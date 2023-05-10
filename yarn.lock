@@ -291,7 +291,7 @@
   optionalDependencies:
     "fsevents" "~2.3.2"
 
-"co-body@^6.1.0":
+"co-body@^6.0.0", "co-body@^6.1.0":
   "integrity" "sha512-m7pOT6CdLN7FuXUcpuz/8lfQ/L77x8SchHCF4G0RBTJO20Wzmhn5Sp4/5WsKy8OSpifBSUrmg83qEqaDHdyFuQ=="
   "resolved" "https://registry.npmjs.org/co-body/-/co-body-6.1.0.tgz"
   "version" "6.1.0"
@@ -359,6 +359,11 @@
   dependencies:
     "depd" "~2.0.0"
     "keygrip" "~1.1.0"
+
+"copy-to@^2.0.1":
+  "integrity" "sha512-3DdaFaU/Zf1AnpLiFDeNCD4TOWe3Zl2RZaTzUvWiIk5ERzcCodOE20Vqq4fzCbNoHURFHT4/us/Lfq+S2zyY4w=="
+  "resolved" "https://registry.npmjs.org/copy-to/-/copy-to-2.0.1.tgz"
+  "version" "2.0.1"
 
 "cors@^2.8.5":
   "integrity" "sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g=="
@@ -732,6 +737,14 @@
     "co-body" "^6.1.0"
     "formidable" "^2.0.1"
     "zod" "^3.19.1"
+
+"koa-bodyparser@^4.4.0":
+  "integrity" "sha512-AXPY7wwKZUmbgb8VkTEUFoRNOlx6aWRJwEnQD+zfNf33/7KSAkN4Oo9BqlIk80D+5TvuqlhpQT5dPVcyxl5Zsw=="
+  "resolved" "https://registry.npmjs.org/koa-bodyparser/-/koa-bodyparser-4.4.0.tgz"
+  "version" "4.4.0"
+  dependencies:
+    "co-body" "^6.0.0"
+    "copy-to" "^2.0.1"
 
 "koa-compose@^4.1.0":
   "integrity" "sha512-8ODW8TrDuMYvXRwra/Kh7/rJo9BtOfPc6qO8eAfC80CnCvSjSl0bkRM24X6/XBBEyj0v1nRUQ1LyOy3dbqOWXw=="

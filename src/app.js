@@ -5,6 +5,7 @@ const axios = require('axios');
 const Router = require('koa-router');
 const fs = require('fs');
 const csv = require('csv-parser');
+const bodyParser = require('koa-bodyparser');
 
 
 
@@ -14,6 +15,7 @@ const port = 3000;
 
 app.use(router.routes());
 app.use(router.allowedMethods());
+app.use(bodyParser());
 
 
 app.use(async (ctx, next) => {
@@ -217,8 +219,84 @@ function readCSVFile(filePath) {
 
 getCSVDictionary();
 
+// servicios
+
+// Array para llevar el registro de las OC recibidas
+const ordenesRecibidas = [];
+const ordenesRecibidas2 = [];
 
 
+app.post('/ordenes-compra/:id_orden', (ctx) => {	
+  // Extract data from the request body	
+  const { cliente, sku, fechaEntrega, cantidad, urlNotificacion } = ctx.request.body;	
+  // Extract the order ID from the URL	
+  const id_orden = ctx.params.id_orden;	
+  // Check if the order ID already exists, return an error if it does	
+  if (ordenesRecibidas.includes(id_orden)) {	
+    ctx.status = 400;	
+    ctx.body = { mensaje: 'OC ya fue recibida' };	
+    return;	
+  }	
+  // Process the data to return the order	
+  const nuevaOrden = {	
+    id: id_orden,	
+    cliente,	
+    sku,	
+    fechaEntrega,	
+    cantidad,	
+    urlNotificacion,	
+    estado: 'recibida',	
+  };	
+  ordenesRecibidas.push(id_orden);	
+  ordenesRecibidas2.push(nuevaOrden);	
+  writeFile(ordenesRecibidas);
+  // Send the response	
+  ctx.status = 201;	
+  ctx.body = nuevaOrden;	
+  // Log the response in the console	
+  console.log('Orden creada exitosamente');	
+  console.log(nuevaOrden);	
+});	
+// Implement PATCH to change the order status	
+app.patch('/ordenes-compra/:id_orden', (ctx) => {	
+  // Extract the order ID from the URL	
+  const id_orden = ctx.params.id_orden;	
+  // Check the order in the order array	
+  const orden = readFile(id_orden, ctx.request.body.estado)	
+  // If the order doesn't exist, return a 404 error	
+  if (!orden) {	
+    ctx.status = 404;	
+    ctx.body = { mensaje: 'Orden no encontrada' };	
+    return;	
+  }	
+  // Update the order status	
+  // Respond with the updated order	
+  ctx.status = 200;	
+  ctx.body = orden;	
+});	
+
+function writeFile(data) {
+  fs.writeFile('Output.txt', data, (err) => {
+    // In case of a error throw err.
+    if (err) throw err;
+})
+}
+
+function readFile(id_orden, status) {
+  fs.readFile('Output.txt', (err, inputD) => {
+    if (err) throw err;
+       const text = inputD.toString();
+        const data = JSON.parse(text);
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].id == id_orden) {
+            data[i].estado = status;
+            writeFile(JSON.stringify(data));
+            return data[i];
+          }
+        }
+        return 0;
+ })
+}
 
 
 app.listen(port, () => {
