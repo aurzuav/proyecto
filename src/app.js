@@ -225,7 +225,7 @@ getCSVDictionary();
 const ordenesRecibidas = [];
 const ordenesRecibidas2 = [];
 
-
+// servicio 2 - recibe orden
 app.use(async (ctx, next) => {
   if (ctx.method === 'POST' && ctx.url.startsWith('/ordenes-compra/')) {
     const id_orden = ctx.url.replace('/ordenes-compra/', '');
@@ -250,12 +250,12 @@ app.use(async (ctx, next) => {
   
     ordenesRecibidas.push(id_orden);
     ordenesRecibidas2.push(nuevaOrden);
+    writeFile(JSON.stringify(ordenesRecibidas2));
   
     // Send the response
     ctx.status = 201;
     ctx.body = nuevaOrden;
-  
-    // Log the response in the console
+
     console.log('Orden creada exitosamente');
     console.log(nuevaOrden);
   }
@@ -263,24 +263,30 @@ app.use(async (ctx, next) => {
   await next();
 });
 
+// servicio 3 - consulta estado
+app.use(async (ctx, next) => {
+  if (ctx.method === 'PATCH' && ctx.url.startsWith('/ordenes-compra/')) {
+    const id_orden = ctx.url.replace('/ordenes-compra/', '');
+    let order = 0;
 
-// Implement PATCH to change the order status	
-router.patch('/ordenes-compra/:id_orden', (ctx) => {	
-  // Extract the order ID from the URL	
-  const id_orden = ctx.params.id_orden;	
-  // Check the order in the order array	
-  const orden = readFile(id_orden, ctx.request.body.estado)	
-  // If the order doesn't exist, return a 404 error	
-  if (!orden) {	
-    ctx.status = 404;	
-    ctx.body = { mensaje: 'Orden no encontrada' };	
-    return;	
-  }	
-  // Update the order status	
-  // Respond with the updated order	
-  ctx.status = 200;	
-  ctx.body = orden;	
-});	
+    console.log(id_orden);
+
+    const orden = readFile(id_orden, ctx.request.body.estado)
+
+  
+    if (orden === 0) {
+      ctx.status = 404;
+      ctx.body = { mensaje: 'Orden no encontrada' };
+      return;
+    }
+
+    ctx.status = 200;
+    ctx.body = orden;
+  }
+  
+  await next();
+});
+
 
 function writeFile(data) {
   fs.writeFile('Output.txt', data, (err) => {
@@ -295,13 +301,16 @@ function readFile(id_orden, status) {
        const text = inputD.toString();
         const data = JSON.parse(text);
         for (let i = 0; i < data.length; i++) {
-          if (data[i].id == id_orden) {
+          if (data[i].id == id_orden.toString()) {
+            console.log('encontrado');
+            console.log(data[i]);
             data[i].estado = status;
+            console.log(status);
+            console.log(data[i]);
             writeFile(JSON.stringify(data));
-            return data[i];
+            return 1;
           }
         }
-        return 0;
  })
 }
 
