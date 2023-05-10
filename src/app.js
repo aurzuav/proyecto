@@ -226,39 +226,46 @@ const ordenesRecibidas = [];
 const ordenesRecibidas2 = [];
 
 
-app.post('/ordenes-compra/:id_orden', (ctx) => {	
-  // Extract data from the request body	
-  const { cliente, sku, fechaEntrega, cantidad, urlNotificacion } = ctx.request.body;	
-  // Extract the order ID from the URL	
-  const id_orden = ctx.params.id_orden;	
-  // Check if the order ID already exists, return an error if it does	
-  if (ordenesRecibidas.includes(id_orden)) {	
-    ctx.status = 400;	
-    ctx.body = { mensaje: 'OC ya fue recibida' };	
-    return;	
-  }	
-  // Process the data to return the order	
-  const nuevaOrden = {	
-    id: id_orden,	
-    cliente,	
-    sku,	
-    fechaEntrega,	
-    cantidad,	
-    urlNotificacion,	
-    estado: 'recibida',	
-  };	
-  ordenesRecibidas.push(id_orden);	
-  ordenesRecibidas2.push(nuevaOrden);	
-  writeFile(ordenesRecibidas);
-  // Send the response	
-  ctx.status = 201;	
-  ctx.body = nuevaOrden;	
-  // Log the response in the console	
-  console.log('Orden creada exitosamente');	
-  console.log(nuevaOrden);	
-});	
+app.use(async (ctx, next) => {
+  if (ctx.method === 'POST' && ctx.url.startsWith('/ordenes-compra/')) {
+    const id_orden = ctx.url.replace('/ordenes-compra/', '');
+  
+    const { cliente, sku, fechaEntrega, cantidad, urlNotificacion } = ctx.request.body;
+  
+    if (ordenesRecibidas.includes(id_orden)) {
+      ctx.status = 400;
+      ctx.body = { mensaje: 'OC ya fue recibida' };
+      return;
+    }
+  
+    const nuevaOrden = {
+      id: id_orden,
+      cliente,
+      sku,
+      fechaEntrega,
+      cantidad,
+      urlNotificacion,
+      estado: 'recibida',
+    };
+  
+    ordenesRecibidas.push(id_orden);
+    ordenesRecibidas2.push(nuevaOrden);
+  
+    // Send the response
+    ctx.status = 201;
+    ctx.body = nuevaOrden;
+  
+    // Log the response in the console
+    console.log('Orden creada exitosamente');
+    console.log(nuevaOrden);
+  }
+  
+  await next();
+});
+
+
 // Implement PATCH to change the order status	
-app.patch('/ordenes-compra/:id_orden', (ctx) => {	
+router.patch('/ordenes-compra/:id_orden', (ctx) => {	
   // Extract the order ID from the URL	
   const id_orden = ctx.params.id_orden;	
   // Check the order in the order array	
