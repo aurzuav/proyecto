@@ -224,6 +224,7 @@ getCSVDictionary();
 // Array para llevar el registro de las OC recibidas
 const ordenesRecibidas = [];
 const ordenesRecibidas2 = [];
+const listInstructions = [];
 
 // servicio 2 - recibe orden
 app.use(async (ctx, next) => {
@@ -251,6 +252,13 @@ app.use(async (ctx, next) => {
     ordenesRecibidas.push(id_orden);
     ordenesRecibidas2.push(nuevaOrden);
     writeFile(JSON.stringify(ordenesRecibidas2));
+
+    const instruction = {
+      id: id_orden,
+      instruction: 'post',
+    }
+    listInstructions.push(instruction);
+    writeInstruction(JSON.stringify(listInstructions));
   
     // Send the response
     ctx.status = 201;
@@ -272,7 +280,6 @@ app.use(async (ctx, next) => {
     console.log(id_orden);
 
     const orden = readFile(id_orden, ctx.request.body.estado)
-
   
     if (orden === 0) {
       ctx.status = 404;
@@ -302,16 +309,19 @@ function readFile(id_orden, status) {
         const data = JSON.parse(text);
         for (let i = 0; i < data.length; i++) {
           if (data[i].id == id_orden.toString()) {
-            console.log('encontrado');
-            console.log(data[i]);
             data[i].estado = status;
-            console.log(status);
-            console.log(data[i]);
             writeFile(JSON.stringify(data));
             return 1;
           }
         }
  })
+}
+
+function writeInstruction(data) {
+  fs.writeFile('Instructions.txt', data, (err) => {
+    // In case of a error throw err.
+    if (err) throw err;
+})
 }
 
 
