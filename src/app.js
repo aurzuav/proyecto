@@ -251,14 +251,15 @@ app.use(async (ctx, next) => {
   
     ordenesRecibidas.push(id_orden);
     ordenesRecibidas2.push(nuevaOrden);
-    writeFile(JSON.stringify(ordenesRecibidas2));
+    writeFile(JSON.stringify(ordenesRecibidas2, null, 2).replace(/\n/g, '\r\n') + '\r\n');
+
 
     const instruction = {
       id: id_orden,
       instruction: 'post',
     }
     listInstructions.push(instruction);
-    writeInstruction(JSON.stringify(listInstructions));
+    writeInstruction(JSON.stringify(listInstructions) + '\n');
   
     // Send the response
     ctx.status = 201;
@@ -275,23 +276,21 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   if (ctx.method === 'PATCH' && ctx.url.startsWith('/ordenes-compra/')) {
     const id_orden = ctx.url.replace('/ordenes-compra/', '');
-    let order = 0;
-
-    console.log(id_orden);
-
-    const orden = readFile(id_orden, ctx.request.body.estado)
+    const orden = ordenesRecibidas2.find((orden) => orden.id == id_orden);
   
-    if (orden === 0) {
+    if (!orden) {
       ctx.status = 404;
       ctx.body = { mensaje: 'Orden no encontrada' };
       return;
     }
-
+  
+    orden.estado = ctx.request.body.estado;
+  
     ctx.status = 200;
     ctx.body = orden;
-  }
   
   await next();
+  }
 });
 
 
