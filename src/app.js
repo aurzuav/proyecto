@@ -224,6 +224,7 @@ getCSVDictionary();
 // Array para llevar el registro de las OC recibidas
 const ordenesRecibidas = [];
 const ordenesRecibidas2 = [];
+const ordenesRecibidas3 = [];
 const listInstructions = [];
 
 // servicio 2 - recibe orden
@@ -251,7 +252,7 @@ app.use(async (ctx, next) => {
   
     ordenesRecibidas.push(id_orden);
     ordenesRecibidas2.push(nuevaOrden);
-    writeFile(JSON.stringify(ordenesRecibidas2, null, 2).replace(/\n/g, '\r\n') + '\r\n');
+    writeFile("Output_S2.txt", JSON.stringify(ordenesRecibidas2, null, 2).replace(/\n/g, '\r\n') + '\r\n');
 
 
     const instruction = {
@@ -259,7 +260,8 @@ app.use(async (ctx, next) => {
       instruction: 'post',
     }
     listInstructions.push(instruction);
-    writeInstruction(JSON.stringify(listInstructions) + '\n');
+    writeInstruction("Instruction_S2.txt", JSON.stringify(listInstructions, null, 2).replace(/\n/g, '\r\n') + '\r\n');
+    //writeInstruction(JSON.stringify(listInstructions) + '\n');
   
     // Send the response
     ctx.status = 201;
@@ -288,14 +290,16 @@ app.use(async (ctx, next) => {
   
     ctx.status = 200;
     ctx.body = orden;
+    ordenesRecibidas3.push(orden);
+    writeFile("Output_S3.txt", JSON.stringify(ordenesRecibidas3, null, 2).replace(/\n/g, '\r\n') + '\r\n');
   
   await next();
   }
 });
 
 
-function writeFile(data) {
-  fs.writeFile('Output.txt', data, (err) => {
+function writeFile(nombre_archivo, data) {
+  fs.writeFile(nombre_archivo, data, (err) => {
     // In case of a error throw err.
     if (err) throw err;
 })
@@ -316,8 +320,8 @@ function readFile(id_orden, status) {
  })
 }
 
-function writeInstruction(data) {
-  fs.writeFile('Instructions.txt', data, (err) => {
+function writeInstruction(nombre_archivo, data) {
+  fs.writeFile(nombre_archivo, data, (err) => {
     // In case of a error throw err.
     if (err) throw err;
 })
