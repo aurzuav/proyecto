@@ -396,9 +396,45 @@ app.use(async (ctx, next) => {
     const id_orden = ctx.url.replace("/ordenes-compra/", "");
     const orden = ordenesRecibidas2.find((orden) => orden.id == id_orden);
 
-    if (!orden) {
-      ctx.status = 404;
+    //if (!orden) {
+    //  ctx.status = 404;
+    //  
+    //  const instruction = {
+    //    id: id_orden,
+    //    estado: ctx.request.body.estado,
+    //  };
+    //  listInstructions2.push(instruction);
+    //  writeInstruction(
+    //    "Instruction_S3.txt",
+    //    JSON.stringify(listInstructions2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
+    //  );
+    //  return;
+    //}
+    if (orden == undefined) {
+      // creamos la orden con su id y el estado recibido
+      ctx.status = 204;
+      const nuevaOrden = {
+        id: id_orden,
+        estado: ctx.request.body.estado,
+      };  
+      ordenesRecibidas2.push(nuevaOrden);
+      writeFile(
+        "Output_S3.txt",
+        JSON.stringify(ordenesRecibidas2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
+      );
+    }else{
+
       
+      orden.estado = ctx.request.body.estado;
+
+      ctx.status = 204;
+      //ctx.body = orden;
+      ordenesRecibidas3.push(orden);
+      writeFile(
+        "Output_S3.txt",
+        JSON.stringify(ordenesRecibidas3, null, 2).replace(/\n/g, "\r\n") + "\r\n"
+      );
+
       const instruction = {
         id: id_orden,
         estado: ctx.request.body.estado,
@@ -408,28 +444,7 @@ app.use(async (ctx, next) => {
         "Instruction_S3.txt",
         JSON.stringify(listInstructions2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
       );
-      return;
     }
-
-    orden.estado = ctx.request.body.estado;
-
-    ctx.status = 204;
-    //ctx.body = orden;
-    ordenesRecibidas3.push(orden);
-    writeFile(
-      "Output_S3.txt",
-      JSON.stringify(ordenesRecibidas3, null, 2).replace(/\n/g, "\r\n") + "\r\n"
-    );
-
-    const instruction = {
-      id: id_orden,
-      estado: ctx.request.body.estado,
-    };
-    listInstructions2.push(instruction);
-    writeInstruction(
-      "Instruction_S3.txt",
-      JSON.stringify(listInstructions2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
-    );
 
     await next();
   }
