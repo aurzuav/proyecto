@@ -180,7 +180,7 @@ router.get("/stocks", async (ctx) => {
       for (const inventory of inventoryResponse.data) {
         //console.log("entro inventario");
         //console.log(inventory);
-        const productIndex = products.findIndex((p) => p.sku === inventory.sku);
+        const productIndex = products.findIndex((p) => p.sku === inventory.sku && p.bodega === inventory.store);
         if (productIndex === -1) {
           products.push({
             sku: inventory.sku,
