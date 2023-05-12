@@ -398,7 +398,7 @@ app.use(async (ctx, next) => {
 
     if (!orden) {
       ctx.status = 404;
-      ctx.body = { mensaje: "Orden no encontrada" };
+      
       const instruction = {
         id: id_orden,
         estado: ctx.request.body.estado,
@@ -413,8 +413,8 @@ app.use(async (ctx, next) => {
 
     orden.estado = ctx.request.body.estado;
 
-    ctx.status = 200;
-    ctx.body = orden;
+    ctx.status = 204;
+    //ctx.body = orden;
     ordenesRecibidas3.push(orden);
     writeFile(
       "Output_S3.txt",
