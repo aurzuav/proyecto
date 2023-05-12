@@ -207,41 +207,50 @@ router.get("/stocks", async (ctx) => {
 // Dashboard
 router.get("/dashboard", async (ctx) => {
   const token = await getToken();
-  console.log("inventory");
-  console.log(token);
+  const inventoryDict = {};
   try {
     const headers = {
-      "Content-Type": "application/json", // Adjust the content type if necessary
+      "Content-Type": "application/json", 
       Authorization: "Bearer " + `${token}`,
     };
-    console.log(headers);
     const response = await axios.get(
       "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
         headers,
       }
-    ); // Replace with the API endpoint URL
-
+    );
+      // Tabla Inventario
     let table = fs.readFileSync("src/dashboard.html", "utf8")
     response.data.forEach(element => {
       table += dashboardInventory(element);
+      if (element.buffer == true) {
+        inventoryDict[element._id] = "Bodega Buffer";
+      } else if (element.kitchen== true) {
+        inventoryDict[element._id] = "Bodega Kitchen";
+      } else {
+        inventoryDict[element._id] = "Bodega";
+      }
     });
     table += "</table>"
+
+    // Tabla Stock
     const stores = response.data;
-   
     for (const store of stores) {
-      //agregar tabla y agregar store._id
-      table += "<table><tr><th>SKU</th><th>Cantidad</th><br>"
-      const inventoryResponse = await axios.get(
+      const stockResponse = await axios.get(
         `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
         {
           headers,
         }
       );
-      console.log(inventoryResponse.data);
-      for (const inventory of inventoryResponse.data) {
-        console.log(inventory);
-        table += dashboardProduct(inventory);
+      for (const stock of stockResponse.data) {
+        if (stock.store in inventoryDict) {
+          table += "<table><tr><th>SKU</th><th>Cantidad</th><br>"
+          table += `<h2>Stock en ${inventoryDict[stock.store]}</h2>`;
+          table += dashboardStock(stock);
+          delete inventoryDict[store._id];
+        } else {
+          table += dashboardStock(stock);
+        }
       }
     }
     ctx.body = table;
@@ -253,13 +262,18 @@ router.get("/dashboard", async (ctx) => {
 });
 
 function dashboardInventory (element){
-  const ocupation = (element.usedSpace/element.totalSpace * 100) + "%";
-  return (
-      `<tr><td>${element._id}</td><td>${element.usedSpace}</td><td>${element.totalSpace}</td><td>${ocupation}</td></tr>`
-  )
+  const occupation = ((element.usedSpace / element.totalSpace) * 100).toFixed(2) + "%";
+  
+  if (element.buffer == true) {
+    return `<tr><td>Bodega Buffer</td><td>${element.usedSpace}</td><td>${element.totalSpace}</td><td>${occupation}</td><td>${element._id}</td></tr>`;
+  } else if (element.kitchen == true) {
+    return `<tr><td>Bodega Kitchen</td><td>${element.usedSpace}</td><td>${element.totalSpace}</td><td>${occupation}</td><td>${element._id}</td></tr>`;
+  } else {
+    return `<tr><td>Bodega</td><td>${element.usedSpace}</td><td>${element.totalSpace}</td><td>${occupation}</td><td>${element._id}</td></tr>`;
+  }
 }
 
-function dashboardProduct (product){
+function dashboardStock (product){
   return (
       `<tr><td>${product.sku}</td><td>${product.quantity}</td></tr>`
   )

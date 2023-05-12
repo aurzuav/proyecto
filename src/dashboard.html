@@ -1,31 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title> Panel de control</title>
+    <title> Dashboard </title>
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        body {
+          margin: 0;
+          padding: 20px;
+          background-color: #f9f9f9;
+          font-family: Arial, sans-serif;
         }
         
-        table, th, td {
-            border: 1px solid black;
-            padding: 8px;
+        table {
+          border-collapse: collapse;
+          width: 60%;
+          margin: 0 auto;
+          background-color: #fff;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          border-radius: 5px;
+        }
+        
+        th, td {
+          text-align: center;
+          padding: 12px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #f2f2f2;
         }
         
         th {
-            background-color: #f2f2f2;
+          background-color: #289DA6;
+          color: white;
         }
-    </style>
+        
+        h1 {
+          text-align: center;
+          margin-top: 30px;
+          color: #289DA6;
+        }
+        
+        td:first-child {
+          font-weight: bold;
+          color: #289DA6;
+        }
+        h2 {
+            color: #289DA6;
+            margin: 10px 0;
+            text-align: center;
+          }
+        
+        
+
+      </style>
 </head>
 <body>
-    <h1>Dashboard</h1>
+    <h1>Panel de Control</h1>
     
     <table>
         <tr>
-            <th>ID</th>
+            <th>Tipo de bodega</th>
             <th>Espacio Usado</th>
             <th>Espacio Total</th>
             <th>Ocupación de Inventario</th>
+            <th>ID</th>
         </tr>
         
