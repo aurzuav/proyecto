@@ -155,14 +155,11 @@ router.get("/inventory", async (ctx) => {
 // creo que este no tiene nada hardcodeado, revisenlo igual
 router.get("/stocks", async (ctx) => {
   const token = await getToken();
-  console.log("inventory");
-  console.log(token);
   try {
     const headers = {
       "Content-Type": "application/json",
       Authorization: "Bearer " + `${token}`,
     };
-    console.log(headers);
     const storesResponse = await axios.get(
       "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
@@ -173,14 +170,16 @@ router.get("/stocks", async (ctx) => {
     const stores = storesResponse.data;
     const products = [];
     for (const store of stores) {
+      //console.log(store._id);
       const inventoryResponse = await axios.get(
         `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
         {
           headers,
         }
       );
-      console.log(inventoryResponse.data);
       for (const inventory of inventoryResponse.data) {
+        //console.log("entro inventario");
+        //console.log(inventory);
         const productIndex = products.findIndex((p) => p.sku === inventory.sku);
         if (productIndex === -1) {
           products.push({
@@ -189,7 +188,11 @@ router.get("/stocks", async (ctx) => {
             bodega: inventory.store,
           });
         } else {
-          products[productIndex].quantity += inventory.quantity;
+          //console.log("entro else");
+          //console.log(inventory.quantity);
+          //console.log(products[productIndex].total);
+          products[productIndex].total += inventory.quantity;
+          //console.log(products[productIndex].total);
         }
       }
     }
