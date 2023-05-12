@@ -34,8 +34,8 @@ router.get("/", async (ctx) => {
       "Content-Type": "application/json", // Adjust the content type if necessary
     };
     const response = await axios.post(
-      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/auth",
-      { group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
+      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/auth",
+      { group: 5, secret: "J6RyeTrwNgX.Z+*MKh4EaBuLn" },
       {
         headers,
       }
@@ -56,8 +56,8 @@ async function getToken() {
       "Content-Type": "application/json",
     };
     const response = await axios.post(
-      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/auth",
-      { group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
+      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/auth",
+      { group: 5, secret: "J6RyeTrwNgX.Z+*MKh4EaBuLn" },
       { headers }
     );
     return response.data.token;
@@ -76,11 +76,11 @@ router.get("/dispatch", async (ctx) => {
 
     const headers = {
       "Content-Type": "application/json", // Adjust the content type if necessary
-      Authorization: "Bearer " + ctx.request.body.token,
+      Authorization: "Bearer " + token,
     };
 
     const response = await axios.post(
-      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch",
+      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch",
       { productId: `${productid}`, orderId: `${orderId}` },
       {
         headers,
@@ -108,8 +108,8 @@ router.get("/product", async (ctx) => {
     };
     // en la linea de abajo esta hardcodeado el sku y la cantidad
     const response = await axios.post(
-      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products",
-      { sku: "22993410e2", quantity: 4 },
+      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products",
+      { sku: "015edda868", quantity: 4 },
       {
         headers,
       }
@@ -134,7 +134,7 @@ router.get("/inventory", async (ctx) => {
     };
     console.log(headers);
     const response = await axios.get(
-      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
         headers,
       }
@@ -153,7 +153,7 @@ router.get("/inventory", async (ctx) => {
 
 // Este llamado es para obtener el inventario de cada bodega e imprimirlo en consola
 // creo que este no tiene nada hardcodeado, revisenlo igual
-router.get("/superinventory", async (ctx) => {
+router.get("/stocks", async (ctx) => {
   const token = await getToken();
   console.log("inventory");
   console.log(token);
@@ -164,7 +164,7 @@ router.get("/superinventory", async (ctx) => {
     };
     console.log(headers);
     const storesResponse = await axios.get(
-      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
         headers,
       }
@@ -174,7 +174,7 @@ router.get("/superinventory", async (ctx) => {
     const products = [];
     for (const store of stores) {
       const inventoryResponse = await axios.get(
-        `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
+        `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
         {
           headers,
         }
@@ -194,7 +194,7 @@ router.get("/superinventory", async (ctx) => {
       }
     }
     console.log(products);
-    ctx.body = products;
+    ctx.body = JSON.stringify(products, null, 2);
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error.message };
@@ -213,7 +213,7 @@ router.get("/dashboard", async (ctx) => {
     };
     console.log(headers);
     const response = await axios.get(
-      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
         headers,
       }
@@ -226,12 +226,11 @@ router.get("/dashboard", async (ctx) => {
     table += "</table>"
     const stores = response.data;
    
-    const products = [];
     for (const store of stores) {
       //agregar tabla y agregar store._id
       table += "<table><tr><th>SKU</th><th>Cantidad</th><br>"
       const inventoryResponse = await axios.get(
-        `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
+        `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
         {
           headers,
         }
@@ -310,6 +309,7 @@ const ordenesRecibidas = [];
 const ordenesRecibidas2 = [];
 const ordenesRecibidas3 = [];
 const listInstructions = [];
+const listInstructions2 = [];
 
 // servicio 2 - recibe orden
 app.use(async (ctx, next) => {
@@ -322,6 +322,15 @@ app.use(async (ctx, next) => {
     if (ordenesRecibidas.includes(id_orden)) {
       ctx.status = 400;
       ctx.body = { mensaje: "OC ya fue recibida" };
+      const instruction = {
+        id: id_orden,
+        instruction: "post",
+      };
+      listInstructions.push(instruction);
+      writeInstruction(
+        "Instruction_S2.txt",
+        JSON.stringify(listInstructions, null, 2).replace(/\n/g, "\r\n") + "\r\n"
+      );
       return;
     }
 
@@ -373,6 +382,15 @@ app.use(async (ctx, next) => {
     if (!orden) {
       ctx.status = 404;
       ctx.body = { mensaje: "Orden no encontrada" };
+      const instruction = {
+        id: id_orden,
+        estado: ctx.request.body.estado,
+      };
+      listInstructions2.push(instruction);
+      writeInstruction(
+        "Instruction_S3.txt",
+        JSON.stringify(listInstructions2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
+      );
       return;
     }
 
@@ -384,6 +402,16 @@ app.use(async (ctx, next) => {
     writeFile(
       "Output_S3.txt",
       JSON.stringify(ordenesRecibidas3, null, 2).replace(/\n/g, "\r\n") + "\r\n"
+    );
+
+    const instruction = {
+      id: id_orden,
+      estado: ctx.request.body.estado,
+    };
+    listInstructions2.push(instruction);
+    writeInstruction(
+      "Instruction_S3.txt",
+      JSON.stringify(listInstructions2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
     );
 
     await next();
