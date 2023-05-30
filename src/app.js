@@ -13,6 +13,7 @@ const app = new Koa();
 const router = new Router();
 const port = 3000;
 
+app.use(KoaLogger());
 
 app.use(router.routes());
 app.use(router.allowedMethods());
@@ -26,6 +27,8 @@ app.use(async (ctx, next) => {
 });
 
 let productDictionary = {};
+
+
 
 // gets token
 router.get("/", async (ctx) => {
@@ -66,6 +69,14 @@ async function getToken() {
     return null;
   }
 }
+
+// vinculo nuevos archivos
+const producirRouter = require('./routes/producir');
+const producir = producirRouter({ getToken });
+app.use(producir.routes()).use(producir.allowedMethods())
+
+const ordenCompra = require('./routes/ordenCompra');
+app.use(ordenCompra.routes())
 
 // dispatches products - ver input productid y orderid
 router.get("/dispatch", async (ctx) => {
@@ -449,6 +460,9 @@ app.use(async (ctx, next) => {
     await next();
   }
 });
+
+
+
 
 function writeFile(nombre_archivo, data) {
   fs.writeFile(nombre_archivo, data, (err) => {
