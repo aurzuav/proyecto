@@ -20,7 +20,7 @@ sftp.connect(config)
     const xmlFiles = data.filter(file => /\.(xml)$/i.test(file.name));
     console.log('Archivos XML en la carpeta "pedidos":');
     xmlFiles.forEach(file => {
-      //console.log(file.name);
+      console.log(file.name);
     });
 
     if (xmlFiles.length > 0) {

@@ -342,6 +342,7 @@ const ordenesRecibidas3 = [];
 const listInstructions = [];
 const listInstructions2 = [];
 
+
 // servicio 2 - recibe orden
 app.use(async (ctx, next) => {
   if (ctx.method === "POST" && ctx.url.startsWith("/ordenes-compra/")) {
