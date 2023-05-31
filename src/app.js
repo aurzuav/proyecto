@@ -291,44 +291,47 @@ function dashboardStock (product){
 }
 
 
-function getCSVDictionary() {
-  console.log("get CSV file...");
-  const filePath = "./products.csv";
+// //se usa el excel de la E2
+// function getCSVDictionary() {
+//   console.log("get CSV file...");
+//   const filePath = "./products_E2.csv";
 
-  readCSVFile(filePath)
-    .then((dictionary) => {
-      productDictionary = dictionary;
-      //console.log(dictionary);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
+//   readCSVFile(filePath)
+//     .then((dictionary) => {
+//       productDictionary = dictionary;
+//       //console.log(dictionary);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// }
 
-function readCSVFile(filePath) {
-  return new Promise((resolve, reject) => {
-    const dictionary = {};
 
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on("data", (row) => {
-        const keys = Object.keys(row);
-        const key = row[keys[0]];
+// function readCSVFile(filePath) {
+//   return new Promise((resolve, reject) => {
+//     const dictionary = {};
 
-        const values = keys.slice(1).map((column) => row[column]);
+//     fs.createReadStream(filePath)
+//       .pipe(csv())
+//       .on("data", (row) => {
+//         const keys = Object.keys(row);
+//         const key = row[keys[0]];
 
-        dictionary[key] = values;
-      })
-      .on("end", () => {
-        resolve(dictionary);
-      })
-      .on("error", (error) => {
-        reject(error);
-      });
-  });
-}
+//         const values = keys.slice(1).map((column) => row[column]);
 
-getCSVDictionary();
+//         dictionary[key] = values;
+//       })
+//       .on("end", () => {
+//         resolve(dictionary);
+//       })
+//       .on("error", (error) => {
+//         reject(error);
+//       });
+//   });
+// }
+
+// getCSVDictionary();
+
 
 // servicios
 
@@ -434,8 +437,6 @@ app.use(async (ctx, next) => {
         JSON.stringify(ordenesRecibidas2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
       );
     }else{
-
-      
       orden.estado = ctx.request.body.estado;
 
       ctx.status = 204;
@@ -460,8 +461,6 @@ app.use(async (ctx, next) => {
     await next();
   }
 });
-
-
 
 
 function writeFile(nombre_archivo, data) {

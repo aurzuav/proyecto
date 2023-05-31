@@ -1,0 +1,168 @@
+ID Producto,Nombre Producto,ID Ingrediente,Nombre Ingrediente,Cantidad
+4e0065d560,Hamburguesa Clásica,e70328935a,Pan de hamburguesa,1
+4e0065d560,Hamburguesa Clásica,1384839fbe,Carne de res,1
+4e0065d560,Hamburguesa Clásica,ec89361b80,Lechuga,1
+4e0065d560,Hamburguesa Clásica,02e409c8bf,Tomate,1
+4e0065d560,Hamburguesa Clásica,cd4b7aab6f,Cebolla,1
+4e0065d560,Hamburguesa Clásica,648e04a1d3,Queso cheddar,1
+4e0065d560,Hamburguesa Clásica,febf35a4ba,Salsa de tomate,1
+fc68d74e89,Hamburguesa Dragón Fuego,e2e9371ad3,Pan de curry,1
+fc68d74e89,Hamburguesa Dragón Fuego,fb1d4530bb,Carne de cordero,1
+fc68d74e89,Hamburguesa Dragón Fuego,61791a408d,Kimchi,1
+fc68d74e89,Hamburguesa Dragón Fuego,3990b2ffcc,Enoki,1
+fc68d74e89,Hamburguesa Dragón Fuego,6ba1c688fe,Salsa de yogurt picante,1
+1682b6fad4,Hamburguesa Dulce Aventura,9c4e8128c7,Pan de donut,1
+1682b6fad4,Hamburguesa Dulce Aventura,8fcd9e64a5,Carne de ternera,1
+1682b6fad4,Hamburguesa Dulce Aventura,e9f2ebee73,Queso brie,1
+1682b6fad4,Hamburguesa Dulce Aventura,7c4aa6a73f,Merelada de fresa,1
+1682b6fad4,Hamburguesa Dulce Aventura,d2a6ebd445,Albahaca,1
+6716416950,Hamburguesa Gourmet,a8bd25d75e,Pan de hamburguesa artesanal,1
+6716416950,Hamburguesa Gourmet,1384839fbe,Carne de res,1
+6716416950,Hamburguesa Gourmet,e9f2ebee73,Queso brie,1
+6716416950,Hamburguesa Gourmet,8c6d70bd7e,Rúcula,1
+6716416950,Hamburguesa Gourmet,85552371f9,Cebolla caramelizada,1
+6716416950,Hamburguesa Gourmet,adb4c6d1db,Tomate seco,1
+6716416950,Hamburguesa Gourmet,84c4f3be38,Mayonesa de trufa,1
+6fee080a75,Hamburguesa Hawaiana,e70328935a,Pan de hamburguesa,1
+6fee080a75,Hamburguesa Hawaiana,1384839fbe,Carne de res,1
+6fee080a75,Hamburguesa Hawaiana,52f81a27b9,Queso suizo,1
+6fee080a75,Hamburguesa Hawaiana,cad77c7dff,Piña,1
+6fee080a75,Hamburguesa Hawaiana,ec89361b80,Lechuga,1
+6fee080a75,Hamburguesa Hawaiana,c93da4dfec,Salsa teriyaki,1
+d465d07dc6,Hamburguesa Mar y Tierra,9d4ed2e7fd,Pan de algas,1
+d465d07dc6,Hamburguesa Mar y Tierra,d5e63913c0,Atún a la parrilla,1
+d465d07dc6,Hamburguesa Mar y Tierra,466eb4baac,Espárragos,1
+d465d07dc6,Hamburguesa Mar y Tierra,c6d6ea106e,Alioli,1
+2e8764580b,Hamburguesa Mediterránea,100bd51422,Pan de hamburguesa integral,1
+2e8764580b,Hamburguesa Mediterránea,1384839fbe,Carne de res,1
+2e8764580b,Hamburguesa Mediterránea,57d036e29e,Queso feta,1
+2e8764580b,Hamburguesa Mediterránea,31d81c0bac,Aceitunas,1
+2e8764580b,Hamburguesa Mediterránea,02e409c8bf,Tomate,1
+2e8764580b,Hamburguesa Mediterránea,ec89361b80,Lechuga,1
+2e8764580b,Hamburguesa Mediterránea,333a762aae,Salsa de yoghurt,1
+ecc8cbf453,Hamburguesa Mediterránea Fresca,43dfc53bc0,Pan de aceitunas,1
+ecc8cbf453,Hamburguesa Mediterránea Fresca,a1f301dc97,Pollo Marinado,1
+ecc8cbf453,Hamburguesa Mediterránea Fresca,4c33fdd142,Hummus,1
+ecc8cbf453,Hamburguesa Mediterránea Fresca,cc215def14,Berenjenas,1
+ecc8cbf453,Hamburguesa Mediterránea Fresca,8c6d70bd7e,Rúcula,1
+ecc8cbf453,Hamburguesa Mediterránea Fresca,823e36fad1,Tzatziki,1
+ff4479d214,Hamburguesa Mexicana,e70328935a,Pan de hamburguesa,1
+ff4479d214,Hamburguesa Mexicana,1384839fbe,Carne de res,1
+ff4479d214,Hamburguesa Mexicana,4d88a06422,Guacamole,1
+ff4479d214,Hamburguesa Mexicana,5d1a9139a8,Salsa de jalapeño,1
+ff4479d214,Hamburguesa Mexicana,648e04a1d3,Queso cheddar,1
+ff4479d214,Hamburguesa Mexicana,ec89361b80,Lechuga,1
+ff4479d214,Hamburguesa Mexicana,d846143374,Salsa de tomate picante,1
+79332c1930,Hamburguesa Otoño en el Bosque,a881119d00,Pan de calabaza,1
+79332c1930,Hamburguesa Otoño en el Bosque,48a35f4045,Carne de venado,1
+79332c1930,Hamburguesa Otoño en el Bosque,5a899a51a8,Setas,1
+79332c1930,Hamburguesa Otoño en el Bosque,d9175cd0ab,Queso azul,1
+79332c1930,Hamburguesa Otoño en el Bosque,85552371f9,Cebolla caramelizada,1
+7a205eb9cb,Hamburguesa Picante,e70328935a,Pan de hamburguesa,1
+7a205eb9cb,Hamburguesa Picante,1384839fbe,Carne de res,1
+7a205eb9cb,Hamburguesa Picante,c9d107bcc5,Queso pepper jack,1
+7a205eb9cb,Hamburguesa Picante,5d1a9139a8,Salsa de jalapeño,1
+7a205eb9cb,Hamburguesa Picante,ab2da8d916,Cebolla roja,1
+7a205eb9cb,Hamburguesa Picante,22993410e2,Aguacate,1
+7a205eb9cb,Hamburguesa Picante,11f954133c,Salsa chipotle,1
+da5032af76,Hamburguesa Tropical Explosiva,1dc06b71f6,Pan de coco,1
+da5032af76,Hamburguesa Tropical Explosiva,cb7a258249,Carne de cangrejo,1
+da5032af76,Hamburguesa Tropical Explosiva,490b71d25f,Piña asada,1
+da5032af76,Hamburguesa Tropical Explosiva,b570c93323,Salsa de mango y aguacate,1
+4b63d969d8,Hamburguesa Vegana,100bd51422,Pan de hamburguesa integral,1
+4b63d969d8,Hamburguesa Vegana,8ed28eed84,Hamburguesa vegetariana de lentejas y zanahoria,1
+4b63d969d8,Hamburguesa Vegana,22993410e2,Aguacate,1
+4b63d969d8,Hamburguesa Vegana,02e409c8bf,Tomate,1
+4b63d969d8,Hamburguesa Vegana,ab2da8d916,Cebolla roja,1
+4b63d969d8,Hamburguesa Vegana,1694fddc6e,Salsa de hummus,1
+e481e233b2,Hamburguesa Vegetariana,e70328935a,Pan de hamburguesa,1
+e481e233b2,Hamburguesa Vegetariana,5df7f1701b,Tofu,1
+e481e233b2,Hamburguesa Vegetariana,ec89361b80,Lechuga,1
+e481e233b2,Hamburguesa Vegetariana,02e409c8bf,Tomate,1
+e481e233b2,Hamburguesa Vegetariana,7cb14c4cec,Mayonesa de mostaza y miel,1
+0a987d2669,Hamburguesa Viva la Pera,f4a4eed62e,Pan de quinoa,1
+0a987d2669,Hamburguesa Viva la Pera,53fe04049a,Pera a la parrilla,1
+0a987d2669,Hamburguesa Viva la Pera,3e3fd480f3,Halloumi,1
+0a987d2669,Hamburguesa Viva la Pera,665d8576b6,Espinaca,1
+0a987d2669,Hamburguesa Viva la Pera,d118907e7e,Nueces,1
+0a987d2669,Hamburguesa Viva la Pera,9da97b3176,Miel,1
+0a44f324c1,Hamburguesa con Huevo,a8bd25d75e,Pan de hamburguesa artesanal,1
+0a44f324c1,Hamburguesa con Huevo,1384839fbe,Carne de res,1
+0a44f324c1,Hamburguesa con Huevo,df55d1d95f,Huevo Frito,1
+0a44f324c1,Hamburguesa con Huevo,648e04a1d3,Queso cheddar,1
+0a44f324c1,Hamburguesa con Huevo,ec89361b80,Lechuga,1
+0a44f324c1,Hamburguesa con Huevo,02e409c8bf,Tomate,1
+0a44f324c1,Hamburguesa con Huevo,cd4b7aab6f,Cebolla,1
+0a44f324c1,Hamburguesa con Huevo,febf35a4ba,Salsa de tomate,1
+adfb55e095,Hamburguesa con Tocino,e70328935a,Pan de hamburguesa,1
+adfb55e095,Hamburguesa con Tocino,1384839fbe,Carne de res,1
+adfb55e095,Hamburguesa con Tocino,4791719128,#N/A,1
+adfb55e095,Hamburguesa con Tocino,648e04a1d3,Queso cheddar,1
+adfb55e095,Hamburguesa con Tocino,ec89361b80,Lechuga,1
+adfb55e095,Hamburguesa con Tocino,02e409c8bf,Tomate,1
+adfb55e095,Hamburguesa con Tocino,85552371f9,Cebolla caramelizada,1
+3da1183c5b,Hamburguesa de Cerdo BBQ,e70328935a,Pan de hamburguesa,1
+3da1183c5b,Hamburguesa de Cerdo BBQ,015edda868,Carne de cerdo,1
+3da1183c5b,Hamburguesa de Cerdo BBQ,648e04a1d3,Queso cheddar,1
+3da1183c5b,Hamburguesa de Cerdo BBQ,85552371f9,Cebolla caramelizada,1
+3da1183c5b,Hamburguesa de Cerdo BBQ,7424b21b1c,Salsa BBQ,1
+9a7ff52e69,Hamburguesa de Champiñones,e70328935a,Pan de hamburguesa,1
+9a7ff52e69,Hamburguesa de Champiñones,d33c24a6c4,Hamburguesa vegetariana de champiñones,1
+9a7ff52e69,Hamburguesa de Champiñones,e0a787d052,Provolone,1
+9a7ff52e69,Hamburguesa de Champiñones,85552371f9,Cebolla caramelizada,1
+9a7ff52e69,Hamburguesa de Champiñones,8c6d70bd7e,Rúcula,1
+868db3472f,Hamburguesa de Espinacas y Feta,100bd51422,Pan de hamburguesa integral,1
+868db3472f,Hamburguesa de Espinacas y Feta,5651dc98d1,Hamburguesa vegetariana de espinacas y feta,1
+868db3472f,Hamburguesa de Espinacas y Feta,6cd357a673,Pepino,1
+868db3472f,Hamburguesa de Espinacas y Feta,02e409c8bf,Tomate,1
+868db3472f,Hamburguesa de Espinacas y Feta,823e36fad1,Tzatziki,1
+8701c5cdb7,Hamburguesa de Pavo,e70328935a,Pan de hamburguesa,1
+8701c5cdb7,Hamburguesa de Pavo,7df9988cf9,Carne de pavo,1
+8701c5cdb7,Hamburguesa de Pavo,648e04a1d3,Queso cheddar,1
+8701c5cdb7,Hamburguesa de Pavo,ec89361b80,Lechuga,1
+8701c5cdb7,Hamburguesa de Pavo,02e409c8bf,Tomate,1
+8701c5cdb7,Hamburguesa de Pavo,7cb14c4cec,Mayonesa de mostaza y miel,1
+3287bfb415,Hamburguesa de Pavo con Guacamole,100bd51422,Pan de hamburguesa integral,1
+3287bfb415,Hamburguesa de Pavo con Guacamole,7df9988cf9,Carne de pavo,1
+3287bfb415,Hamburguesa de Pavo con Guacamole,4d88a06422,Guacamole,1
+3287bfb415,Hamburguesa de Pavo con Guacamole,02e409c8bf,Tomate,1
+3287bfb415,Hamburguesa de Pavo con Guacamole,ab2da8d916,Cebolla roja,1
+3287bfb415,Hamburguesa de Pavo con Guacamole,ec89361b80,Lechuga,1
+2c3e81f42b,Hamburguesa de Pescado,e70328935a,Pan de hamburguesa,1
+2c3e81f42b,Hamburguesa de Pescado,84e65bfc0e,Pescado empanizado,1
+2c3e81f42b,Hamburguesa de Pescado,ec89361b80,Lechuga,1
+2c3e81f42b,Hamburguesa de Pescado,02e409c8bf,Tomate,1
+2c3e81f42b,Hamburguesa de Pescado,cd4b7aab6f,Cebolla,1
+2c3e81f42b,Hamburguesa de Pescado,635212bf6c,Salsa tártara,1
+ecfc869d23,Hamburguesa de Pollo,e70328935a,Pan de hamburguesa,1
+ecfc869d23,Hamburguesa de Pollo,537b0722b5,Pechuga de pollo,1
+ecfc869d23,Hamburguesa de Pollo,ec89361b80,Lechuga,1
+ecfc869d23,Hamburguesa de Pollo,02e409c8bf,Tomate,1
+ecfc869d23,Hamburguesa de Pollo,cd4b7aab6f,Cebolla,1
+ecfc869d23,Hamburguesa de Pollo,e702757a97,Mayonesa,1
+051b0206d1,Hamburguesa de Pollo BBQ,e70328935a,Pan de hamburguesa,1
+051b0206d1,Hamburguesa de Pollo BBQ,537b0722b5,Pechuga de pollo,1
+051b0206d1,Hamburguesa de Pollo BBQ,648e04a1d3,Queso cheddar,1
+051b0206d1,Hamburguesa de Pollo BBQ,cd4b7aab6f,Cebolla,1
+051b0206d1,Hamburguesa de Pollo BBQ,7424b21b1c,Salsa BBQ,1
+73b8bdf09f,Hamburguesa de Portobello,e70328935a,Pan de hamburguesa,1
+73b8bdf09f,Hamburguesa de Portobello,56b708699a,Portobello a la parrilla,1
+73b8bdf09f,Hamburguesa de Portobello,018aa592b1,Queso de cabra,1
+73b8bdf09f,Hamburguesa de Portobello,b8c943dcd7,Espinacas frescas,1
+73b8bdf09f,Hamburguesa de Portobello,031ccb997e,Mayonesa de ajo,1
+24b96e2e69,Hamburguesa de Queso Azul,e70328935a,Pan de hamburguesa,1
+24b96e2e69,Hamburguesa de Queso Azul,1384839fbe,Carne de res,1
+24b96e2e69,Hamburguesa de Queso Azul,d9175cd0ab,Queso azul,1
+24b96e2e69,Hamburguesa de Queso Azul,85552371f9,Cebolla caramelizada,1
+24b96e2e69,Hamburguesa de Queso Azul,8c6d70bd7e,Rúcula,1
+6b6bd5ce9f,Hamburguesa de Queso de Cabra,e70328935a,Pan de hamburguesa,1
+6b6bd5ce9f,Hamburguesa de Queso de Cabra,1384839fbe,Carne de res,1
+6b6bd5ce9f,Hamburguesa de Queso de Cabra,018aa592b1,Queso de cabra,1
+6b6bd5ce9f,Hamburguesa de Queso de Cabra,85552371f9,Cebolla caramelizada,1
+6b6bd5ce9f,Hamburguesa de Queso de Cabra,b8c943dcd7,Espinacas frescas,1
+5a6574e79f,Hamburguesa de Salmón,a8bd25d75e,Pan de hamburguesa artesanal,1
+5a6574e79f,Hamburguesa de Salmón,8f36f2c5c3,Filete de Salmón a la parrilla,1
+5a6574e79f,Hamburguesa de Salmón,ec89361b80,Lechuga,1
+5a6574e79f,Hamburguesa de Salmón,02e409c8bf,Tomate,1
+5a6574e79f,Hamburguesa de Salmón,ab2da8d916,Cebolla roja,1
+5a6574e79f,Hamburguesa de Salmón,635212bf6c,Salsa tártara,1

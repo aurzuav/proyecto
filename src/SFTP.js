@@ -1,5 +1,6 @@
 const Client = require('ssh2-sftp-client');
 const fs = require('fs');
+const xml2js = require('xml2js');
 
 const config = {
   host: 'langosta.ing.puc.cl', // Coloca el nombre de host o la dirección IP del servidor SFTP
@@ -19,13 +20,12 @@ sftp.connect(config)
     const xmlFiles = data.filter(file => /\.(xml)$/i.test(file.name));
     console.log('Archivos XML en la carpeta "pedidos":');
     xmlFiles.forEach(file => {
-      console.log(file.name);
+      //console.log(file.name);
     });
 
     if (xmlFiles.length > 0) {
         const firstXmlFile = xmlFiles[0];
         console.log(`Leyendo el primer archivo XML: ${firstXmlFile.name}`);
-  
         const localPath = `./${firstXmlFile.name}`;
         return sftp.get(`pedidos/${firstXmlFile.name}`, localPath) // Descargar el primer archivo XML
           .then(() => {
@@ -42,6 +42,19 @@ sftp.connect(config)
           .then(fileContent => {
             console.log('Contenido del primer archivo XML:');
             console.log(fileContent);
+            xml2js.parseString(fileContent, (err, result) => {
+                if (err) {
+                  console.error('Error al analizar el XML:', err);
+                  return;
+                }
+                // Obtener el ID, SKU y cantidad del objeto resultante
+                const id = result.order.id[0];
+                const sku = result.order.sku[0];
+                const cantidad = result.order.qty[0];
+                console.log('ID:', id);
+                console.log('SKU:', sku);
+                console.log('Cantidad:', cantidad);
+            });
             fs.unlinkSync(localPath); // Eliminar archivo descargado
             return sftp.end(); // Cerrar conexión SFTP
           });
