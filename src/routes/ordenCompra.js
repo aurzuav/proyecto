@@ -54,7 +54,7 @@ const crearOrden = async (requestBody) => {
     );
     console.log(response.data);
     if (response.status === 201){
-      notificarOrden(response.data)
+      notificarOrden(response.data, 5)
     }
   } catch (error) {
     console.log(error.response.data);
@@ -78,7 +78,7 @@ const obtenerOrden = async (idOrden) => {
     );
     console.log(response.data);
     if (response.status === 201){
-      notificarActualizacion(response.data)
+      notificarActualizacion(response.data, 5)
     }
   } catch (error) {
     console.log(error.response.data);
@@ -107,7 +107,7 @@ const actualizarOrden = async (requestBody, idOrden) => {
 };
 
 //notificar al grupo que la orden fue creada
-const notificarOrden = async (data) => {
+const notificarOrden = async (data, group) => {
   try {
     const headers = {
       "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
@@ -120,7 +120,7 @@ const notificarOrden = async (data) => {
       "urlNotificacion": "nosequeesesto.cl"
    }
     const response = await axios.post(
-      `http://lagarto5.ing.puc.cl/ordenes-compra/${data.id}`,
+      `http://lagarto${group}.ing.puc.cl/ordenes-compra/${data.id}`,
       requestBody,
       {headers}
     );
@@ -131,7 +131,7 @@ const notificarOrden = async (data) => {
 };
 
 //notificar al grupo que la orden fue actualizada
-const notificarActualizacion = async (data) => {
+const notificarActualizacion = async (data, group) => {
   try {
     const headers = {
       "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
@@ -144,7 +144,7 @@ const notificarActualizacion = async (data) => {
       "urlNotificacion": "nosequeesesto.cl"
    }
     const response = await axios.post(
-      `http://lagarto5.ing.puc.cl/ordenes-compra/${data.id}`,
+      `http://lagarto${group}.ing.puc.cl/ordenes-compra/${data.id}`,
       requestBody,
       {headers}
     );
@@ -159,7 +159,7 @@ async function manejarOrden(pedido){
     requestBody = {"estado": "aceptada"}
     idOrden = pedido.id
     try {
-      await actualizarOrden(requestBody, idOrden);
+      await actualizarOrden(requestBody, idOrden, 5);
       await producir_orden(idOrden);
     } catch (error) {
       console.log(error);
@@ -193,7 +193,8 @@ async function producir_orden(idOrden){
           console.log(formula)
           for (let ingrediente in formula) {
             const ingredient = Productdictionary[ingrediente];
-            if (JSON.parse(ingredient.gruposProductores).includes(5)) {
+            const array_groups = JSON.parse(ingredient.gruposProductores)
+            if (array_groups.includes(5)) {
               console.log("entro al if")
               if (formula.hasOwnProperty(ingrediente)) {
                 const qty = ingredient.loteProduccion
@@ -202,7 +203,10 @@ async function producir_orden(idOrden){
               }
             }
             else { // ask ingredient to another group
-              console.log("entro al else")
+              const length = array_groups.length;
+              const value = Math.random() * length;
+              const group = array_groups[Math.floor(value)];
+              notificarOrden(ingredient, group);
             }
         }
 
