@@ -7,46 +7,16 @@ const moment = require("moment");
 const producirSku = require("./producir.js")
 
 
+const { getCSVDictionaryProducts, getCSVDictionaryFormula } = require('./obtenerDiccionarios');
+
 // Se usa el excel de la E2
 const Productdictionary = {};
 const Formuladictionary = {}; // Declara la variable dictionary fuera de la función
 
-async function getCSVDictionary(dictionary, filePath) {
-  console.log("get CSV file...");
-
-  try {
-    await readCSVFile(filePath, dictionary); // Espera a que se complete la lectura del archivo y se llene el diccionario
-    //console.log(dictionary); // Ahora puedes usar dictionary fuera de la función
-    // Continúa con el resto del código que depende del diccionario
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-function readCSVFile(filePath, dictionary) {
-  return new Promise((resolve, reject) => {
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on("data", (row) => {
-        const keys = Object.keys(row);
-        const key = row[keys[0]];
-
-        const values = keys.slice(1).map((column) => row[column]);
-
-        dictionary[key] = values;
-      })
-      .on("end", () => {
-        resolve();
-      })
-      .on("error", (error) => {
-        reject(error);
-      });
-  });
-}
 
 // Llama a la función getCSVDictionary para comenzar la carga del diccionario
-getCSVDictionary(Productdictionary, "./products_E2.csv");
-getCSVDictionary(Formuladictionary, "./formulas_E2.csv");
+getCSVDictionaryProducts(Productdictionary, "./products_E2.csv");
+getCSVDictionaryFormula(Formuladictionary, "./formulas_E2.csv");
 
 // Esta es una funcion para obtener el token, la usamos para hacer los llamados a la API (necesitan el token como autorizacion)
 async function getToken() {
@@ -213,27 +183,21 @@ async function producir_orden(idOrden){
         sku = response.data.sku
         console.log(sku)
         const producto = Productdictionary[sku];
-        //console.log(producto)
+        console.log(producto)
         // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
         
-        if(producto[9] === "cocina"){
-          ingredientes = []
-          Object.keys(Formuladictionary).forEach(key => {
-            if (key === sku) {
-              ingredientes.push({
-                llave: key,
-                valor: Formuladictionary[key]
-              });
-            }
-          });
+        if(producto.produccion === "cocina"){
+          const formula = Formuladictionary[sku].ingredientes;
           console.log("voy aproducir")
-          console.log(ingredientes)
-          //falta hacer que la cantidad calce con el lote de manera automatica
-          producirSku(ingredientes[0].valor[1], 6)
-
+          console.log(formula)
+          for (let ingrediente in formula) {
+            if (formula.hasOwnProperty(ingrediente)) {
+              qty = 2 //falta hacer que calce con el lote
+              producirSku(ingrediente, qty)
+            }
         } 
 
-    }
+    }}
         catch (error) {
         console.log(error)
     }
@@ -276,10 +240,11 @@ function procesarPedidos() {
       console.log(pedidos);
       //for cada pedido, manejar orden
       manejarOrden(pedidos[0])
+      //console.log(Formuladictionary);
+      //console.log(Productdictionary);
       
     })
     .catch(error => {
-      console.log(Formuladictionary)
       console.error('Error:', error.message);
     });
 }
