@@ -17,6 +17,7 @@ async function getCSVDictionary(dictionary, filePath) {
     await readCSVFile(filePath, dictionary); // Espera a que se complete la lectura del archivo y se llene el diccionario
     //console.log(dictionary); // Ahora puedes usar dictionary fuera de la función
     // Continúa con el resto del código que depende del diccionario
+
   } catch (error) {
     console.error(error);
   }
@@ -28,11 +29,14 @@ function readCSVFile(filePath, dictionary) {
       .pipe(csv())
       .on("data", (row) => {
         const keys = Object.keys(row);
-        const key = row[keys[0]];
-
+        const key = row[keys[0]].toString();
         const values = keys.slice(1).map((column) => row[column]);
-
-        dictionary[key] = values;
+        if (!dictionary[key]) {
+          dictionary[key] = []; // Inicializa un array vacío si la clave no existe aún en el diccionario
+        }
+        dictionary[key].push(values); // Agrega los valores al array de la clave correspondiente        
+        
+        
       })
       .on("end", () => {
         resolve();
@@ -45,7 +49,7 @@ function readCSVFile(filePath, dictionary) {
 
 // Llama a la función getCSVDictionary para comenzar la carga del diccionario
 getCSVDictionary(Productdictionary, "./products_E2.csv");
-getCSVDictionary(Formuladictionary, "./formulas_E2.csv");
+//getCSVDictionary(Formuladictionary, "./formulas_E2.csv");
 
 // Esta es una funcion para obtener el token, la usamos para hacer los llamados a la API (necesitan el token como autorizacion)
 async function getToken() {
