@@ -1,6 +1,7 @@
 const getToken = require("../app");
 const axios = require("axios");
 
+
 async function producirSku(sku, quantity){
         try {
             const token = await getToken();

@@ -18,6 +18,7 @@ const Formuladictionary = {}; // Declara la variable dictionary fuera de la func
 getCSVDictionaryProducts(Productdictionary, "./products_E2.csv");
 getCSVDictionaryFormula(Formuladictionary, "./formulas_E2.csv");
 
+
 // Esta es una funcion para obtener el token, la usamos para hacer los llamados a la API (necesitan el token como autorizacion)
 async function getToken() {
   try {
@@ -183,7 +184,7 @@ async function producir_orden(idOrden){
         sku = response.data.sku
         console.log(sku)
         const producto = Productdictionary[sku];
-        console.log(producto)
+        const groups = producto.gruposProductores;
         // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
         
         if(producto.produccion === "cocina"){
@@ -191,11 +192,20 @@ async function producir_orden(idOrden){
           console.log("voy aproducir")
           console.log(formula)
           for (let ingrediente in formula) {
-            if (formula.hasOwnProperty(ingrediente)) {
-              qty = 2 //falta hacer que calce con el lote
-              producirSku(ingrediente, qty)
+            const ingredient = Productdictionary[ingrediente];
+            if (JSON.parse(ingredient.gruposProductores).includes(5)) {
+              console.log("entro al if")
+              if (formula.hasOwnProperty(ingrediente)) {
+                const qty = ingredient.loteProduccion
+                console.log(qty);
+                producirSku(ingrediente, qty)
+              }
             }
-        } 
+            else { // ask ingredient to another group
+              console.log("entro al else")
+            }
+        }
+
 
     }}
         catch (error) {
