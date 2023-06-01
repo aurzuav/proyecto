@@ -4,6 +4,7 @@ const router = new Router();
 const fs = require("fs");
 const csv = require("csv-parser");
 const moment = require("moment");
+const producirSku = require("./producir.js")
 
 
 // Se usa el excel de la E2
@@ -121,8 +122,9 @@ const actualizarOrden = async (requestBody, idOrden) => {
       "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
       Authorization: "Bearer " + token,
     };
+    console.log(requestBody)
     const response = await axios.post(
-      `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/${idOrden}/estado`,
+      `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}/estado`,
       requestBody,
       {headers}
     );
@@ -181,12 +183,24 @@ const notificarActualizacion = async (data) => {
   }
 };
 
-
+async function manejarOrden(pedido){
+  try {
+    requestBody = {"estado": "aceptada"}
+    idOrden = pedido.id
+    try {
+      await actualizarOrden(requestBody, idOrden);
+      await producir_orden(idOrden);
+    } catch (error) {
+      console.log(error);
+    }
+    
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 
 async function producir_orden(idOrden){
-    //obtener orden
-
     try {
         const token = await getToken();
         const headers = {
@@ -197,11 +211,26 @@ async function producir_orden(idOrden){
             `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
             {headers})
         sku = response.data.sku
-        //console.log(sku)
+        console.log(sku)
         const producto = Productdictionary[sku];
+        //console.log(producto)
         // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
+        
         if(producto[9] === "cocina"){
-          //buscar en formulas
+          ingredientes = []
+          Object.keys(Formuladictionary).forEach(key => {
+            if (key === sku) {
+              ingredientes.push({
+                llave: key,
+                valor: Formuladictionary[key]
+              });
+            }
+          });
+          console.log("voy aproducir")
+          console.log(ingredientes)
+          //falta hacer que la cantidad calce con el lote de manera automatica
+          producirSku(ingredientes[0].valor[1], 6)
+
         } 
 
     }
@@ -215,25 +244,48 @@ async function producir_orden(idOrden){
 module.exports = router;
 
 //prueba crear orden
-const fechaActualUtc = moment.utc();
-const fechaHoraUtc4 = fechaActualUtc.add(4, "hours").format("YYYY-MM-DD HH:mm:ss");
-const requestBody = {
-  "cliente":"5",
-  "proveedor":"7",
-  "sku":"22993410e2",
-  "cantidad":4,
-  "vencimiento":fechaHoraUtc4
-}
-crearOrden(requestBody)
+// const fechaActualUtc = moment.utc();
+// const fechaHoraUtc4 = fechaActualUtc.add(4, "hours").format("YYYY-MM-DD HH:mm:ss");
+// const requestBody = {
+//   "cliente":"5",
+//   "proveedor":"7",
+//   "sku":"22993410e2",
+//   "cantidad":4,
+//   "vencimiento":fechaHoraUtc4
+// }
+// crearOrden(requestBody)
 
-//prueba obtener orden
-// idOrden = "64777c884d301e5af39ca255"
+// prueba obtener orden
+// idOrden = "6477d6983a956b399c778e0b"
 // obtenerOrden(idOrden)
 
 
 //prueba Actualizar estado de Orden de Compra
 // requestBody = {
-//   "estado": "Aceptada"
+//   "estado": "aceptada"
 // }
-// idOrden = ""
+// idOrden = "6477d6983a956b399c778e0b"
 // actualizarOrden(requestBody, idOrden)
+
+const leerArchivosXML = require('../SFTP2.js');
+
+function procesarPedidos() {
+  leerArchivosXML()
+    .then(pedidos => {
+      
+      console.log(pedidos);
+      //for cada pedido, manejar orden
+      manejarOrden(pedidos[0])
+      
+    })
+    .catch(error => {
+      console.log(Formuladictionary)
+      console.error('Error:', error.message);
+    });
+}
+
+// Llamar a la función inicialmente
+procesarPedidos();
+
+// Ejecutar la función cada 15 minutos
+setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos

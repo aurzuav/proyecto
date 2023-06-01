@@ -70,10 +70,11 @@ async function getToken() {
   }
 }
 
+module.exports = getToken;
 // vinculo nuevos archivos
-const producirRouter = require('./routes/producir');
-const producir = producirRouter({ getToken });
-app.use(producir.routes()).use(producir.allowedMethods())
+// const producirRouter = require('./routes/producir');
+// const producir = producirRouter({ getToken });
+// app.use(producir.routes()).use(producir.allowedMethods())
 
 const ordenCompra = require('./routes/ordenCompra');
 app.use(ordenCompra.routes())
