@@ -185,6 +185,7 @@ async function producir_orden(idOrden){
         console.log(sku)
         const producto = Productdictionary[sku];
         const groups = producto.gruposProductores;
+        const qty_burger = producto.loteProduccion;
         // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
         
         if(producto.produccion === "cocina"){
@@ -207,14 +208,53 @@ async function producir_orden(idOrden){
               const value = Math.random() * length;
               const group = array_groups[Math.floor(value)];
               notificarOrden(ingredient, group);
+              await wait_ingredient(ingrediente);
+
             }
         }
+        producirSku(producto, qty_burger);
 
 
     }}
         catch (error) {
         console.log(error)
     }
+}
+
+async function wait_ingredient(sku){
+  try {
+      const token = await getToken();
+      const headers = {
+          "Content-Type": "application/json", // Adjust the content type if necessary
+          Authorization: "Bearer " + token,
+        };
+      let condition = 1;
+      while (condition == 1) {
+        // iterate over all stores
+        const stores = await axios.get(
+          `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores`,
+          {headers});
+        const array_stores = stores.data;
+        for (let store in array_stores){
+        const response = await axios.get(
+          `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
+          {headers});
+        const array_inventory = response.data;
+        for (product in array_inventory){
+          if (product.sku === sku){
+            if (product.cantidad > 0){
+              condition = 0;
+              break;
+            }
+          }
+        }
+      }
+
+      
+  }}
+      catch (error) {
+      console.log(error)
+  }
 }
 
 //producir_orden("6470ffd12abc3cdd7509ff9d")
