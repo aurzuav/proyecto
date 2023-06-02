@@ -166,6 +166,7 @@ async function manejarOrden(pedido) {
       await actualizarOrden(requestBody, idOrden, 5);
       await producir_orden(idOrden);
       await ReceptionToKitchen(idOrden);
+
     } catch (error) {
       console.log(error);
     }
@@ -193,7 +194,7 @@ async function producir_orden(idOrden){
         const qty_burger = producto.loteProduccion;
         // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
         
-        if(producto.produccion === "cocina"){
+        if(producto.produccion === "cocina"){ // si es una hamburguesa
           const formula = Formuladictionary[sku].ingredientes;
           console.log("voy aproducir")
           console.log(formula)
@@ -217,6 +218,8 @@ async function producir_orden(idOrden){
 
             }
         }
+        producirSku(sku, qty_burger);
+        await wait_preparation(formula);
       }
   } catch (error) {
     console.log(error);
@@ -274,13 +277,22 @@ async function wait_ingredient(sku){
             }
           }
         }
-      }
-
-      
+      }   
   }}
       catch (error) {
       console.log(error)
   }
+}
+
+async function wait_preparation(ingredients) {
+  let time = 0;
+  for (let ingredient in ingredients) {
+    time += ingredient.duracionEsperada;
+  }
+  //timeout
+  setTimeout(() => {
+    console.log("Esperando produccion");}, time
+  )
 }
 
 //producir_orden("6470ffd12abc3cdd7509ff9d")
