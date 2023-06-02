@@ -172,23 +172,6 @@ async function manejarOrden(pedido) {
   }
 }
 
-async function producir_orden(idOrden) {
-  try {
-    const token = await getToken();
-    const headers = {
-      "Content-Type": "application/json", // Adjust the content type if necessary
-      Authorization: "Bearer " + token,
-    };
-    const response = await axios.get(
-      `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
-      { headers }
-    );
-    sku = response.data.sku;
-    const producto = Productdictionary[sku];
-    console.log(producto)
-    // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
-
-
 async function producir_orden(idOrden){
     try {
         const token = await getToken();
@@ -232,7 +215,6 @@ async function producir_orden(idOrden){
         }
         producirSku(producto, qty_burger);
       }
-    }
   } catch (error) {
     console.log(error);
   }
