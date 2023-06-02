@@ -110,6 +110,8 @@ const actualizarOrden = async (requestBody, idOrden) => {
 
 //notificar al grupo que la orden fue creada
 const notificarOrden = async (data, group) => {
+  // console.log("notificando orden");
+  // console.log(group);
   try {
     const headers = {
       "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
@@ -126,7 +128,7 @@ const notificarOrden = async (data, group) => {
       requestBody,
       { headers }
     );
-    //.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.log(error.response.data);
   }
@@ -150,7 +152,7 @@ const notificarActualizacion = async (data, group) => {
       requestBody,
       { headers }
     );
-    //console.log(response.data);
+    console.log(response.data);
   } catch (error) {
     console.log(error.response.data);
   }
@@ -185,6 +187,8 @@ async function producir_orden(idOrden){
         sku = response.data.sku
         console.log(sku)
         const producto = Productdictionary[sku];
+        console.log("producto")
+        console.log(producto)
         const groups = producto.gruposProductores;
         const qty_burger = producto.loteProduccion;
         // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
@@ -213,7 +217,6 @@ async function producir_orden(idOrden){
 
             }
         }
-        producirSku(producto, qty_burger);
       }
   } catch (error) {
     console.log(error);

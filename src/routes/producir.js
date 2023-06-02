@@ -19,13 +19,6 @@ async function producirSku(sku, quantity){
         } catch (error) {
           console.log(error.response.data)
         }
-
-      }
-    ); // Replace with the API endpoint URL
-    //console.log(response.data)
-  } catch (error) {
-    console.log(error.response.data);
-  }
 }
 
 module.exports = producirSku;
