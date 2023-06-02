@@ -14,7 +14,6 @@ const router = new Router();
 const port = 3000;
 
 app.use(KoaLogger());
-
 app.use(router.routes());
 app.use(router.allowedMethods());
 app.use(bodyParser());
@@ -27,8 +26,6 @@ app.use(async (ctx, next) => {
 });
 
 let productDictionary = {};
-
-
 
 // gets token
 router.get("/", async (ctx) => {
@@ -45,7 +42,7 @@ router.get("/", async (ctx) => {
     ); // Replace with the API endpoint URL
     ctx.body = response.data.token;
     const token = response.data.token;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error.message };
@@ -83,7 +80,7 @@ app.use(ordenCompra.routes())
 router.get("/dispatch", async (ctx) => {
   try {
     const token = await getToken();
-    console.log("dispatch");
+    //console.log("dispatch");
     console.log(token);
 
     const headers = {
@@ -99,7 +96,7 @@ router.get("/dispatch", async (ctx) => {
       }
     ); // Replace with the API endpoint URL
     ctx.body = response.data;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error.message };
@@ -112,8 +109,8 @@ router.get("/dispatch", async (ctx) => {
 router.get("/product", async (ctx) => {
   try {
     const token = await getToken();
-    console.log("product");
-    console.log(token);
+    //console.log("product");
+    //console.log(token);
     const headers = {
       "Content-Type": "application/json", // Adjust the content type if necessary
       Authorization: "Bearer " + token,
@@ -144,7 +141,7 @@ router.get("/inventory", async (ctx) => {
       "Content-Type": "application/json", // Adjust the content type if necessary
       Authorization: "Bearer " + `${token}`,
     };
-    console.log(headers);
+    //console.log(headers);
     const response = await axios.get(
       "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
@@ -164,7 +161,6 @@ router.get("/inventory", async (ctx) => {
 });
 
 // Este llamado es para obtener el inventario de cada bodega e imprimirlo en consola
-// creo que este no tiene nada hardcodeado, revisenlo igual
 router.get("/stocks", async (ctx) => {
   const token = await getToken();
   try {
@@ -178,7 +174,7 @@ router.get("/stocks", async (ctx) => {
         headers,
       }
     );
-    console.log(storesResponse.data);
+    //console.log(storesResponse.data);
     const stores = storesResponse.data;
     const products = [];
     for (const store of stores) {
@@ -208,7 +204,7 @@ router.get("/stocks", async (ctx) => {
         }
       }
     }
-    console.log(products);
+    //console.log(products);
     ctx.body = JSON.stringify(products, null, 2);
   } catch (error) {
     ctx.status = 500;
@@ -266,7 +262,7 @@ router.get("/dashboard", async (ctx) => {
       }
     }
     ctx.body = table;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error.message };
