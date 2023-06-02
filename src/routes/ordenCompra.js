@@ -211,8 +211,8 @@ async function producir_orden(idOrden){
             }
             else { // ask ingredient to another group
               const length = array_groups.length;
-              const value = Math.random() * length;
-              const group = array_groups[Math.floor(value)];
+              const value = Math.floor(Math.random() * length);
+              const group = array_groups[value];
               notificarOrden(ingredient, group);
               await wait_ingredient(ingrediente);
 
@@ -264,12 +264,12 @@ async function wait_ingredient(sku){
           `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores`,
           {headers});
         const array_stores = stores.data;
-        for (let store in array_stores){
+        for (let store of array_stores){
         const response = await axios.get(
           `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
           {headers});
         const array_inventory = response.data;
-        for (product in array_inventory){
+        for (let product of array_inventory){
           if (product.sku === sku){
             if (product.cantidad > 0){
               condition = 0;
@@ -287,12 +287,10 @@ async function wait_ingredient(sku){
 async function wait_preparation(ingredients) {
   let time = 0;
   for (let ingredient in ingredients) {
-    time += ingredient.duracionEsperada;
+    time += ingredients[ingredient].duracionEsperada;
   }
   //timeout
-  setTimeout(() => {
-    console.log("Esperando produccion");}, time
-  )
+  await new Promise(resolve => setTimeout(resolve, time));
 }
 
 //producir_orden("6470ffd12abc3cdd7509ff9d")
