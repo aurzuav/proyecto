@@ -4,15 +4,17 @@ const router = new Router();
 const fs = require("fs");
 const csv = require("csv-parser");
 const moment = require("moment");
-const producirSku = require("./producir.js")
+const producirSku = require("./producir.js");
+const moveProduct = require("./moveProduct.js");
 
-
-const { getCSVDictionaryProducts, getCSVDictionaryFormula } = require('./obtenerDiccionarios');
+const {
+  getCSVDictionaryProducts,
+  getCSVDictionaryFormula,
+} = require("./obtenerDiccionarios");
 
 // Se usa el excel de la E2
 const Productdictionary = {};
 const Formuladictionary = {}; // Declara la variable dictionary fuera de la función
-
 
 // Llama a la función getCSVDictionary para comenzar la carga del diccionario
 getCSVDictionaryProducts(Productdictionary, "./products_E2.csv");
@@ -25,11 +27,11 @@ async function getToken() {
       "Content-Type": "application/json",
     };
     const response = await axios.post(
-        "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/autenticar",
-        { group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
-        {
-          headers,
-        }
+      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/autenticar",
+      { group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
+      {
+        headers,
+      }
     );
     return response.data.token;
   } catch (error) {
@@ -49,17 +51,16 @@ const crearOrden = async (requestBody) => {
     const response = await axios.post(
       `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes`,
       requestBody,
-      {headers}
+      { headers }
     );
-    console.log(response.data);
-    if (response.status === 201){
-      notificarOrden(response.data)
+    //console.log(response.data);
+    if (response.status === 201) {
+      notificarOrden(response.data);
     }
   } catch (error) {
     console.log(error.response.data);
   }
 };
-
 
 //obtener orden de compra
 const obtenerOrden = async (idOrden) => {
@@ -75,9 +76,9 @@ const obtenerOrden = async (idOrden) => {
         headers,
       }
     );
-    console.log(response.data);
-    if (response.status === 201){
-      notificarActualizacion(response.data)
+    //console.log(response.data);
+    if (response.status === 201) {
+      notificarActualizacion(response.data);
     }
   } catch (error) {
     console.log(error.response.data);
@@ -92,14 +93,14 @@ const actualizarOrden = async (requestBody, idOrden) => {
       "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
       Authorization: "Bearer " + token,
     };
-    console.log(requestBody)
+    //console.log(requestBody)
     const response = await axios.post(
       `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}/estado`,
       requestBody,
-      {headers}
+      { headers }
     );
-    console.log(response.data);
-    return response.data
+    //console.log(response.data);
+    return response.data;
   } catch (error) {
     console.log(error.response.data);
   }
@@ -112,18 +113,18 @@ const notificarOrden = async (data) => {
       "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
     };
     const requestBody = {
-      "cliente": data.cliente,
-      "sku": data.sku,
-      "fechaEntrega": data.vencimiento,
-      "cantidad": data.cantidad,
-      "urlNotificacion": "nosequeesesto.cl"
-   }
+      cliente: data.cliente,
+      sku: data.sku,
+      fechaEntrega: data.vencimiento,
+      cantidad: data.cantidad,
+      urlNotificacion: "nosequeesesto.cl",
+    };
     const response = await axios.post(
       `http://lagarto5.ing.puc.cl/ordenes-compra/${data.id}`,
       requestBody,
-      {headers}
+      { headers }
     );
-    console.log(response.data);
+    //.log(response.data);
   } catch (error) {
     console.log(error.response.data);
   }
@@ -136,71 +137,101 @@ const notificarActualizacion = async (data) => {
       "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
     };
     const requestBody = {
-      "cliente": data.cliente,
-      "sku": data.sku,
-      "fechaEntrega": data.vencimiento,
-      "cantidad": data.cantidad,
-      "urlNotificacion": "nosequeesesto.cl"
-   }
+      cliente: data.cliente,
+      sku: data.sku,
+      fechaEntrega: data.vencimiento,
+      cantidad: data.cantidad,
+      urlNotificacion: "nosequeesesto.cl",
+    };
     const response = await axios.post(
       `http://lagarto5.ing.puc.cl/ordenes-compra/${data.id}`,
       requestBody,
-      {headers}
+      { headers }
     );
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     console.log(error.response.data);
   }
 };
 
-async function manejarOrden(pedido){
+async function manejarOrden(pedido) {
   try {
-    requestBody = {"estado": "aceptada"}
-    idOrden = pedido.id
+    requestBody = { estado: "aceptada" };
+    idOrden = pedido.id;
     try {
       await actualizarOrden(requestBody, idOrden);
       await producir_orden(idOrden);
+      await ReceptionToKitchen(idOrden);
     } catch (error) {
       console.log(error);
     }
-    
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
+async function producir_orden(idOrden) {
+  try {
+    const token = await getToken();
+    const headers = {
+      "Content-Type": "application/json", // Adjust the content type if necessary
+      Authorization: "Bearer " + token,
+    };
+    const response = await axios.get(
+      `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
+      { headers }
+    );
+    sku = response.data.sku;
+    const producto = Productdictionary[sku];
+    console.log(producto)
+    // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
 
-async function producir_orden(idOrden){
-    try {
-        const token = await getToken();
-        const headers = {
-            "Content-Type": "application/json", // Adjust the content type if necessary
-            Authorization: "Bearer " + token,
-          };
-          const response = await axios.get(
-            `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
-            {headers})
-        sku = response.data.sku
-        console.log(sku)
-        const producto = Productdictionary[sku];
-        console.log(producto)
-        // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
-        
-        if(producto.produccion === "cocina"){
-          const formula = Formuladictionary[sku].ingredientes;
-          console.log("voy aproducir")
-          console.log(formula)
-          for (let ingrediente in formula) {
-            if (formula.hasOwnProperty(ingrediente)) {
-              qty = 2 //falta hacer que calce con el lote
-              producirSku(ingrediente, qty)
-            }
-        } 
-
-    }}
-        catch (error) {
-        console.log(error)
+    if (producto.produccion === "cocina") {
+      const formula = Formuladictionary[sku].ingredientes;
+      //console.log("voy aproducir")
+      console.log(formula)
+      for (let sku in formula) {
+        const ingrediente = Productdictionary[sku];
+        if (JSON.parse(ingrediente.gruposProductores).includes(5)) {
+          if (formula.hasOwnProperty(ingrediente)) {
+            //ingrediente es el sku del ingrediente
+            const qty = ingrediente.loteProduccion;
+            producirSku(sku, qty);
+            console.log("PRODUCIR",sku, qty);
+          }
+        } else {
+          // ask ingredient to another group
+          //console.log("entro al else")
+        }
+      }
     }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function ReceptionToKitchen(idOrden) {
+  try {
+    const token = await getToken();
+    const headers = {
+      "Content-Type": "application/json", // Adjust the content type if necessary
+      Authorization: "Bearer " + token,
+    };
+    const response = await axios.get(
+      `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
+      { headers }
+    );
+    sku = response.data.sku;
+    const formula = Formuladictionary[sku].ingredientes
+    
+    // CAMBIAR DE BODEGA DE RECEPCION A COCINA EL INGREDIENTE QUE NECESITAMOS PARA LA HAMBURGUESA
+    for (let sku in formula) {
+      moveProduct(sku);
+    }
+    
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 //producir_orden("6470ffd12abc3cdd7509ff9d")
@@ -223,7 +254,6 @@ module.exports = router;
 // idOrden = "6477d6983a956b399c778e0b"
 // obtenerOrden(idOrden)
 
-
 //prueba Actualizar estado de Orden de Compra
 // requestBody = {
 //   "estado": "aceptada"
@@ -231,21 +261,19 @@ module.exports = router;
 // idOrden = "6477d6983a956b399c778e0b"
 // actualizarOrden(requestBody, idOrden)
 
-const leerArchivosXML = require('../SFTP2.js');
+const leerArchivosXML = require("../SFTP2.js");
 
 function procesarPedidos() {
   leerArchivosXML()
-    .then(pedidos => {
-      
-      console.log(pedidos);
+    .then((pedidos) => {
+      //console.log(pedidos);
       //for cada pedido, manejar orden
-      manejarOrden(pedidos[0])
+      manejarOrden(pedidos[0]);
       //console.log(Formuladictionary);
       //console.log(Productdictionary);
-      
     })
-    .catch(error => {
-      console.error('Error:', error.message);
+    .catch((error) => {
+      console.error("Error:", error.message);
     });
 }
 
