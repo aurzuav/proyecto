@@ -10,7 +10,7 @@ async function producirSku(sku, quantity){
                 "Content-Type": "application/json", // Adjust the content type if necessary
                 Authorization: "Bearer " + token,
               };
-            const response = await axios.get(
+            const response = await axios.post(
                 "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products ",
                 { sku: `${sku}`, quantity: `${quantity}` },
                 {
