@@ -166,6 +166,13 @@ async function manejarOrden(pedido) {
       await actualizarOrden(requestBody, idOrden, 5);
       await producir_orden(idOrden);
       await ReceptionToKitchen(idOrden);
+    } catch (error) {
+      console.log(error);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
       
 async function producir_orden(idOrden){
