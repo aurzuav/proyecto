@@ -1,9 +1,8 @@
-const Router = require('koa-router');
+const getToken = require("../app");
 const axios = require("axios");
 
-module.exports = function ({getToken, sku, ingrediente}){
-    const router = new Router();
-    router.get('/producir', async (ctx) => {
+
+async function producirSku(sku, quantity){
         try {
           console.log("INGREDIENTE", ingrediente)
             const token = await getToken();
@@ -11,23 +10,17 @@ module.exports = function ({getToken, sku, ingrediente}){
                 "Content-Type": "application/json", // Adjust the content type if necessary
                 Authorization: "Bearer " + token,
               };
-            const sku = sku
-            const quantity = ingrediente.loteProduccion 
             const response = await axios.post(
-                "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl//warehouse/products ",
+                "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products ",
                 { sku: `${sku}`, quantity: `${quantity}` },
                 {
                   headers,
                 }
               ); // Replace with the API endpoint URL
-            ctx.body = response.data;
+              console.log(response.data)
         } catch (error) {
-            ctx.status = 500;
-            ctx.body = { error: error.message };
+          console.log(error.response.data)
         }
-    })
-    return router;
-};
+}
 
-
-
+module.exports = producirSku;

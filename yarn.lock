@@ -1193,7 +1193,8 @@
     "promise-retry" "^2.0.1"
     "ssh2" "^1.12.0"
 
-"ssh2@^1.12.0":
+
+"ssh2@^1.12.0", "ssh2@^1.13.0":
   "integrity" "sha512-CIZBFRRY1y9mAZSqBGFE4EB4dNJad2ysT2PqO8OpkiI3UTB/gUZwE5EaN16qVyQ6s/M7EgC/iaV/MnjdlvnuzA=="
   "resolved" "https://registry.npmjs.org/ssh2/-/ssh2-1.13.0.tgz"
   "version" "1.13.0"
