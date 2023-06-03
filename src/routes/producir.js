@@ -1,8 +1,10 @@
 const getToken = require("../app");
 const axios = require("axios");
 
+
 async function producirSku(sku, quantity){
         try {
+          console.log("INGREDIENTE", ingrediente)
             const token = await getToken();
             const headers = {
                 "Content-Type": "application/json", // Adjust the content type if necessary

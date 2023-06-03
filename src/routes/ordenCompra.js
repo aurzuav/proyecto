@@ -167,17 +167,10 @@ async function manejarOrden(pedido) {
       await producir_orden(idOrden);
       await ReceptionToKitchen(idOrden);
 
-    } catch (error) {
-      console.log(error);
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
-
+      
 async function producir_orden(idOrden){
     try {
-        const token = await getToken();
+      const token = await getToken();
         const headers = {
             "Content-Type": "application/json", // Adjust the content type if necessary
             Authorization: "Bearer " + token,
@@ -186,14 +179,13 @@ async function producir_orden(idOrden){
             `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
             {headers})
         sku = response.data.sku
-        console.log(sku)
+        //console.log(sku)
         const producto = Productdictionary[sku];
         console.log("producto")
         console.log(producto)
         const groups = producto.gruposProductores;
         const qty_burger = producto.loteProduccion;
         // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
-        
         if(producto.produccion === "cocina"){ // si es una hamburguesa
           const formula = Formuladictionary[sku].ingredientes;
           console.log("voy aproducir")
@@ -293,7 +285,7 @@ async function wait_preparation(ingredients) {
   await new Promise(resolve => setTimeout(resolve, time));
 }
 
-//producir_orden("6470ffd12abc3cdd7509ff9d")
+producir_orden("6470ffd12abc3cdd7509ff9d")
 
 module.exports = router;
 
