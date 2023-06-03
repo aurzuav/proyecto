@@ -10,7 +10,7 @@ async function ReceptionToKitchen(idOrden) {
 			Authorization: "Bearer " + token,
 		};
 		const response = await axios.get(
-			`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
+			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
 			{ headers }
 		);
 		sku = response.data.sku;

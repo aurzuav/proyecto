@@ -19,7 +19,7 @@ async function produceBurgers(BurgersinProdution, ready_for_production, Productd
                 Authorization: "Bearer " + token,
             };
             const response = await axios.post(
-                "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products ",
+                "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products ",
                 { sku: `${sku}`, quantity: `${quantity}` },
                 {
                     headers,

@@ -10,7 +10,7 @@ async function moveProduct(sku) {
       Authorization: "Bearer " + `${token}`,
     };
     const storesResponse = await axios.get(
-      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
         headers,
       }
@@ -32,7 +32,7 @@ async function moveProduct(sku) {
     });
     // INVENTARIO DE BODEGA (RECEPCION)
     const stockResponse = await axios.get(
-      `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/inventory`,
+      `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/inventory`,
       {
         headers,
       }
@@ -44,7 +44,7 @@ async function moveProduct(sku) {
       if (ingrediente.sku == sku) {
         //OBTENER DETALLE DE INGREDIENTE, PARA OBTENER ID
         const detalleIngrediente = await axios.get(
-          `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/products?sku=${sku}`,
+          `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/products?sku=${sku}`,
           {
             headers,
           }
@@ -53,7 +53,7 @@ async function moveProduct(sku) {
         productoId = detalleIngrediente.data[0]._id;
         //SI INGREDIENTE ESTA EN EL INVENTARIO, CAMBIAR A BODEGA KITCHEN
         const move = await axios.patch(
-          `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/${productoId}`,
+          `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/${productoId}`,
           { store: `${kitchenId}` },
           { headers }
         );

@@ -36,7 +36,7 @@ async function getToken() {
 			"Content-Type": "application/json",
 		};
 		const response = await axios.post(
-			"https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/autenticar",
+			"https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/autenticar",
 			{ group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
 			{
 				headers,
@@ -49,29 +49,6 @@ async function getToken() {
 	}
 }
 
-// //crear orden
-// const crearOrden = async (requestBody) => {
-//   try {
-//     const token = await getToken();
-//     const headers = {
-//       "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
-//       Authorization: "Bearer " + token,
-//     };
-//     const response = await axios.post(
-//       `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes`,
-//       requestBody,
-//       { headers }
-//     );
-
-//     console.log(response.data);
-//     if (response.status === 201){
-//       notificarOrden(response.data, 5)
-//     }
-//   } catch (error) {
-//     console.log(error.response.data);
-//   }
-// };
-
 //obtener orden de compra
 const obtenerOrden = async (idOrden) => {
 	try {
@@ -81,7 +58,7 @@ const obtenerOrden = async (idOrden) => {
 			Authorization: "Bearer " + token,
 		};
 		const response = await axios.get(
-			`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
+			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
 			{
 				headers,
 			}
@@ -105,7 +82,7 @@ const actualizarOrden = async (requestBody, idOrden) => {
 		};
 		//console.log(requestBody)
 		const response = await axios.post(
-			`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}/estado`,
+			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}/estado`,
 			requestBody,
 			{ headers }
 		);
@@ -167,7 +144,7 @@ async function producir_orden(idOrden) {
 			Authorization: "Bearer " + token,
 		};
 		const response = await axios.get(
-			`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
+			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
 			{ headers })
 		//const sku = response.data.sku
 		const sku = "d9175cd0ab";
@@ -198,8 +175,10 @@ async function producir_orden(idOrden) {
 						//console.log(group);
 						const stock = getStock(ingrediente, ind_group);
 						if (stock === 1) {
+							console.log("entro al if de stock");
+							console.log(ind_group);
 							const fechaActualUtc = moment.utc();
-							const fechaHoraUtc4 = fechaActualUtc.add(4, "hours").format("YYYY-MM-DD HH:mm:ss");
+							const fechaHoraUtc4 = fechaActualUtc.add(0.5, "hours").format("YYYY-MM-DD HH:mm:ss");
 							const requestBody = {
 								"cliente": "5",
 								"proveedor": ind_group,
@@ -269,7 +248,7 @@ function procesarPedidos() {
 		.then((pedidos) => {
 			//console.log(pedidos);
 			//for cada pedido, manejar orden
-			manejarOrden(pedidos[0]);
+			manejarOrden(pedidos[1]);
 			//console.log(Formuladictionary);
 			//console.log(Productdictionary);
 		})
