@@ -202,10 +202,10 @@ async function producir_orden(idOrden){
             const array_groups = JSON.parse(ingredient.gruposProductores)
             if (array_groups.includes(5)) {
               console.log("entro al if")
-              if (formula.hasOwnProperty(ingrediente)) {
+              if (formula.hasOwnProperty(ingredient)) {
                 const qty = ingredient.loteProduccion
                 console.log(qty);
-                producirSku(ingrediente, qty)
+                producirSku(ingredient, qty)
               }
             }
             else { // ask ingredient to another group
