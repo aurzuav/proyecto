@@ -185,13 +185,15 @@ async function producir_orden(idOrden){
           const response = await axios.get(
             `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
             {headers})
-        sku = response.data.sku
+        const sku = response.data.sku
         //console.log(sku)
         const producto = Productdictionary[sku];
         console.log("producto")
         console.log(producto)
         const groups = producto.gruposProductores;
         const qty_burger = producto.loteProduccion;
+        console.log("quantity");
+        console.log(qty_burger);
         // si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
         if(producto.produccion === "cocina"){ // si es una hamburguesa
           const formula = Formuladictionary[sku].ingredientes;
@@ -202,8 +204,8 @@ async function producir_orden(idOrden){
             const array_groups = JSON.parse(ingredient.gruposProductores)
             if (array_groups.includes(5)) {
               console.log("entro al if")
-              if (formula.hasOwnProperty(ingredient)) {
-                const qty = ingredient.loteProduccion
+              if (formula.hasOwnProperty(ingrediente)) {
+                const qty = parseInt(ingredient.loteProduccion);
                 console.log(qty);
                 producirSku(ingredient, qty)
               }
