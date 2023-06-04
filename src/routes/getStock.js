@@ -26,7 +26,7 @@ async function getStock(sku, group) {
         }
         return 0;
     } catch (error) {
-        throw new Error(error.message);
+        console.log(error.message);
     }
 }
 

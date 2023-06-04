@@ -1,4 +1,4 @@
-const getToken = require("../app");
+const getToken = require("./ordenCompra");
 const axios = require("axios");
 
 
@@ -21,7 +21,7 @@ async function newOrder(requestBody) {
             return response.data;
         }
     } catch (error) {
-        console.log(error.response.data);
+        console.log(error.message);
     }
 };
 

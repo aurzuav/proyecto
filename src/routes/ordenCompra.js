@@ -7,7 +7,7 @@ const moment = require("moment");
 const producirSku = require("./producir.js");
 const moveProduct = require("./moveProduct.js");
 const getStock = require("./getStock.js");
-const newOrder = require("./newOrder.js");
+//const newOrder = require("./newOrder.js");
 const notifyOrder = require("./notifyOrder.js");
 const checkIngredients = require("./checkIngredients.js");
 const produceBurgers = require("./produceBurgers.js");
@@ -37,7 +37,7 @@ async function getToken() {
 		};
 		const response = await axios.post(
 			"https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/autenticar",
-			{ group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
+			{ group: 5, secret: "J6RyeTrwNgX.Z+*MKh4EaBuLn" },
 			{
 				headers,
 			}
@@ -48,6 +48,7 @@ async function getToken() {
 		return null;
 	}
 }
+
 
 //obtener orden de compra
 const obtenerOrden = async (idOrden) => {
@@ -146,13 +147,13 @@ async function producir_orden(idOrden) {
 		const response = await axios.get(
 			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
 			{ headers })
-		//const sku = response.data.sku
-		const sku = "d9175cd0ab";
+		const sku = response.data.sku;
 		const producto = Productdictionary[sku];
 		const groups = producto.gruposProductores;
 		const qty_burger = producto.loteProduccion;
 		// si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
 		if (producto.produccion === "cocina") { // si es una hamburguesa
+			console.log("es una hamburguesa")
 			const formula = Formuladictionary[sku].ingredientes;
 			for (let ingrediente in formula) {
 				const ingredient = Productdictionary[ingrediente];
@@ -166,40 +167,43 @@ async function producir_orden(idOrden) {
 					}
 				}
 				else { // ask ingredient to another group
-					for (ind_group in array_groups) {
+					for (indice in array_groups) {
+						const grupoProductor = array_groups[indice].toString()
 						console.log("entro al else");
 						// const length = array_groups.length;
 						// const value = Math.floor(Math.random() * length);
 						// const group = array_groups[value];
 						//const group = 1;
-						//console.log(group);
-						const stock = getStock(ingrediente, ind_group);
+						const stock = await getStock(ingrediente, grupoProductor);
+						console.log(`el stock es:${stock}`)
 						if (stock === 1) {
 							console.log("entro al if de stock");
-							console.log(ind_group);
+							console.log(grupoProductor);
 							const fechaActualUtc = moment.utc();
-							const fechaHoraUtc4 = fechaActualUtc.add(0.5, "hours").format("YYYY-MM-DD HH:mm:ss");
+							const fechaHoraUtc4 = fechaActualUtc.add(4, "hours").format("YYYY-MM-DD HH:mm:ss");
 							const requestBody = {
 								"cliente": "5",
-								"proveedor": ind_group,
+								"proveedor": grupoProductor,
 								"sku": ingrediente,
-								"cantidad": ingredient.loteProduccion,
+								"cantidad": parseInt(ingredient.loteProduccion),
 								"vencimiento": fechaHoraUtc4
 							};
+							console.log(requestBody)
 							try {
-								const order = newOrder(requestBody);
-							} catch (error) {
-								console.log(error);
-							}
-							const requestBody1 = {
-								"cliente": "5",
-								"sku": ingredient.sku,
-								"fechaEntrega": Date.now(),
-								"cantidad": ingredient.loteProduccion,
-								"urlNotificacion": `http://lagarto${ind_group}.ing.puc.cl/ordenes-compra/${order.id}`,
-							};
-							try {
-								notifyOrder(requestBody1, ind_group, order.id);
+								const order = await newOrder(requestBody);
+								console.log(order)
+								const requestBody1 = {
+									"cliente": "5",
+									"sku": ingredient.sku,
+									"fechaEntrega": Date.now(),
+									"cantidad": ingredient.loteProduccion,
+									"urlNotificacion": `http://lagarto${grupoProductor}.ing.puc.cl/ordenes-compra/${order.id}`,
+								};
+								try {
+									notifyOrder(requestBody1, grupoProductor, order.id);
+								} catch (error) {
+									console.log(error);
+								}
 							} catch (error) {
 								console.log(error);
 							}
@@ -208,13 +212,36 @@ async function producir_orden(idOrden) {
 			}
 		}}
 	} catch (error) {
-		console.log(error);
+		console.log(error.message);
 	}
 }
 
 
+async function newOrder(requestBody) {
+    try {
+        const token = await getToken();
+        const headers = {
+            "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
+            Authorization: "Bearer " + token,
+        };
+        const response = await axios.post(
+            `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes`,
+            requestBody,
+            { headers }
+        );
 
-producir_orden("6470ffd12abc3cdd7509ff9d")
+        console.log(response.data);
+        if (response.status === 201) {
+            console.log("ORDEN CREADA");
+            return response.data;
+        }
+    } catch (error) {
+		console.log("error en newOrder")
+        console.log(error.request.data);
+    }
+};
+
+
 
 module.exports = router;
 
@@ -242,13 +269,16 @@ module.exports = router;
 // actualizarOrden(requestBody, idOrden)
 
 const leerArchivosXML = require("../SFTP2.js");
+const { response } = require("express");
 
 function procesarPedidos() {
 	leerArchivosXML()
 		.then((pedidos) => {
 			//console.log(pedidos);
 			//for cada pedido, manejar orden
-			manejarOrden(pedidos[1]);
+			console.log(pedidos)
+			//obtenerOrden(pedidos[0].id);
+			manejarOrden(pedidos[0]);
 			//console.log(Formuladictionary);
 			//console.log(Productdictionary);
 		})
