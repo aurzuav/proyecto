@@ -91,7 +91,7 @@ module.exports =  router;
 // idOrden = "6477d6983a956b399c778e0b"
 // actualizarOrden(requestBody, idOrden)
 
-const leerArchivosXML = require("../SFTP2.js");
+const leerArchivosXML = require("../SFTP3.js");
 const { response } = require("express");
 
 function procesarPedidos() {
