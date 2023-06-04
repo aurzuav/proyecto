@@ -8,7 +8,7 @@ const Router = require("koa-router");
 const fs = require("fs");
 const csv = require("csv-parser");
 const bodyParser = require("koa-bodyparser");
-const manejarOrden = require("./routes/ordenCompra");
+const manejarOrden = require("./routes/manejarOrden.js");
 
 const app = new Koa();
 const router = new Router();
@@ -399,7 +399,7 @@ app.use(async (ctx, next) => {
     console.log("Orden creada exitosamente");
     console.log(nuevaOrden);
     // manejar la orden
-    manejarOrden(nuevaOrden);
+    manejarOrden(nuevaOrden, "nuestrocanal");
 
   }
 

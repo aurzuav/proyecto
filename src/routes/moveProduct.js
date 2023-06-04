@@ -57,6 +57,7 @@ async function moveProduct(sku) {
           { store: `${kitchenId}` },
           { headers }
         );
+        console.log("define");
         console.log("MOVE", move.data);
       } else {
         //console.log("NO HAY INGREDIENTE",sku);
