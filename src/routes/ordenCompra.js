@@ -94,6 +94,7 @@ module.exports =  router;
 const leerArchivosXML = require("../SFTP3.js");
 const { response } = require("express");
 
+
 function procesarPedidos() {
 	leerArchivosXML()
 		.then((pedidos) => {
@@ -107,6 +108,7 @@ function procesarPedidos() {
 			console.error("Error:", error.message);
 		});
 }
+
 
 // Llamar a la función inicialmente
 procesarPedidos();
