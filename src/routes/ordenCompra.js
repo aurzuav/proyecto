@@ -113,31 +113,31 @@ module.exports =  router;
 // idOrden = "6477d6983a956b399c778e0b"
 // actualizarOrden(requestBody, idOrden)
 
-const leerArchivosXML = require("../SFTP3.js");
+const leerArchivosXML = require("../SFTP2.js");
 const { response } = require("express");
 
 function procesarPedidos() {
-// 	leerArchivosXML()
-// 		.then((pedidos) => {
-// 			//console.log(pedidos);
-// 			//for cada pedido, manejar orden
-// 			console.log("aaaa")
-// 			console.log(pedidos)
-// 			//obtenerOrden(pedidos[0].id);
-// 			for (let pedido in pedidos){
-
-// 				console.log(pedidos[pedido])
-// 				manejarOrden(pedidos[pedido], "SFTP")
-// 			}
+	leerArchivosXML()
+		.then((pedidos) => {
+			//console.log(pedidos);
+			//for cada pedido, manejar orden
+			console.log("aaaa")
+			console.log(pedidos)
+			//obtenerOrden(pedidos[0].id);
+			// for (let pedido in pedidos){
+			// 	console.log(pedidos[pedido])
+			// 	manejarOrden(pedidos[pedido], "SFTP")
+			// }
+			//manejarOrden(pedidos[0].id, "SFTP")
 				
-// 			//console.log(Formuladictionary);
-// 			//console.log(Productdictionary);
-// 		})
-// 		.catch((error) => {
-// 			console.error("Error:", error.message);
-// 		});
-// }
+			//console.log(Formuladictionary);
+			//console.log(Productdictionary);
+		})
+		.catch((error) => {
+			console.error("Error:", error.message);
+		});
 }
+
 // Llamar a la función inicialmente
 procesarPedidos();
 

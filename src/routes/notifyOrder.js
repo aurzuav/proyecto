@@ -8,7 +8,7 @@ async function notifyOrder(estado, group, orderId) {
 		const headers = {
 			"Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
 		};
-		const response = await axios.post(
+		const response = await axios.patch(
 			`http://lagarto${group}.ing.puc.cl/ordenes-compra/ordenes/${orderId}/estado`,
 			{ "estado": estado},
 			{ headers }
@@ -17,7 +17,6 @@ async function notifyOrder(estado, group, orderId) {
 		console.log( response.data);
 	} catch (error) {
 		console.log("NO FUNCIONO notify :((((")
-		console.log(error);
 	}
 };
 

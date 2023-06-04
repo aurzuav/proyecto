@@ -117,20 +117,28 @@ async function manejarOrden(OrderId, canal) {
         console.log("llego aca");
 		try {
 			console.log(OrderId, canal)
-			const stock = await getStockRecepcion(datos.sku, 5)
-			if (stock >= datos.cantidad){
-				console.log("lo tengo")
-				requestBody = {"estado":"aceptada"}
-				await actualizarOrden(requestBody, OrderId, canal);
-				await ReceptionToDispatch(OrderId, canal, datos.cantidad)
-			}else{
-				//producir
-				console.log("no lo tengo")
+			if (canal === "grupo"){
+				const stock = await getStockRecepcion(datos.sku, 5)
+				if (stock >= datos.cantidad){
+					console.log("lo tengo")
+					requestBody = {"estado":"aceptada"}
+					await actualizarOrden(requestBody, OrderId, canal);
+					await ReceptionToDispatch(OrderId, canal, datos.cantidad)
+				}else{
+					//producir
+					console.log("no lo tengo")
+					requestBody = {"estado":"rechazada"}
+					await producir_orden(OrderId);
+					await actualizarOrden(requestBody, OrderId, canal);
+					
+				}
+			}else if (canal === "SFTP"){
+				console.log("SFTP")
 				await producir_orden(OrderId);
-				await ReceptionToKitchen(OrderId, Formuladictionary, canal);
-				console.log("post producir") 
 			}
+			
             //console.log("llego aca 4")
+			//await ReceptionToKitchen(OrderId, Formuladictionary, canal);
 		} catch (error) {
 			console.log(error);
 		}

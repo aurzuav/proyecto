@@ -2,6 +2,7 @@ const axios = require("axios");
 const getToken = require("./getToken")
 const poblar_or = require("../ordenes_recibidas.js")
 const obtenerOrden = require("./obtenerOrden")
+const notifyOrder = require("./notifyOrder.js");
 
 async function actualizarOrden(requestBody, idOrden, canal){
 	try {
@@ -21,6 +22,8 @@ async function actualizarOrden(requestBody, idOrden, canal){
 		if (requestBody.estado === "aceptada"){
 			await poblar_or(datos.id, "creada", datos.sku, datos.cantidad,canal)
 		}
+		console.log(requestBody.estado)
+		await notifyOrder(requestBody.estado, datos.cliente, idOrden);
 		return response.data;
 	} catch (error) {
 		console.log("error funcion actualizar")
