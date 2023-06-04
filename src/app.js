@@ -8,12 +8,13 @@ const Router = require("koa-router");
 const fs = require("fs");
 const csv = require("csv-parser");
 const bodyParser = require("koa-bodyparser");
+const manejarOrden = require("./routes/manejarOrden.js");
 
 const app = new Koa();
 const router = new Router();
 const port = 3000;
 
-
+app.use(KoaLogger());
 app.use(router.routes());
 app.use(router.allowedMethods());
 app.use(bodyParser());
@@ -42,7 +43,7 @@ router.get("/", async (ctx) => {
     ); // Replace with the API endpoint URL
     ctx.body = response.data.token;
     const token = response.data.token;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error.message };
@@ -67,11 +68,20 @@ async function getToken() {
   }
 }
 
+module.exports = getToken;
+// vinculo nuevos archivos
+// const producirRouter = require('./routes/producir');
+// const producir = producirRouter({ getToken });
+// app.use(producir.routes()).use(producir.allowedMethods())
+
+const ordenCompra = require('./routes/ordenCompra');
+app.use(ordenCompra.routes())
+
 // dispatches products - ver input productid y orderid
 router.get("/dispatch", async (ctx) => {
   try {
     const token = await getToken();
-    console.log("dispatch");
+    //console.log("dispatch");
     console.log(token);
 
     const headers = {
@@ -87,7 +97,7 @@ router.get("/dispatch", async (ctx) => {
       }
     ); // Replace with the API endpoint URL
     ctx.body = response.data;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error.message };
@@ -100,8 +110,8 @@ router.get("/dispatch", async (ctx) => {
 router.get("/product", async (ctx) => {
   try {
     const token = await getToken();
-    console.log("product");
-    console.log(token);
+    //console.log("product");
+    //console.log(token);
     const headers = {
       "Content-Type": "application/json", // Adjust the content type if necessary
       Authorization: "Bearer " + token,
@@ -132,7 +142,7 @@ router.get("/inventory", async (ctx) => {
       "Content-Type": "application/json", // Adjust the content type if necessary
       Authorization: "Bearer " + `${token}`,
     };
-    console.log(headers);
+    //console.log(headers);
     const response = await axios.get(
       "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
@@ -152,7 +162,6 @@ router.get("/inventory", async (ctx) => {
 });
 
 // Este llamado es para obtener el inventario de cada bodega e imprimirlo en consola
-// creo que este no tiene nada hardcodeado, revisenlo igual
 router.get("/stocks", async (ctx) => {
   const token = await getToken();
   try {
@@ -166,7 +175,7 @@ router.get("/stocks", async (ctx) => {
         headers,
       }
     );
-    console.log(storesResponse.data);
+    //console.log(storesResponse.data);
     const stores = storesResponse.data;
     const products = [];
     for (const store of stores) {
@@ -196,7 +205,7 @@ router.get("/stocks", async (ctx) => {
         }
       }
     }
-    console.log(products);
+    //console.log(products);
     ctx.body = JSON.stringify(products, null, 2);
   } catch (error) {
     ctx.status = 500;
@@ -254,7 +263,7 @@ router.get("/dashboard", async (ctx) => {
       }
     }
     ctx.body = table;
-    console.log(response.data);
+    //console.log(response.data);
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: error.message };
@@ -280,44 +289,47 @@ function dashboardStock (product){
 }
 
 
-function getCSVDictionary() {
-  console.log("get CSV file...");
-  const filePath = "./products.csv";
+// //se usa el excel de la E2
+// function getCSVDictionary() {
+//   console.log("get CSV file...");
+//   const filePath = "./products_E2.csv";
 
-  readCSVFile(filePath)
-    .then((dictionary) => {
-      productDictionary = dictionary;
-      //console.log(dictionary);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
+//   readCSVFile(filePath)
+//     .then((dictionary) => {
+//       productDictionary = dictionary;
+//       //console.log(dictionary);
+//     })
+//     .catch((error) => {
+//       console.error(error);
+//     });
+// }
 
-function readCSVFile(filePath) {
-  return new Promise((resolve, reject) => {
-    const dictionary = {};
 
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on("data", (row) => {
-        const keys = Object.keys(row);
-        const key = row[keys[0]];
+// function readCSVFile(filePath) {
+//   return new Promise((resolve, reject) => {
+//     const dictionary = {};
 
-        const values = keys.slice(1).map((column) => row[column]);
+//     fs.createReadStream(filePath)
+//       .pipe(csv())
+//       .on("data", (row) => {
+//         const keys = Object.keys(row);
+//         const key = row[keys[0]];
 
-        dictionary[key] = values;
-      })
-      .on("end", () => {
-        resolve(dictionary);
-      })
-      .on("error", (error) => {
-        reject(error);
-      });
-  });
-}
+//         const values = keys.slice(1).map((column) => row[column]);
 
-getCSVDictionary();
+//         dictionary[key] = values;
+//       })
+//       .on("end", () => {
+//         resolve(dictionary);
+//       })
+//       .on("error", (error) => {
+//         reject(error);
+//       });
+//   });
+// }
+
+// getCSVDictionary();
+
 
 // servicios
 
@@ -327,6 +339,7 @@ const ordenesRecibidas2 = [];
 const ordenesRecibidas3 = [];
 const listInstructions = [];
 const listInstructions2 = [];
+
 
 // servicio 2 - recibe orden
 app.use(async (ctx, next) => {
@@ -385,6 +398,9 @@ app.use(async (ctx, next) => {
 
     console.log("Orden creada exitosamente");
     console.log(nuevaOrden);
+    // manejar la orden
+    manejarOrden(nuevaOrden.id, "grupo");
+
   }
 
   await next();
@@ -423,8 +439,6 @@ app.use(async (ctx, next) => {
         JSON.stringify(ordenesRecibidas2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
       );
     }else{
-
-      
       orden.estado = ctx.request.body.estado;
 
       ctx.status = 204;
@@ -449,6 +463,7 @@ app.use(async (ctx, next) => {
     await next();
   }
 });
+
 
 function writeFile(nombre_archivo, data) {
   fs.writeFile(nombre_archivo, data, (err) => {

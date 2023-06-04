@@ -1,9 +1,9 @@
 [
   {
-    "id": "1",
-    "cliente": "4af9f23d8ead0e1d320000a1",
-    "sku": 100,
-    "fechaEntrega": 1623195349833,
+    "id": "647c6ed54b02183549d34e3b",
+    "cliente": "7",
+    "sku": "",
+    "fechaEntrega": "",
     "cantidad": 5,
     "urlNotificacion": "http://example.com/oc/4af9f23d8ead0e1d320000a1",
     "estado": "recibida"
