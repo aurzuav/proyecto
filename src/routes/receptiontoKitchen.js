@@ -1,8 +1,10 @@
-const getToken = require("../app");
+const getToken = require("./getToken");
 const axios = require("axios");
+const moveProduct = require("./moveProduct")
 
 
-async function ReceptionToKitchen(idOrden) {
+
+async function ReceptionToKitchen(idOrden, Formuladictionary) {
 	try {
 		const token = await getToken();
 		const headers = {

@@ -1,4 +1,3 @@
-const getToken = require("../app");
 const axios = require("axios");
 
 async function checkIngredients(BurgersinProdution, dict_products, dict_formula, ready_for_production) {
@@ -8,10 +7,8 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
         const array_ingredients = dict_formula[burger];
         let igd_available = 0;
 		try {
-			const token = await getToken();
 			const headers = {
 				"Content-Type": "application/json", // Adjust the content type if necessary
-				Authorization: "Bearer " + token,
 			};
 			let condition = 1;
 			while (condition == 1) {

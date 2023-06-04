@@ -7,11 +7,12 @@ const moment = require("moment");
 const producirSku = require("./producir.js");
 const moveProduct = require("./moveProduct.js");
 const getStock = require("./getStock.js");
-//const newOrder = require("./newOrder.js");
+const newOrder = require("./newOrder.js");
 const notifyOrder = require("./notifyOrder.js");
 const checkIngredients = require("./checkIngredients.js");
 const produceBurgers = require("./produceBurgers.js");
 const ReceptionToKitchen = require("./receptiontoKitchen.js");
+const getToken = require("./getToken");
 
 const {
 	getCSVDictionaryProducts,
@@ -29,25 +30,25 @@ getCSVDictionaryProducts(Productdictionary, "./products_E2.csv");
 getCSVDictionaryFormula(Formuladictionary, "./formulas_E2.csv");
 
 
-// Esta es una funcion para obtener el token, la usamos para hacer los llamados a la API (necesitan el token como autorizacion)
-async function getToken() {
-	try {
-		const headers = {
-			"Content-Type": "application/json",
-		};
-		const response = await axios.post(
-			"https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/autenticar",
-			{ group: 5, secret: "J6RyeTrwNgX.Z+*MKh4EaBuLn" },
-			{
-				headers,
-			}
-		);
-		return response.data.token;
-	} catch (error) {
-		console.error(error);
-		return null;
-	}
-}
+// // Esta es una funcion para obtener el token, la usamos para hacer los llamados a la API (necesitan el token como autorizacion)
+// async function getToken() {
+// 	try {
+// 		const headers = {
+// 			"Content-Type": "application/json",
+// 		};
+// 		const response = await axios.post(
+// 			"https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/autenticar",
+// 			{ group: 5, secret: "J6RyeTrwNgX.Z+*MKh4EaBuLn" },
+// 			{
+// 				headers,
+// 			}
+// 		);
+// 		return response.data.token;
+// 	} catch (error) {
+// 		console.error(error);
+// 		return null;
+// 	}
+// }
 
 
 //obtener orden de compra
@@ -127,7 +128,7 @@ async function manejarOrden(pedido) {
 		try {
 			await actualizarOrden(requestBody, idOrden, 5);
 			await producir_orden(idOrden);
-			await ReceptionToKitchen(idOrden);
+			await ReceptionToKitchen(idOrden, Formuladictionary);
 		} catch (error) {
 			console.log(error);
 		}
@@ -156,6 +157,7 @@ async function producir_orden(idOrden) {
 			console.log("es una hamburguesa")
 			const formula = Formuladictionary[sku].ingredientes;
 			for (let ingrediente in formula) {
+				console.log(ingrediente)
 				const ingredient = Productdictionary[ingrediente];
 				const array_groups = JSON.parse(ingredient.gruposProductores)
 				if (array_groups.includes(5)) {
@@ -214,36 +216,13 @@ async function producir_orden(idOrden) {
 	} catch (error) {
 		console.log(error.message);
 	}
+	console.log("ya produjimos/pedimos todo")
 }
 
 
-async function newOrder(requestBody) {
-    try {
-        const token = await getToken();
-        const headers = {
-            "Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
-            Authorization: "Bearer " + token,
-        };
-        const response = await axios.post(
-            `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes`,
-            requestBody,
-            { headers }
-        );
-
-        console.log(response.data);
-        if (response.status === 201) {
-            console.log("ORDEN CREADA");
-            return response.data;
-        }
-    } catch (error) {
-		console.log("error en newOrder")
-        console.log(error.request.data);
-    }
-};
 
 
-
-module.exports = router;
+module.exports =  router;
 
 //prueba crear orden
 // const fechaActualUtc = moment.utc();

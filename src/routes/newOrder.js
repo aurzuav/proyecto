@@ -1,6 +1,5 @@
-const getToken = require("./ordenCompra");
+const getToken = require("./getToken");
 const axios = require("axios");
-
 
 async function newOrder(requestBody) {
     try {
@@ -21,7 +20,8 @@ async function newOrder(requestBody) {
             return response.data;
         }
     } catch (error) {
-        console.log(error.message);
+		console.log("error en newOrder")
+        console.log(error.request.data);
     }
 };
 

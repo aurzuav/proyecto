@@ -1,13 +1,10 @@
-const getToken = require("../app");
 const axios = require("axios");
 
 
 async function getStock(sku, group) {
     try {
-        const token = await getToken();
         const headers = {
             "Content-Type": "application/json",
-            Authorization: "Bearer " + `${token}`,
         };
         // first we get stores
         const inventoryResponse = await axios.get(

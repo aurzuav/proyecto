@@ -1,4 +1,3 @@
-const getToken = require("../app");
 const axios = require("axios");
 
 async function notifyOrder(data, group, orderId) {
@@ -14,9 +13,11 @@ async function notifyOrder(data, group, orderId) {
 			requestBody,
 			{ headers }
 		);
-		//console.log(response.data);
+		console.log("funcionó notify")
+		console.log( response.data);
 	} catch (error) {
-		console.log(error.response.data);
+		console.log("NO FUNCIONO notify :((((")
+		//console.log(error);
 	}
 };
 
