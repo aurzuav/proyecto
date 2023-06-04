@@ -1,6 +1,6 @@
 const moveProduct = require("./moveProduct")
 
-async function ReceptionToKitchen(datosOrden) {
+async function ReceptionToKitchen(datosOrden, Formuladictionary) {
 	try {
 		console.log("estoy en reception to kitchen")
 		sku = datosOrden.sku;

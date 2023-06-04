@@ -3,14 +3,19 @@ const getTokenW = require("./getTokenW");
 const getToken = require("./getToken");
 
 async function checkIngredients(BurgersinProdution, dict_products, dict_formula, ready_for_production) {
-	for (let burger in BurgersinProdution) { // burger is a sku
+	const length = BurgersinProdution.length;
+	for (let i = 0; i < length; i++) { // burger is a sku
+		// console.log("burgerrrrrr")
+		// console.log(BurgersinProdution[i]);
+		const burger = BurgersinProdution[i]
 		const info_burger = dict_products[burger];
 		const num_ingredients = JSON.parse(info_burger.numeroIngredientes);
-		const array_ingredients = dict_formula[burger];
+		const array_ingredients = dict_formula[burger].ingredientes;
 		let igd_available = 0;
-		console.log("check ingrediets");
 
 		for (let ingr in array_ingredients) {
+			// console.log("ing");
+			// console.log(ingr);
 			try {
 				const token = await getTokenW();
 				const headers = {
@@ -37,13 +42,29 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 					{ headers }
 				);
 				console.log("stores response");
-				console.log(storesResponse_);
+				console.log(storesResponse_.data);
+				if (storesResponse_.data.length > 0) {
+					console.log("entro al if del length")
+					igd_available += 1;
+				}
+
+				if (igd_available == num_ingredients) {
+					console.log("estan todos");
+					ready_for_production.push(burger);
+				}
 	
 			} catch (error) {
 				console.log(error.message);
 				return 0
 			}
 		}
+	}
+	//return ready_for_production
+}
+
+
+module.exports = checkIngredients;
+
 
 	
 		// try {
@@ -116,8 +137,3 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 		// 	console.log(error.message);
 		// 	return 0
 		// }
-	}
-}
-    //return ready_for_production;
-
-module.exports = checkIngredients;
