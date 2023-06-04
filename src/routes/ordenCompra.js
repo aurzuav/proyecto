@@ -114,8 +114,6 @@ procesarPedidos();
 // Ejecutar la función cada 15 minutos
 setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos
 
-setInterval(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
 
-setInterval(produceBurgers, 10 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
 
 

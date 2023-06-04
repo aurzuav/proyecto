@@ -54,7 +54,11 @@ async function manejarOrden(OrderId, canal) {
 				BurgersinProdution.push(datos.sku);
 				await actualizarOrden(requestBody, OrderId, canal);
 				await producir_orden(datos);
-				await ReceptionToKitchen(datos, Formuladictionary[datos.sku].ingredientes);
+				const formula = Formuladictionary[datos.sku].ingredientes;
+				console.log("receptiontokitchen")
+				await ReceptionToKitchen(datos, formula);
+				setInterval(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
+				setInterval(produceBurgers, 10 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
 			}
 			
 		} catch (error) {
@@ -88,10 +92,6 @@ async function producir_orden(datos) {
 					for (indice in array_groups) {
 						const grupoProductor = array_groups[indice].toString()
 						console.log("entro al else, estamos pidiendo");
-						// const length = array_groups.length;
-						// const value = Math.floor(Math.random() * length);
-						// const group = array_groups[value];
-						//const group = 1;
 						const stock = await getStock(ingrediente, grupoProductor);
 						console.log(`el stock es:${stock}`)
 						if (stock === 1) {

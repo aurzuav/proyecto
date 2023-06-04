@@ -1,7 +1,4 @@
-const getToken = require("./getToken");
-const axios = require("axios");
 const moveProduct = require("./moveProduct")
-const obtenerOrden = require("./obtenerOrden")
 
 async function ReceptionToKitchen(datosOrden) {
 	try {
