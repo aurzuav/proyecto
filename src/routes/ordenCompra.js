@@ -261,9 +261,11 @@ function procesarPedidos() {
 		.then((pedidos) => {
 			//console.log(pedidos);
 			//for cada pedido, manejar orden
+			console.log("aaaa")
 			console.log(pedidos)
 			//obtenerOrden(pedidos[0].id);
 			for (let pedido in pedidos){
+
 				console.log(pedidos[pedido])
 				manejarOrden(pedidos[pedido], "SFTP")
 			}

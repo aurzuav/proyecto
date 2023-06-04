@@ -781,7 +781,7 @@ koa-body@^6.0.1:
 
 koa-bodyparser@^4.4.0:
   version "4.4.0"
-  resolved "https://registry.npmjs.org/koa-bodyparser/-/koa-bodyparser-4.4.0.tgz"
+  resolved "https://registry.yarnpkg.com/koa-bodyparser/-/koa-bodyparser-4.4.0.tgz#2271cd7d603a08c47a47e82d2c00630379672e6c"
   integrity sha512-AXPY7wwKZUmbgb8VkTEUFoRNOlx6aWRJwEnQD+zfNf33/7KSAkN4Oo9BqlIk80D+5TvuqlhpQT5dPVcyxl5Zsw==
   dependencies:
     co-body "^6.0.0"
