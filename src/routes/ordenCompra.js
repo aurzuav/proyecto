@@ -57,29 +57,7 @@ getCSVDictionaryFormula(Formuladictionary, "./formulas_E2.csv");
 
 
 
-//notificar al grupo que la orden fue actualizada
-const notificarActualizacion = async (data, group) => {
-	try {
-		const headers = {
-			"Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
-		};
-		const requestBody = {
-			cliente: data.cliente,
-			sku: data.sku,
-			fechaEntrega: data.vencimiento,
-			cantidad: data.cantidad,
-			urlNotificacion: "nosequeesesto.cl",
-		};
-		const response = await axios.post(
-			`http://lagarto${group}.ing.puc.cl/ordenes-compra/${data.id}`,
-			requestBody,
-			{ headers }
-		);
-		console.log(response.data);
-	} catch (error) {
-		console.log(error.response.data);
-	}
-};
+
 
 
 
@@ -124,10 +102,10 @@ function procesarPedidos() {
 			console.log("aaaa")
 			console.log(pedidos)
 			//obtenerOrden(pedidos[0].id);
-			// for (let pedido in pedidos){
-			// 	console.log(pedidos[pedido])
-			// 	manejarOrden(pedidos[pedido], "SFTP")
-			// }
+			for (let pedido in pedidos){
+				console.log(pedidos[pedido])
+				manejarOrden(pedidos[pedido].id, "SFTP")
+			}
 			//manejarOrden(pedidos[0].id, "SFTP")
 				
 			//console.log(Formuladictionary);

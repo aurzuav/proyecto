@@ -12,6 +12,7 @@ const Formuladictionary = {};
 const Productdictionary = {};
 const moveProduct = require("./moveProduct.js");
 const notifyOrder = require("./notifyOrder.js");
+const notifyCreateOrder = require("./notifyCreateOrder.js");
 const getStock = require("./getStock.js")
 const producirSku = require("./producir.js");
 const moment = require("moment");
@@ -95,7 +96,6 @@ async function ReceptionToKitchen(idOrden, Formuladictionary, canal) {
 
               // Ahora notificamos al grupo
               console.log(idOrden);
-              notifyOrder("Aceptada", cliente, idOrden);
 
         }
 
@@ -110,11 +110,7 @@ async function ReceptionToKitchen(idOrden, Formuladictionary, canal) {
 
 async function manejarOrden(OrderId, canal) {
 	try {
-		requestBody = { estado: "aceptada" };
 		datos = await obtenerOrden(OrderId)
-		console.log(datos)
-		BurgersinProdution.push(datos.sku);
-        console.log("llego aca");
 		try {
 			console.log(OrderId, canal)
 			if (canal === "grupo"){
@@ -134,7 +130,11 @@ async function manejarOrden(OrderId, canal) {
 				}
 			}else if (canal === "SFTP"){
 				console.log("SFTP")
-				await producir_orden(OrderId);
+				requestBody = {"estado":"aceptada"}
+				BurgersinProdution.push(datos.sku);
+				await actualizarOrden(requestBody, OrderId, canal);
+				await producir_orden(OrderId, datos);
+				
 			}
 			
             //console.log("llego aca 4")
@@ -149,17 +149,9 @@ async function manejarOrden(OrderId, canal) {
 
 
 
-async function producir_orden(idOrden) {
+async function producir_orden(idOrden, datos) {
 	try {
-		const token = await getToken();
-		const headers = {
-			"Content-Type": "application/json", // Adjust the content type if necessary
-			Authorization: "Bearer " + token,
-		};
-		const response = await axios.get(
-			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
-			{ headers })
-		const sku = response.data.sku;
+		const sku = datos.sku;
 		const producto = Productdictionary[sku];
 		const groups = producto.gruposProductores;
 		const qty_burger = producto.loteProduccion;
@@ -183,7 +175,7 @@ async function producir_orden(idOrden) {
 				else { // ask ingredient to another group
 					for (indice in array_groups) {
 						const grupoProductor = array_groups[indice].toString()
-						console.log("entro al else");
+						console.log("entro al else, estamos pidiendo");
 						// const length = array_groups.length;
 						// const value = Math.floor(Math.random() * length);
 						// const group = array_groups[value];
@@ -207,18 +199,7 @@ async function producir_orden(idOrden) {
 							try {
 								const order = await newOrder(requestBody);
 								console.log(order)
-								const requestBody1 = {
-									"cliente": "5",
-									"sku": ingredient.sku,
-									"fechaEntrega": Date.now(),
-									"cantidad": ingredient.loteProduccion,
-									"urlNotificacion": `http://lagarto${grupoProductor}.ing.puc.cl/ordenes-compra/${order.id}`,
-								};
-								try {
-									notifyOrder(requestBody1, grupoProductor, order.id);
-								} catch (error) {
-									console.log(error);
-								}
+								await notifyCreateOrder(order)
 							} catch (error) {
 								console.log(error);
 							}
