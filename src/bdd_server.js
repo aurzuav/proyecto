@@ -1,6 +1,8 @@
 const fs = require('fs');
 const { Client } = require('ssh2');
 const { Pool } = require('pg');
+const poblar_or = require("../ordenes_recibidas.js")
+const poblar_oc = require("../ordenes_creadas.js")
 
 // Configuración de la conexión SSH
 const sshConfig = {

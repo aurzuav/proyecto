@@ -13,6 +13,7 @@ const checkIngredients = require("./checkIngredients.js");
 const produceBurgers = require("./produceBurgers.js");
 const ReceptionToKitchen = require("./receptiontoKitchen.js");
 const getToken = require("./getToken");
+const poblar_or = require("../ordenes_recibidas.js")
 
 const {
 	getCSVDictionaryProducts,
@@ -65,16 +66,17 @@ const obtenerOrden = async (idOrden) => {
 				headers,
 			}
 		);
-		console.log(response.data);
-		if (response.status === 201) {
-			notificarActualizacion(response.data, 5)
-		}
+
+		return (response.data);
+		// if (response.status === 201) {
+		// 	notificarActualizacion(response.data, 5)
+		// }
 	} catch (error) {
 		console.log(error.response.data);
 	}
 };
 
-const actualizarOrden = async (requestBody, idOrden) => {
+const actualizarOrden = async (requestBody, idOrden, canal) => {
 	try {
 		const token = await getToken();
 		const headers = {
@@ -88,6 +90,10 @@ const actualizarOrden = async (requestBody, idOrden) => {
 			{ headers }
 		);
 		//console.log(response.data);
+		
+		
+		const datos = await(obtenerOrden(idOrden))
+		poblar_or(datos.id, "creada", datos.sku, datos.cantidad,canal)
 		return response.data;
 	} catch (error) {
 		console.log(error.response.data);
@@ -119,13 +125,13 @@ const notificarActualizacion = async (data, group) => {
 };
 
 
-async function manejarOrden(pedido) {
+async function manejarOrden(pedido, canal) {
 	try {
 		requestBody = { estado: "aceptada" };
 		idOrden = pedido.id;
 		BurgersinProdution.push(pedido.sku);
 		try {
-			await actualizarOrden(requestBody, idOrden, 5);
+			await actualizarOrden(requestBody, idOrden, canal);
 			await producir_orden(idOrden);
 			await ReceptionToKitchen(idOrden, Formuladictionary);
 		} catch (error) {
@@ -247,7 +253,7 @@ module.exports =  router;
 // idOrden = "6477d6983a956b399c778e0b"
 // actualizarOrden(requestBody, idOrden)
 
-const leerArchivosXML = require("../SFTP2.js");
+const leerArchivosXML = require("../SFTP3.js");
 const { response } = require("express");
 
 function procesarPedidos() {
@@ -257,7 +263,11 @@ function procesarPedidos() {
 			//for cada pedido, manejar orden
 			console.log(pedidos)
 			//obtenerOrden(pedidos[0].id);
-			manejarOrden(pedidos[0]);
+			for (let pedido in pedidos){
+				console.log(pedidos[pedido])
+				manejarOrden(pedidos[pedido], "SFTP")
+			}
+				
 			//console.log(Formuladictionary);
 			//console.log(Productdictionary);
 		})

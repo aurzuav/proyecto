@@ -1,6 +1,6 @@
 const getToken = require("./getToken");
 const axios = require("axios");
-const poblar = require("../ordenes_creadas.js")
+const poblar_oc = require("../ordenes_creadas.js")
 
 async function newOrder(requestBody) {
     try {
@@ -18,7 +18,7 @@ async function newOrder(requestBody) {
         console.log(response.data);
         if (response.status === 201) {
             console.log("ORDEN CREADA");
-            poblar(response.data.id, "creada", requestBody.sku, requestBody.cantidad, requestBody.proveedor)
+            poblar_oc(response.data.id, "creada", requestBody.sku, requestBody.cantidad, requestBody.proveedor)
             return response.data;
         }
     } catch (error) {

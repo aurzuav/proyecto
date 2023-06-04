@@ -18,7 +18,7 @@ async function poblarTabla(id, estado, sku, cantidad, canal) {
     client = await pool.connect(); // Obtener una instancia de cliente de conexión
 
     await client.query(
-      `INSERT INTO ordenes_creadas (id, estado, sku, cantidad, canal)
+      `INSERT INTO ordenes_recibidas (id, estado, sku, cantidad, canal)
        VALUES ($1, $2, $3, $4, $5)`,
       [id, estado, sku, cantidad, canal]
     );
