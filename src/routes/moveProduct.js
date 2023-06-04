@@ -57,10 +57,9 @@ async function moveProduct(sku) {
           { store: `${kitchenId}` },
           { headers }
         );
-        console.log("define");
-        console.log("MOVE", move.data);
+        console.log("MOVI", move.data);
       } else {
-        //console.log("NO HAY INGREDIENTE",sku);
+        console.log("NO está el INGREDIENTE",sku);
       }
     }
   } catch (error) {
