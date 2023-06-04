@@ -91,39 +91,31 @@ module.exports =  router;
 // idOrden = "6477d6983a956b399c778e0b"
 // actualizarOrden(requestBody, idOrden)
 
-const leerArchivosXML = require("../SFTP2.js");
+const leerArchivosXML = require("../SFTP3.js");
 const { response } = require("express");
 
-// function procesarPedidos() {
-// 	leerArchivosXML()
-// 		.then((pedidos) => {
-// 			//console.log(pedidos);
-// 			//for cada pedido, manejar orden
-// 			console.log("aaaa")
-// 			console.log(pedidos)
-// 			//obtenerOrden(pedidos[0].id);
-// 			for (let pedido in pedidos){
-// 				console.log(pedidos[pedido])
-// 				manejarOrden(pedidos[pedido].id, "SFTP")
-// 			}
-// 			//manejarOrden(pedidos[0].id, "SFTP")
-				
-// 			//console.log(Formuladictionary);
-// 			//console.log(Productdictionary);
-// 		})
-// 		.catch((error) => {
-// 			console.error("Error:", error.message);
-// 		});
-// }
+
+function procesarPedidos() {
+	leerArchivosXML()
+		.then((pedidos) => {
+			for (let pedido in pedidos){
+				//console.log(pedidos[pedido])
+				manejarOrden(pedidos[pedido].id, "SFTP")
+			}
+			//manejarOrden(pedidos[0].id, "SFTP")
+		})
+		.catch((error) => {
+			console.error("Error:", error.message);
+		});
+}
+
 
 // Llamar a la función inicialmente
-//procesarPedidos();
+procesarPedidos();
 
 // Ejecutar la función cada 15 minutos
-//setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos
+setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos
 
-setInterval(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
 
-setInterval(produceBurgers, 10 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
 
 

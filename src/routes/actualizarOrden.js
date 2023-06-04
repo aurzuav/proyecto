@@ -6,7 +6,6 @@ const notifyOrder = require("./notifyOrder.js");
 
 async function actualizarOrden(requestBody, idOrden, canal){
 	try {
-		console
 		const token = await getToken();
 		const headers = {
 			"Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
@@ -19,15 +18,13 @@ async function actualizarOrden(requestBody, idOrden, canal){
 		);
 		const datos = await obtenerOrden(idOrden)
 		//falta update
-		console.log(requestBody.estado)
 		if (requestBody.estado === "aceptada"){
 			await poblar_or(datos.id, "creada", datos.sku, datos.cantidad,canal)
 		}
-		console.log(requestBody.estado)
 		if (datos.cliente !== "999"){
 			await notifyOrder(requestBody.estado, datos.cliente, idOrden);
 		}
-		console.log(response.data)
+		console.log("actualizar orden")
 		return response.data;
 	} catch (error) {
 		console.log("error funcion actualizar")

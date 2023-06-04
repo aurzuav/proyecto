@@ -21,92 +21,12 @@ const ReceptionToDispatch = require("./ReceptiontoDispatch.js")
 const actualizarOrden = require("./actualizarOrden")
 const obtenerOrden = require("./obtenerOrden");
 const getStockRecepcion = require("./getStockRecepcion.js");
+const ReceptionToKitchen = require("./receptiontoKitchen.js")
 
 //app.use(router.routes());
 
 getCSVDictionaryFormula(Formuladictionary, "./formulas_E2.csv");
 getCSVDictionaryProducts(Productdictionary, "./products_E2.csv");
-
-async function ReceptionToKitchen(idOrden, Formuladictionary, canal) {
-	try {
-		const token = await getToken();
-		const headers = {
-			"Content-Type": "application/json", // Adjust the content type if necessary
-			Authorization: "Bearer " + token,
-		};
-		const response = await axios.get(
-			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
-			{ headers }
-		);
-        console.log(response.data)
-        const cliente = response.data.cliente;
-		sku = response.data.sku;
-
-        let ingrediente_buscado;
-        let formula;
-        //console.log(sku);
-        //console.log(Formuladictionary);
-        // si es sftp, la formula es distinta
-        if (canal == "SFTP"){
-            const formula = Formuladictionary[sku].ingredientes;
-        }   
-        else{
-            for (const dato in Formuladictionary) {
-                const hamburguesa = Formuladictionary[dato];
-              
-                // Verificar si la hamburguesa tiene el ingrediente buscado
-                if (hamburguesa.ingredientes[sku]) {
-                  const nombreHamburguesa = hamburguesa.nombre;
-                  const ingrediente_buscado = hamburguesa.ingredientes[sku];
-              
-                  console.log(nombreHamburguesa);
-                  console.log(ingrediente_buscado);
-                }
-              }
-            //const formula2 = Formuladictionary[sku].formula;
-        }
-        //console.log(formula);
-
-		// CAMBIAR DE BODEGA DE RECEPCION A COCINA EL INGREDIENTE QUE NECESITAMOS PARA LA HAMBURGUESA
-        console.log(canal);
-        if (canal == "SFTP"){
-            for (let sku in formula) {
-                moveProduct(sku);
-            }
-        }
-        else{
-                try {
-					const token = await getToken();
-					const headers = {
-					  "Content-Type": "application/json", // Adjust the content type if necessary
-					  Authorization: "Bearer " + token,
-					};
-					const response = await axios.post(
-					  "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch",
-					  { productId: `${sku}`, orderId: `${idOrden}` },
-					  {
-						headers,
-					  }
-					); 
-				} catch (error) {
-					
-				}
-
-              console.log("se despacho");
-
-              // Ahora notificamos al grupo
-              console.log(idOrden);
-
-        }
-
-
-	} catch (error) {
-        console.log("aqui?");
-		console.log(error);
-	}
-}
-
-
 
 async function manejarOrden(OrderId, canal) {
 	try {
@@ -124,7 +44,7 @@ async function manejarOrden(OrderId, canal) {
 					//producir
 					console.log("no lo tengo")
 					requestBody = {"estado":"rechazada"}
-					await producir_orden(OrderId);
+					await producir_orden(datos);
 					await actualizarOrden(requestBody, OrderId, canal);
 					
 				}
@@ -133,12 +53,14 @@ async function manejarOrden(OrderId, canal) {
 				requestBody = {"estado":"aceptada"}
 				BurgersinProdution.push(datos.sku);
 				await actualizarOrden(requestBody, OrderId, canal);
-				await producir_orden(OrderId, datos);
-				
+				await producir_orden(datos);
+				const formula = Formuladictionary[datos.sku].ingredientes;
+				console.log("receptiontokitchen")
+				await ReceptionToKitchen(datos, formula);
+				setInterval(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
+				setInterval(produceBurgers, 10 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
 			}
 			
-            //console.log("llego aca 4")
-			//await ReceptionToKitchen(OrderId, Formuladictionary, canal);
 		} catch (error) {
 			console.log(error);
 		}
@@ -147,19 +69,14 @@ async function manejarOrden(OrderId, canal) {
 	}
 }
 
-
-
-async function producir_orden(idOrden, datos) {
+async function producir_orden(datos) {
 	try {
 		const sku = datos.sku;
 		const producto = Productdictionary[sku];
-		const groups = producto.gruposProductores;
-		const qty_burger = producto.loteProduccion;
 		// si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
 		if (producto.produccion === "cocina") { // si es una hamburguesa
 			console.log("es una hamburguesa")
 			const formula = Formuladictionary[sku].ingredientes;
-			console.log(formula)
 			for (let ingrediente in formula) {
 				console.log(ingrediente)
 				const ingredient = Productdictionary[ingrediente];
@@ -168,7 +85,6 @@ async function producir_orden(idOrden, datos) {
 					console.log("entro al if, producimos nosotros")
 					if (formula.hasOwnProperty(ingrediente)) {
 						const qty = parseInt(ingredient.loteProduccion);
-						console.log(qty);
 						producirSku(ingrediente, qty)
 					}
 				}
@@ -176,10 +92,6 @@ async function producir_orden(idOrden, datos) {
 					for (indice in array_groups) {
 						const grupoProductor = array_groups[indice].toString()
 						console.log("entro al else, estamos pidiendo");
-						// const length = array_groups.length;
-						// const value = Math.floor(Math.random() * length);
-						// const group = array_groups[value];
-						//const group = 1;
 						const stock = await getStock(ingrediente, grupoProductor);
 						console.log(`el stock es:${stock}`)
 						if (stock === 1) {
@@ -195,10 +107,10 @@ async function producir_orden(idOrden, datos) {
 								"cantidad": parseInt(ingredient.loteProduccion),
 								"vencimiento": fechaHoraUtc4
 							};
-							console.log(requestBody)
+							//console.log(requestBody)
 							try {
 								const order = await newOrder(requestBody);
-								console.log(order)
+								//console.log(order)
 								await notifyCreateOrder(order)
 							} catch (error) {
 								console.log(error);

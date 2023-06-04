@@ -15,7 +15,7 @@ async function newOrder(requestBody) {
             { headers }
         );
 
-        console.log(response.data);
+        //console.log(response.data);
         if (response.status === 201) {
             console.log("ORDEN CREADA");
             poblar_oc(response.data.id, "creada", requestBody.sku, requestBody.cantidad, requestBody.proveedor)
