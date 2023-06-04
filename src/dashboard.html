@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title> Dashboard </title>
+    <title>Dashboard</title>
     <style>
         body {
           margin: 0;
@@ -43,25 +43,67 @@
           font-weight: bold;
           color: #289DA6;
         }
+        
         h2 {
-            color: #289DA6;
-            margin: 10px 0;
-            text-align: center;
-          }
-        
-        
-
-      </style>
+          color: #289DA6;
+          margin: 10px 0;
+          text-align: center;
+        }
+    </style>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script>
+        $(document).ready(function() {
+            // Realizar una solicitud GET al servidor para obtener los datos de la tabla "ordenes_creadas"
+            $.get('/ordenes', function(data) {
+                // Manejar la respuesta del servidor y actualizar la tabla en la página HTML
+                data.forEach(function(row) {
+                    $('table#ordenes').append('<tr><td>' + row.id + '</td><td>' + row.estado + '</td><td>' + row.sku + '</td><td>' + row.cantidad + '</td><td>' + row.grupo + '</td></tr>');
+                });
+            });
+            
+            // Realizar una solicitud GET al servidor para obtener los datos de la tabla "productos"
+            $.get('/ordenes2', function(data) {
+                // Manejar la respuesta del servidor y actualizar la tabla en la página HTML
+                data.forEach(function(row) {
+                    $('table#ordenes_recibidas').append('<tr><td>' + row.id + '</td><td>' + row.estado + '</td><td>' + row.sku + '</td><td>' + row.cantidad + '</td><td>' + row.canal + '</td></tr>');
+                });
+            });
+        });
+ </script>
 </head>
 <body>
-    <h1>Panel de Control</h1>
-    
-    <table>
-        <tr>
-            <th>Tipo de bodega</th>
-            <th>Espacio Usado</th>
-            <th>Espacio Total</th>
-            <th>Ocupación de Inventario</th>
-            <th>ID</th>
-        </tr>
-        
+ <h1>Panel de Control</h1>
+ 
+ <h2>Tabla de Ordenes Creadas</h2>
+ <table id="ordenes">
+     <tr>
+         <th>ID</th>
+         <th>Estado</th>
+         <th>SKU</th>
+         <th>Cantidad</th>
+         <th>Grupo</th>
+     </tr>
+ </table>
+
+ <h2>Tabla de Ordenes Recibidas</h2>
+ <table id="ordenes_recibidas">
+     <tr>
+         <th>ID</th>
+         <th>Estado</th>
+         <th>SKU</th>
+         <th>Cantidad</th>
+         <th>Canal</th>
+     </tr>
+ </table>
+ 
+ <h2>Tabla de Inventario</h2>
+ <table>
+  <tr>
+      <th>Tipo de bodega</th>
+      <th>Espacio Usado</th>
+      <th>Espacio Total</th>
+      <th>Ocupación de Inventario</th>
+      <th>ID</th>
+  </tr>
+</body>
+</html>

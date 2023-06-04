@@ -1,4 +1,6 @@
 // Importar los módulos necesarios
+const express = require('express');
+const app = express();
 const { Pool } = require('pg');
 
 // Configurar la conexión a la base de datos
@@ -23,9 +25,9 @@ async function poblarTabla(id, estado, sku, cantidad, canal) {
       [id, estado, sku, cantidad, canal]
     );
 
-    console.log('La tabla "ordenes" ha sido poblada exitosamente.');
+    console.log('La tabla "ordenes_recibidas" ha sido poblada exitosamente.');
   } catch (error) {
-    console.error('Error al poblar la tabla "ordenes":', error);
+    console.error('Error al poblar la tabla "ordenes_recibidas":', error);
   } finally {
     if (client) {
       client.release(); // Liberar el cliente de conexión
@@ -33,7 +35,23 @@ async function poblarTabla(id, estado, sku, cantidad, canal) {
   }
 }
 
+// Definir la ruta para obtener los datos de la tabla "ordenes_creadas"
+app.get('/ordenes2', async function(req, res) {
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM ordenes_recibidas');
+    const rows = result.rows;
+    res.send(rows);
+  } catch (error) {
+    console.error('Error al obtener los datos de la tabla "ordenes_recibidas":', error);
+    res.status(500).send('Error al obtener los datos');
+  }
+});
+
 // Ejecutar la función para poblar la tabla al iniciar el servidor
-poblarTabla();
+poblarTabla(); // Puedes pasar los valores deseados para poblar la tabla aquí
+
+
 
 module.exports = poblarTabla;
+

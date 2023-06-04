@@ -10,6 +10,8 @@ const csv = require("csv-parser");
 const bodyParser = require("koa-bodyparser");
 const manejarOrden = require("./routes/manejarOrden.js");
 
+const { Pool } = require('pg');
+
 const app = new Koa();
 const router = new Router();
 const port = 3000;
@@ -50,6 +52,55 @@ router.get("/", async (ctx) => {
   }
 });
 
+// Configurar la conexión a la base de datos
+const pool = new Pool({
+  user: 'postgres',
+  password: '12345678',
+  host: 'localhost',
+  database: 'entrega_3',
+  port: 5432,
+});
+
+
+// Definir la ruta para obtener los datos de la tabla "ordenes_creadas"
+router.get('/ordenes', async (ctx, next) => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM ordenes_creadas');
+    const rows = result.rows.filter(row => {
+      // Filtrar las filas que contengan valores nulos
+      return Object.values(row).every(value => value !== null);
+    });
+    ctx.body = rows;
+  } catch (error) {
+    console.error('Error al obtener los datos de la tabla "ordenes_creadas":', error);
+    ctx.status = 500;
+    ctx.body = 'Error al obtener los datos';
+  }
+  await next();
+});
+
+// Definir la ruta para obtener los datos de la tabla "ordenes_creadas"
+router.get('/ordenes2', async (ctx, next) => {
+  try {
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM ordenes_recibidas');
+    const rows = result.rows.filter(row => {
+      // Filtrar las filas que contengan valores nulos
+      return Object.values(row).every(value => value !== null);
+    });
+    ctx.body = rows;
+  } catch (error) {
+    console.error('Error al obtener los datos de la tabla "ordenes_recibidas":', error);
+    ctx.status = 500;
+    ctx.body = 'Error al obtener los datos';
+  }
+  await next();
+});
+
+
+
+
 // Esta es una funcion para obtener el token, la usamos para hacer los llamados a la API (necesitan el token como autorizacion)
 async function getToken() {
   try {
@@ -69,10 +120,6 @@ async function getToken() {
 }
 
 module.exports = getToken;
-// vinculo nuevos archivos
-// const producirRouter = require('./routes/producir');
-// const producir = producirRouter({ getToken });
-// app.use(producir.routes()).use(producir.allowedMethods())
 
 const ordenCompra = require('./routes/ordenCompra');
 app.use(ordenCompra.routes())
@@ -272,7 +319,7 @@ router.get("/dashboard", async (ctx) => {
 
 function dashboardInventory (element){
   const occupation = ((element.usedSpace / element.totalSpace) * 100).toFixed(2) + "%";
-  
+
   if (element.buffer == true) {
     return `<tr><td>Bodega Buffer</td><td>${element.usedSpace}</td><td>${element.totalSpace}</td><td>${occupation}</td><td>${element._id}</td></tr>`;
   } else if (element.kitchen == true) {
@@ -282,58 +329,10 @@ function dashboardInventory (element){
   }
 }
 
-function dashboardStock (product){
-  return (
-      `<tr><td>${product.sku}</td><td>${product.quantity}</td></tr>`
-  )
+function dashboardStock(product) {
+  return `<tr><td>${product.sku}</td><td>${product.quantity}</td></tr>`;
 }
 
-
-// //se usa el excel de la E2
-// function getCSVDictionary() {
-//   console.log("get CSV file...");
-//   const filePath = "./products_E2.csv";
-
-//   readCSVFile(filePath)
-//     .then((dictionary) => {
-//       productDictionary = dictionary;
-//       //console.log(dictionary);
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//     });
-// }
-
-
-// function readCSVFile(filePath) {
-//   return new Promise((resolve, reject) => {
-//     const dictionary = {};
-
-//     fs.createReadStream(filePath)
-//       .pipe(csv())
-//       .on("data", (row) => {
-//         const keys = Object.keys(row);
-//         const key = row[keys[0]];
-
-//         const values = keys.slice(1).map((column) => row[column]);
-
-//         dictionary[key] = values;
-//       })
-//       .on("end", () => {
-//         resolve(dictionary);
-//       })
-//       .on("error", (error) => {
-//         reject(error);
-//       });
-//   });
-// }
-
-// getCSVDictionary();
-
-
-// servicios
-
-// Array para llevar el registro de las OC recibidas
 const ordenesRecibidas = [];
 const ordenesRecibidas2 = [];
 const ordenesRecibidas3 = [];
@@ -412,20 +411,7 @@ app.use(async (ctx, next) => {
     const id_orden = ctx.url.replace("/ordenes-compra/", "");
     const orden = ordenesRecibidas2.find((orden) => orden.id == id_orden);
 
-    //if (!orden) {
-    //  ctx.status = 404;
-    //  
-    //  const instruction = {
-    //    id: id_orden,
-    //    estado: ctx.request.body.estado,
-    //  };
-    //  listInstructions2.push(instruction);
-    //  writeInstruction(
-    //    "Instruction_S3.txt",
-    //    JSON.stringify(listInstructions2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
-    //  );
-    //  return;
-    //}
+
     if (orden == undefined) {
       // creamos la orden con su id y el estado recibido
       ctx.status = 204;
