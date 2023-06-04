@@ -4,6 +4,7 @@ const getToken = require("./getToken.js");
 
 const axios = require("axios");
 const BurgersinProdution = [];
+const ready_for_production = [];
 const {
 	getCSVDictionaryProducts,
 	getCSVDictionaryFormula,
@@ -21,7 +22,8 @@ const ReceptionToDispatch = require("./ReceptiontoDispatch.js")
 const actualizarOrden = require("./actualizarOrden")
 const obtenerOrden = require("./obtenerOrden");
 const getStockRecepcion = require("./getStockRecepcion.js");
-const ReceptionToKitchen = require("./receptiontoKitchen.js")
+const ReceptionToKitchen = require("./receptiontoKitchen.js");
+const checkIngredients = require("./checkIngredients")
 
 //app.use(router.routes());
 
@@ -36,6 +38,7 @@ async function manejarOrden(OrderId, canal) {
 			if (canal === "grupo"){
 				const stock = await getStockRecepcion(datos.sku, 5)
 				if (stock >= datos.cantidad){
+					checkIngredients();
 					console.log("lo tengo")
 					requestBody = {"estado":"aceptada"}
 					await actualizarOrden(requestBody, OrderId, canal);
@@ -57,8 +60,12 @@ async function manejarOrden(OrderId, canal) {
 				const formula = Formuladictionary[datos.sku].ingredientes;
 				console.log("receptiontokitchen")
 				await ReceptionToKitchen(datos, formula);
-				setInterval(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
-				setInterval(produceBurgers, 10 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
+				// setInterval(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
+				// setInterval(produceBurgers, 10 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
+				await ReceptionToKitchen(datos, Formuladictionary[datos.sku].ingredientes);
+				await checkIngredients(BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
+				console.log("ready for prod");
+				console.log(ready_for_production);
 			}
 			
 		} catch (error) {
