@@ -97,19 +97,11 @@ const { response } = require("express");
 function procesarPedidos() {
 	leerArchivosXML()
 		.then((pedidos) => {
-			//console.log(pedidos);
-			//for cada pedido, manejar orden
-			console.log("aaaa")
-			console.log(pedidos)
-			//obtenerOrden(pedidos[0].id);
 			for (let pedido in pedidos){
-				console.log(pedidos[pedido])
+				//console.log(pedidos[pedido])
 				manejarOrden(pedidos[pedido].id, "SFTP")
 			}
 			//manejarOrden(pedidos[0].id, "SFTP")
-				
-			//console.log(Formuladictionary);
-			//console.log(Productdictionary);
 		})
 		.catch((error) => {
 			console.error("Error:", error.message);
