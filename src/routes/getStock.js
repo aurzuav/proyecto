@@ -2,6 +2,7 @@ const axios = require("axios");
 
 
 async function getStock(sku, group) {
+    console.log("entro a getstock");
     try {
         const headers = {
             "Content-Type": "application/json",
