@@ -74,7 +74,6 @@ const obtenerOrden = async (idOrden) => {
 	}
 };
 
-//crear orden
 const actualizarOrden = async (requestBody, idOrden) => {
 	try {
 		const token = await getToken();
@@ -156,6 +155,7 @@ async function producir_orden(idOrden) {
 		if (producto.produccion === "cocina") { // si es una hamburguesa
 			console.log("es una hamburguesa")
 			const formula = Formuladictionary[sku].ingredientes;
+			console.log(formula)
 			for (let ingrediente in formula) {
 				console.log(ingrediente)
 				const ingredient = Productdictionary[ingrediente];
