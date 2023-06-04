@@ -117,27 +117,27 @@ const leerArchivosXML = require("../SFTP3.js");
 const { response } = require("express");
 
 function procesarPedidos() {
-	leerArchivosXML()
-		.then((pedidos) => {
-			//console.log(pedidos);
-			//for cada pedido, manejar orden
-			console.log("aaaa")
-			console.log(pedidos)
-			//obtenerOrden(pedidos[0].id);
-			for (let pedido in pedidos){
+// 	leerArchivosXML()
+// 		.then((pedidos) => {
+// 			//console.log(pedidos);
+// 			//for cada pedido, manejar orden
+// 			console.log("aaaa")
+// 			console.log(pedidos)
+// 			//obtenerOrden(pedidos[0].id);
+// 			for (let pedido in pedidos){
 
-				console.log(pedidos[pedido])
-				manejarOrden(pedidos[pedido], "SFTP")
-			}
+// 				console.log(pedidos[pedido])
+// 				manejarOrden(pedidos[pedido], "SFTP")
+// 			}
 				
-			//console.log(Formuladictionary);
-			//console.log(Productdictionary);
-		})
-		.catch((error) => {
-			console.error("Error:", error.message);
-		});
+// 			//console.log(Formuladictionary);
+// 			//console.log(Productdictionary);
+// 		})
+// 		.catch((error) => {
+// 			console.error("Error:", error.message);
+// 		});
+// }
 }
-
 // Llamar a la función inicialmente
 procesarPedidos();
 

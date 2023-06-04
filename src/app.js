@@ -399,7 +399,7 @@ app.use(async (ctx, next) => {
     console.log("Orden creada exitosamente");
     console.log(nuevaOrden);
     // manejar la orden
-    manejarOrden(nuevaOrden, "nuestrocanal");
+    manejarOrden(nuevaOrden.id, "grupo");
 
   }
 

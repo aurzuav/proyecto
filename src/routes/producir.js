@@ -1,5 +1,6 @@
-const getToken = require("../app");
+const getToken = require("./getTokenW");
 const axios = require("axios");
+
 
 
 async function producirSku(sku, quantity){
@@ -19,8 +20,8 @@ async function producirSku(sku, quantity){
               ); // Replace with the API endpoint URL
               //console.log(response.data);
         } catch (error) {
-          //console.log("ERROR")
-          console.log(error.response.data)
+          console.log("ERROR en producir")
+          console.log(error)
         }
 }
 

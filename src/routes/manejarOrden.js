@@ -1,7 +1,7 @@
 const Router = require("koa-router");
 const router = new Router();
 const getToken = require("./getToken.js");
-const poblar_or = require("../ordenes_recibidas.js")
+
 const axios = require("axios");
 const BurgersinProdution = [];
 const {
@@ -12,6 +12,14 @@ const Formuladictionary = {};
 const Productdictionary = {};
 const moveProduct = require("./moveProduct.js");
 const notifyOrder = require("./notifyOrder.js");
+const getStock = require("./getStock.js")
+const producirSku = require("./producir.js");
+const moment = require("moment");
+const newOrder = require("./newOrder.js")
+const ReceptionToDispatch = require("./ReceptiontoDispatch.js")
+const actualizarOrden = require("./actualizarOrden")
+const obtenerOrden = require("./obtenerOrden");
+const getStockRecepcion = require("./getStockRecepcion.js");
 
 //app.use(router.routes());
 
@@ -66,31 +74,23 @@ async function ReceptionToKitchen(idOrden, Formuladictionary, canal) {
             }
         }
         else{
-            router.get("/dispatch", async (ctx) => {
                 try {
-                  const token = await getToken();
-                  //console.log("dispatch");
-                  console.log(token);
-              
-                  const headers = {
-                    "Content-Type": "application/json", // Adjust the content type if necessary
-                    Authorization: "Bearer " + token,
-                  };
-              
-                  const response = await axios.post(
-                    "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch",
-                    { productId: `${sku}`, orderId: `${idOrden}` },
-                    {
-                      headers,
-                    }
-                  ); // Replace with the API endpoint URL
-                  ctx.body = response.data;
-                  //console.log(response.data);
-                } catch (error) {
-                  ctx.status = 500;
-                  ctx.body = { error: error.message };
-                }
-              });
+					const token = await getToken();
+					const headers = {
+					  "Content-Type": "application/json", // Adjust the content type if necessary
+					  Authorization: "Bearer " + token,
+					};
+					const response = await axios.post(
+					  "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch",
+					  { productId: `${sku}`, orderId: `${idOrden}` },
+					  {
+						headers,
+					  }
+					); 
+				} catch (error) {
+					
+				}
+
               console.log("se despacho");
 
               // Ahora notificamos al grupo
@@ -106,42 +106,30 @@ async function ReceptionToKitchen(idOrden, Formuladictionary, canal) {
 	}
 }
 
-const obtenerOrden = async (idOrden) => {
-	try {
-		const token = await getToken();
-		const headers = {
-			"Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
-			Authorization: "Bearer " + token,
-		};
-		const response = await axios.get(
-			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
-			{
-				headers,
-			}
-		);
-
-		return (response.data);
-		// if (response.status === 201) {
-		// 	notificarActualizacion(response.data, 5)
-		// }
-	} catch (error) {
-		console.log(error.response.data);
-	}
-};
 
 
-async function manejarOrden(pedido, canal) {
+async function manejarOrden(OrderId, canal) {
 	try {
 		requestBody = { estado: "aceptada" };
-		idOrden = pedido.id;
-		BurgersinProdution.push(pedido.sku);
+		datos = await obtenerOrden(OrderId)
+		console.log(datos)
+		BurgersinProdution.push(datos.sku);
         console.log("llego aca");
 		try {
-			await actualizarOrden("aceptada2", idOrden, canal);
-            //console.log("llego aca 2")
-			await producir_orden(idOrden);
-            //console.log("llego aca 3")  
-			await ReceptionToKitchen(idOrden, Formuladictionary, canal);
+			console.log(OrderId, canal)
+			const stock = await getStockRecepcion(datos.sku, 5)
+			if (stock >= datos.cantidad){
+				console.log("lo tengo")
+				requestBody = {"estado":"aceptada"}
+				await actualizarOrden(requestBody, OrderId, canal);
+				await ReceptionToDispatch(OrderId, canal, datos.cantidad)
+			}else{
+				//producir
+				console.log("no lo tengo")
+				await producir_orden(OrderId);
+				await ReceptionToKitchen(OrderId, Formuladictionary, canal);
+				console.log("post producir") 
+			}
             //console.log("llego aca 4")
 		} catch (error) {
 			console.log(error);
@@ -152,30 +140,6 @@ async function manejarOrden(pedido, canal) {
 }
 
 
-const actualizarOrden = async (requestBody, idOrden, canal) => {
-	try {
-		const token = await getToken();
-		const headers = {
-			"Content-Type": "application/json", // Ajusta el tipo de contenido si es necesario
-			Authorization: "Bearer " + token,
-		};
-        const body = {}
-		//console.log(requestBody)
-		const response = await axios.post(
-			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}/estado`,
-			requestBody,
-			{ headers }
-		);
-		//console.log(response.data);
-		
-		
-		const datos = await(obtenerOrden(idOrden))
-		poblar_or(datos.id, "creada", datos.sku, datos.cantidad,canal)
-		return response.data;
-	} catch (error) {
-		console.log(error.response.data);
-	}
-};
 
 async function producir_orden(idOrden) {
 	try {
@@ -201,7 +165,7 @@ async function producir_orden(idOrden) {
 				const ingredient = Productdictionary[ingrediente];
 				const array_groups = JSON.parse(ingredient.gruposProductores)
 				if (array_groups.includes(5)) {
-					console.log("entro al if")
+					console.log("entro al if, producimos nosotros")
 					if (formula.hasOwnProperty(ingrediente)) {
 						const qty = parseInt(ingredient.loteProduccion);
 						console.log(qty);
@@ -223,6 +187,7 @@ async function producir_orden(idOrden) {
 							console.log(grupoProductor);
 							const fechaActualUtc = moment.utc();
 							const fechaHoraUtc4 = fechaActualUtc.add(4, "hours").format("YYYY-MM-DD HH:mm:ss");
+							//console.log(fechaHoraUtc4)
 							const requestBody = {
 								"cliente": "5",
 								"proveedor": grupoProductor,

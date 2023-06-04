@@ -1,4 +1,4 @@
-const getToken = require("../app");
+const getToken = require("./getTokenW");
 const axios = require("axios");
 
 async function moveProduct(sku) {
