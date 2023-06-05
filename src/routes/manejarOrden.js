@@ -64,7 +64,7 @@ async function manejarOrden(OrderId, canal) {
 				console.log("receptiontokitchen")
 				await ReceptionToKitchen(datos, Formuladictionary);
 				setTimeout(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
-				setTimeout(produceBurgers, 10 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
+				setTimeout(produceBurgers, 1 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
 				// await ReceptionToKitchen(datos, Formuladictionary[datos.sku].ingredientes);
 				// console.log("burgers in production before check")
 				// console.log(BurgersinProdution);
