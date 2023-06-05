@@ -16,7 +16,7 @@ async function getStock(sku, group) {
         );
         console.log(inventoryResponse.data);
         for (const inventory of inventoryResponse.data) {
-            console.log("recorriendo el inventario")
+            //console.log("recorriendo el inventario")
             if (inventory.sku === sku) {
                 return 1;
             } 
