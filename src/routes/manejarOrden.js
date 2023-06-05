@@ -37,6 +37,7 @@ async function manejarOrden(OrderId, canal) {
 	try {
 		datos = await obtenerOrden(OrderId)
 		try {
+			console.log("isi")
 			console.log(OrderId, canal)
 			if (canal === "grupo"){
 				const stock = await getStockRecepcion(datos.sku, 5)
@@ -64,7 +65,9 @@ async function manejarOrden(OrderId, canal) {
 				console.log("receptiontokitchen")
 				await ReceptionToKitchen(datos, Formuladictionary);
 				setTimeout(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
-				setTimeout(produceBurgers, 1 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
+				// console.log("ready_for_production")
+				// console.log(ready_for_production);
+				// setTimeout(produceBurgers, 1 * 60 * 1000, BurgersinProdution, ready_for_production, Productdictionary)
 				// await ReceptionToKitchen(datos, Formuladictionary[datos.sku].ingredientes);
 				// console.log("burgers in production before check")
 				// console.log(BurgersinProdution);
@@ -87,6 +90,18 @@ async function manejarOrden(OrderId, canal) {
 		console.log(error);
 	}
 }
+
+// function wait(timeout) {
+// 	return new Promise((resolve) => {
+// 	  setTimeout(resolve, timeout);
+// 	});
+//   }
+  
+//   // Call the function and wait for the specified timeout
+//   wait(10 * 60 * 1000).then(() => {
+// 	const result = checkIngredients(BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
+// 	console.log(result); // Output the returned value
+//   });
 
 async function producir_orden(datos) {
 	try {

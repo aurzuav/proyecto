@@ -3,6 +3,7 @@ const axios = require("axios");
 
 async function produceBurgers(BurgersinProdution, ready_for_production, Productdictionary) {
     console.log("entra a pdroduceeeeee")
+    console.log(ready_for_production);
     const len = ready_for_production.length;
     for (let i = 0; i < len; i++) {
         const burger = ready_for_production[i];

@@ -42,8 +42,8 @@ function procesarPedidos() {
 	leerArchivosXML()
 		.then((pedidos) => {
 			for (let pedido in pedidos){
-				//console.log(pedidos[pedido])
-				manejarOrden(pedidos[7].id, "SFTP")
+				console.log(pedidos[pedido])
+				manejarOrden(pedidos[0].id, "SFTP")
 			}
 			//manejarOrden(pedidos[0].id, "SFTP")
 		})
