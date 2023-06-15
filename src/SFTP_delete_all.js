@@ -2,10 +2,17 @@ const Client = require('ssh2').Client;
 
 const config = {
   host: 'langosta.ing.puc.cl', // Coloca el nombre de host o la dirección IP del servidor SFTP
-  port: 22, // Puerto del servidor SFTP (por defecto es 22)
-  username: 'grupo5_produccion', // Nombre de usuario para autenticación
-  password: 'saMXkp8!wP%B!SUA+NbE-w' // Contraseña para autenticación
+  port: '22', // Puerto del servidor SFTP (por defecto es 22)
+  username: 'grupo5_desarrollo', // Nombre de usuario para autenticación
+  password: 'JhFQ5FUc!8nuJwE93kDC!7' // Contraseña para autenticación
 };
+
+// const config = {
+//   host: 'langosta.ing.puc.cl', // Coloca el nombre de host o la dirección IP del servidor SFTP
+//   port: '22', // Puerto del servidor SFTP (por defecto es 22)
+//   username: 'grupo5_produccion', // Nombre de usuario para autenticación
+//   password: 'saMXkp8!wP%B!SUA+NbE-w' // Contraseña para autenticación
+// };
 
 const conn = new Client();
 

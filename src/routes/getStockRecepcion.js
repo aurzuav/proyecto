@@ -11,7 +11,7 @@ async function getStockRecepcion(sku) {
       };
       
       const storesResponse = await axios.get(
-        "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+        "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
         { headers }
       );
       const inventoryDict = {};
@@ -38,7 +38,7 @@ async function getStockRecepcion(sku) {
       };
       
       const storesResponse_ = await axios.get(
-        `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/products?sku=${sku}`,
+        `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/products?sku=${sku}`,
         { headers }
       );
       return storesResponse_.data.length

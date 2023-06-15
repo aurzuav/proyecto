@@ -37,8 +37,9 @@ router.get("/", async (ctx) => {
       "Content-Type": "application/json", // Adjust the content type if necessary
     };
     const response = await axios.post(
-      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/auth",
-      { group: 5, secret: "J6RyeTrwNgX.Z+*MKh4EaBuLn" },
+      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/auth",
+            //{ group: 5, secret: "J6RyeTrwNgX.Z+*MKh4EaBuLn" },
+            { group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
       {
         headers,
       }
@@ -108,8 +109,9 @@ async function getToken() {
       "Content-Type": "application/json",
     };
     const response = await axios.post(
-      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/auth",
-      { group: 5, secret: "J6RyeTrwNgX.Z+*MKh4EaBuLn" },
+      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/auth",
+      //{ group: 5, secret: "J6RyeTrwNgX.Z+*MKh4EaBuLn" },
+      { group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
       { headers }
     );
     return response.data.token;
@@ -137,7 +139,7 @@ router.get("/dispatch", async (ctx) => {
     };
 
     const response = await axios.post(
-      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch",
+      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch",
       { productId: `${productid}`, orderId: `${orderId}` },
       {
         headers,
@@ -165,7 +167,7 @@ router.get("/product", async (ctx) => {
     };
     // en la linea de abajo esta hardcodeado el sku y la cantidad
     const response = await axios.post(
-      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products",
+      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products",
       { sku: "015edda868", quantity: 4 },
       {
         headers,
@@ -191,7 +193,7 @@ router.get("/inventory", async (ctx) => {
     };
     //console.log(headers);
     const response = await axios.get(
-      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
         headers,
       }
@@ -217,7 +219,7 @@ router.get("/stocks", async (ctx) => {
       Authorization: "Bearer " + `${token}`,
     };
     const storesResponse = await axios.get(
-      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
         headers,
       }
@@ -228,7 +230,7 @@ router.get("/stocks", async (ctx) => {
     for (const store of stores) {
       //console.log(store._id);
       const inventoryResponse = await axios.get(
-        `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
+        `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
         {
           headers,
         }
@@ -270,7 +272,7 @@ router.get("/dashboard", async (ctx) => {
       Authorization: "Bearer " + `${token}`,
     };
     const response = await axios.get(
-      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+      "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
       {
         headers,
       }
@@ -293,7 +295,7 @@ router.get("/dashboard", async (ctx) => {
     const stores = response.data;
     for (const store of stores) {
       const stockResponse = await axios.get(
-        `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
+        `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${store._id}/inventory`,
         {
           headers,
         }

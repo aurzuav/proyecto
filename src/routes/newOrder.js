@@ -10,7 +10,7 @@ async function newOrder(requestBody) {
             Authorization: "Bearer " + token,
         };
         const response = await axios.post(
-            `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes`,
+            `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes`,
             requestBody,
             { headers }
         );

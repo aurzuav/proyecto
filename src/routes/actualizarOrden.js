@@ -12,22 +12,22 @@ async function actualizarOrden(requestBody, idOrden, canal){
 			Authorization: "Bearer " + token,
 		};
 		const response = await axios.post(
-			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}/estado`,
+			`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}/estado`,
 			requestBody,
 			{ headers }
 		);
 		const datos = await obtenerOrden(idOrden)
-		//falta update
+
 		if (requestBody.estado === "aceptada"){
 			await poblar_or(datos.id, "creada", datos.sku, datos.cantidad,canal)
 		}
 		if (datos.cliente !== "999"){
 			await notifyOrder(requestBody.estado, datos.cliente, idOrden);
 		}
-		console.log("actualizar orden")
+		console.log(`Orden actualizada con estado: ${requestBody.estado} correctamente`)
 		return response.data;
 	} catch (error) {
-		console.log("error funcion actualizar")
+		console.log(`No se pudo actualizar la orden con estado: ${requestBody.estado}`)
 		console.log(error.response.data);
 	}
 };

@@ -16,7 +16,7 @@ async function ReceptionToDispatch(idOrden, canal, qty) {
     };
     
     const response = await axios.get(
-      `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
+      `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
       { headers }
     );
     
@@ -36,7 +36,7 @@ async function ReceptionToDispatch(idOrden, canal, qty) {
         console.log(productId)
         
         const response = await axios.post(
-          "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch",
+          "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch",
           { "productId": `${productId}`, "orderId": `${idOrden}` },
           { headers }
         ); 
@@ -67,7 +67,7 @@ async function getProductId(sku) {
       };
       
       const storesResponse = await axios.get(
-        "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+        "https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
         { headers }
       );
       
@@ -92,7 +92,7 @@ async function getProductId(sku) {
       
       // INVENTARIO DE BODEGA (RECEPCION)
       const stockResponse = await axios.get(
-        `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/inventory`,
+        `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/inventory`,
         { headers }
       );
       
@@ -107,7 +107,7 @@ async function getProductId(sku) {
             console.log("dentro del if")
           //OBTENER DETALLE DE INGREDIENTE, PARA OBTENER ID
           const detalleIngrediente = await axios.get(
-            `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/products?sku=${sku}`,
+            `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/products?sku=${sku}`,
             { headers }
           );
           //ElIJO EL PRIMER ID QUE APARECE (lo elegi de manera random, podría ser cualquierA)

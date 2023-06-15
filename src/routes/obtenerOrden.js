@@ -9,7 +9,7 @@ const obtenerOrden = async (idOrden) => {
 			Authorization: "Bearer " + token,
 		};
 		const response = await axios.get(
-			`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
+			`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}`,
 			{
 				headers,
 			}
