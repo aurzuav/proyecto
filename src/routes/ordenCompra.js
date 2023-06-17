@@ -28,25 +28,26 @@ const BurgersinProdution = [];
 const ready_for_production = [];
 
 // Llama a la función getCSVDictionary para comenzar la carga del diccionario
-getCSVDictionaryProducts(Productdictionary, "./products_E2.csv");
-getCSVDictionaryFormula(Formuladictionary, "./formulas_E2.csv");
+getCSVDictionaryProducts(Productdictionary, "./products_E3.csv");
+getCSVDictionaryFormula(Formuladictionary, "./formulas_E3.csv");
 
 
 module.exports =  router;
 
 
-const leerArchivosXML = require("../SFTP3.js");
+const leerArchivosXML = require("../SFTP2.js");
 const { response } = require("express");
 
 
 function procesarPedidos() {
 	leerArchivosXML()
 		.then((pedidos) => {
-			for (let pedido in pedidos){
-				console.log(pedidos[pedido])
-				manejarOrden(pedidos[0].id, "SFTP")
-			}
-			//manejarOrden(pedidos[0].id, "SFTP")
+			// for (let pedido in pedidos){
+			// 	console.log(pedidos[pedido])
+			// 	manejarOrden(pedidos[0].id, "SFTP")
+			// }
+			console.log(pedidos[pedidos.length -1])
+			//manejarOrden(pedidos[pedidos.length -1].id, "SFTP")
 		})
 		.catch((error) => {
 			console.error("Error:", error.message);
@@ -58,7 +59,7 @@ function procesarPedidos() {
 procesarPedidos();
 
 // Ejecutar la función cada 15 minutos
-setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos
+//setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos
 
 
 // setInterval(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);

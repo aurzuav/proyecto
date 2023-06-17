@@ -9,7 +9,7 @@ router.get('/', async (ctx) => {
             'Authorization': 'Bearer ' + ctx.request.body.token
           };
       
-        const response = await axios.post('https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch', { productId: `${productid}`, orderId: `${orderId}` }, {
+        const response = await axios.post('https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/dispatch', { productId: `${productid}`, orderId: `${orderId}` }, {
             headers }); // Replace with the API endpoint URL
         ctx.body = response.data;
         console.log(response.data);
@@ -28,7 +28,7 @@ router.get('/', async (ctx) => {
             'Authorization': 'Bearer ' + ctx.request.body.token
           };
       
-        const response = await axios.post('https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products', { sku: `${sku}`, quantity: `${quantity}` }, {
+        const response = await axios.post('https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products', { sku: `${sku}`, quantity: `${quantity}` }, {
             headers }); // Replace with the API endpoint URL
         ctx.body = response.data;
         console.log(response.data);
@@ -49,7 +49,7 @@ try {
         'Authorization': 'Bearer ' + ctx.request.body.token
         };
     
-    const response = await axios.post('https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/' + `${productid}` + '/group', { group: `${group}` }, {
+    const response = await axios.post('https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/' + `${productid}` + '/group', { group: `${group}` }, {
         headers }); // Replace with the API endpoint URL
     ctx.body = response.data;
     console.log(response.data);
@@ -71,7 +71,7 @@ try {
             'Authorization': 'Bearer ' + ctx.request.body.token
           };
       
-        const response = await axios.post('https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/' + `${productid}`, { store: `${store}` }, {
+        const response = await axios.post('https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/' + `${productid}`, { store: `${store}` }, {
             headers }); // Replace with the API endpoint URL
         ctx.body = response.data;
         console.log(response.data);
@@ -90,7 +90,7 @@ try {
             'Authorization': 'Bearer ' + ctx.request.body.token
           };
       
-        const response = await axios.get('https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores', {}, {
+        const response = await axios.get('https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores', {}, {
             headers }); // Replace with the API endpoint URL
         ctx.body = response.data;
         console.log(response.data);
@@ -112,7 +112,7 @@ try {
             'Authorization': 'Bearer ' + ctx.request.body.token
           };
       
-        const response = await axios.get('https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores' + `${storeid}` + '/products?sku=' + `${sku}`, {}, {
+        const response = await axios.get('https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores' + `${storeid}` + '/products?sku=' + `${sku}`, {}, {
             headers }); // Replace with the API endpoint URL
         ctx.body = response.data;
         console.log(response.data);
@@ -133,7 +133,7 @@ try {
             'Authorization': 'Bearer ' + ctx.request.body.token
           };
       
-        const response = await axios.get('https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores' + `${storeid}` + '/invetory', {}, {
+        const response = await axios.get('https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores' + `${storeid}` + '/invetory', {}, {
             headers }); // Replace with the API endpoint URL
         ctx.body = response.data;
         console.log(response.data);

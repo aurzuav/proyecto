@@ -29,7 +29,7 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 				};
 
 				const storesResponse = await axios.get(
-					"https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
+					"https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
 					{ headers }
 				);
 				const inventoryDict = {};
@@ -54,7 +54,7 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 				});
 				// INVENTARIO DE BODEGA (RECEPCION)
 				const stockResponse = await axios.get(
-					`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/inventory`,
+					`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/inventory`,
 					{
 						headers,
 					}
@@ -68,7 +68,7 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 					if (ingrediente.sku == ingr) {
 						//OBTENER DETALLE DE INGREDIENTE, PARA OBTENER ID
 						const detalleIngrediente = await axios.get(
-							`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/products?sku=${ingr}`,
+							`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/products?sku=${ingr}`,
 							{
 								headers,
 							}
@@ -77,7 +77,7 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 						productoId = detalleIngrediente.data[0]._id;
 						//SI INGREDIENTE ESTA EN EL INVENTARIO, CAMBIAR A BODEGA KITCHEN
 						const move = await axios.patch(
-							`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/${productoId}`,
+							`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/${productoId}`,
 							{ store: `${kitchenId}` },
 							{ headers }
 						);
@@ -87,7 +87,7 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 					}
 
 				const storesResponse_ = await axios.get(
-					`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${kitchenId}/products?sku=${ingr}`,
+					`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${kitchenId}/products?sku=${ingr}`,
 					{ headers }
 				);
 
@@ -108,7 +108,7 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 
 				// INVENTARIO DE BODEGA (RECEPCION)
 				const stockResponse = await axios.get(
-					`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/inventory`,
+					`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/inventory`,
 					{
 						headers,
 					}
@@ -122,7 +122,7 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 					if (ingrediente.sku == ingr) {
 						//OBTENER DETALLE DE INGREDIENTE, PARA OBTENER ID
 						const detalleIngrediente = await axios.get(
-							`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${bufferId}/products?sku=${ingr}`,
+							`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${bufferId}/products?sku=${ingr}`,
 							{
 								headers,
 							}
@@ -131,7 +131,7 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 						productoId = detalleIngrediente.data[0]._id;
 						//SI INGREDIENTE ESTA EN EL INVENTARIO, CAMBIAR A BODEGA KITCHEN
 						const move = await axios.patch(
-							`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/${productoId}`,
+							`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/${productoId}`,
 							{ store: `${kitchenId}` },
 							{ headers }
 						);
@@ -141,7 +141,7 @@ async function checkIngredients(BurgersinProdution, dict_products, dict_formula,
 					}
 
 				const storesResponse_ = await axios.get(
-					`https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${kitchenId}/products?sku=${ingr}`,
+					`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${kitchenId}/products?sku=${ingr}`,
 					{ headers }
 				);
 

@@ -1,106 +1,68 @@
+const IdAlmacenes = require("./IdAlmacenes");
 const getToken = require("./getTokenW");
 const axios = require("axios");
 
-async function moveProduct(sku) {
+async function moveProduct(sku, cantidad) {
   try {
-    //TOKEN
-    const token = await getToken();
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + `${token}`,
-    };
-    const storesResponse = await axios.get(
-      "https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores",
-      {
-        headers,
-      }
-    );
+    const almacenes = await IdAlmacenes()
+    console.log("Almacenes:", almacenes);
+    let keyKitchen;
+    almacenes.forEach(almacen => {
+      const key = Object.keys(almacen)[0];
+      const value = almacen[key];
 
-    //OBTENER ID DE BODEGA, BODEGA BUFFER Y BODEGA KITCHEN
-    const inventoryDict = {};
-    let kitchenId = "";
-    let receptionId = "";
-    let bufferId = "";
-    const stores = storesResponse.data;
-    stores.forEach((element) => {
-      if (element.buffer == true) {
-        inventoryDict[element._id] = "Bodega Buffer";
-        bufferId = element._id
-      } else if (element.kitchen == true) {
-        inventoryDict[element._id] = "Bodega Kitchen";
-        kitchenId = element._id;
-      } else {
-        inventoryDict[element._id] = "Bodega";
-        receptionId = element._id;
+      if (value === 'kitchen') {
+        keyKitchen = key;
+        return; // Terminar el bucle si se encuentra la clave "kitchen"
       }
     });
-    // INVENTARIO DE BODEGA (RECEPCION)
-    const stockResponse = await axios.get(
-      `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/inventory`,
-      {
-        headers,
-      }
-    );
-
-    //INGREDIENTES EN EL INVENTARIO DE RECEPCION
-    for (const ingrediente of stockResponse.data) {
-      // VER SI INGREDIENTE ESTA EN EL INVENTARIO
-      if (ingrediente.sku == sku) {
-        //OBTENER DETALLE DE INGREDIENTE, PARA OBTENER ID
-        const detalleIngrediente = await axios.get(
-          `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${receptionId}/products?sku=${sku}`,
-          {
-            headers,
-          }
-        );
-        //ElIJO EL PRIMER ID QUE APARECE (lo elegi de manera random, podría ser cualquierA)
-        productoId = detalleIngrediente.data[0]._id;
-        //SI INGREDIENTE ESTA EN EL INVENTARIO, CAMBIAR A BODEGA KITCHEN
-        const move = await axios.patch(
-          `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/${productoId}`,
-          { store: `${kitchenId}` },
-          { headers }
-        );
-        console.log("MOVI", move.data);
-      } else {
-        console.log("NO está el INGREDIENTE",sku);
-      }
-    }
-
-        // INVENTARIO DE BODEGA (RECEPCION)
-        const stockResponse2 = await axios.get(
-          `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${bufferId}/inventory`,
-          {
-            headers,
-          }
-        );
-    
-        //INGREDIENTES EN EL INVENTARIO DE RECEPCION
-        for (const ingrediente of stockResponse2.data) {
-          // VER SI INGREDIENTE ESTA EN EL INVENTARIO
-          if (ingrediente.sku == sku) {
-            //OBTENER DETALLE DE INGREDIENTE, PARA OBTENER ID
-            const detalleIngrediente = await axios.get(
-              `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${bufferId}/products?sku=${sku}`,
-              {
-                headers,
-              }
-            );
-            //ElIJO EL PRIMER ID QUE APARECE (lo elegi de manera random, podría ser cualquierA)
-            productoId = detalleIngrediente.data[0]._id;
-            //SI INGREDIENTE ESTA EN EL INVENTARIO, CAMBIAR A BODEGA KITCHEN
-            const move = await axios.patch(
-              `https://prod.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/${productoId}`,
-              { store: `${kitchenId}` },
-              { headers }
-            );
-            console.log("MOVI", move.data);
-          } else {
-            console.log("NO está el INGREDIENTE",sku);
-          }
+    outerLoop: // Etiqueta para el bucle externo
+    for (const almacen of almacenes) {
+      const idStore = Object.keys(almacen)[0];
+      console.log(`consulta a almacen ${JSON.stringify(idStore)} por el sku ${sku}`)
+      const token = await getToken();
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + `${token}`,
+      };
+      const stockResponse = await axios.get(
+        `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/stores/${idStore}/products?sku=${sku}`,
+        {
+          headers,
         }
+      );
+      //console.log(stockResponse.data)
+      if ((stockResponse.data.length >= cantidad) && (idStore !== keyKitchen)) {
+        console.log(`${JSON.stringify(almacen)} tiene stock suficiente de ${sku}`)
+        const listaIds = stockResponse.data.map(objeto => objeto._id);
+        let contador = 0
+        requestBody = { store: `${keyKitchen}` }
+        while (contador < cantidad) {
+          id = listaIds[contador]
+          const token = await getToken();
+          const headers = {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + `${token}`,
+          };
+          const moveResponse = await axios.patch(
+            `https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/warehouse/products/${id}`,
+
+            requestBody,
+            { headers }
+
+          )
+          console.log("lo movi")
+          console.log(moveResponse.data)
+          contador += 1
+        }
+        break outerLoop; // Salir del bucle externo
+      } 
+    }
   } catch (error) {
-    console.log(error.response);
+    if (error.isAxiosError) {
+      const errorArray = error.response.data; // Accede al array de errores
+      console.log(errorArray); // Imprime el array de errores
+    }
   }
 }
 

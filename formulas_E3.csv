@@ -96,7 +96,7 @@ e481e233b2,Hamburguesa Vegetariana,7cb14c4cec,Mayonesa de mostaza y miel,1
 0a44f324c1,Hamburguesa con Huevo,febf35a4ba,Salsa de tomate,1
 adfb55e095,Hamburguesa con Tocino,e70328935a,Pan de hamburguesa,1
 adfb55e095,Hamburguesa con Tocino,1384839fbe,Carne de res,1
-adfb55e095,Hamburguesa con Tocino,4791719128,#N/A,1
+adfb55e095,Hamburguesa con Tocino,4791719128,Tocino,1
 adfb55e095,Hamburguesa con Tocino,648e04a1d3,Queso cheddar,1
 adfb55e095,Hamburguesa con Tocino,ec89361b80,Lechuga,1
 adfb55e095,Hamburguesa con Tocino,02e409c8bf,Tomate,1
@@ -166,3 +166,51 @@ ecfc869d23,Hamburguesa de Pollo,e702757a97,Mayonesa,1
 5a6574e79f,Hamburguesa de Salmón,02e409c8bf,Tomate,1
 5a6574e79f,Hamburguesa de Salmón,ab2da8d916,Cebolla roja,1
 5a6574e79f,Hamburguesa de Salmón,635212bf6c,Salsa tártara,1
+X8Nc2bH3m5,Hamburguesa Extraterrestre,R3Kt7fG9w2,Pan de carbón activado,1
+X8Nc2bH3m5,Hamburguesa Extraterrestre,S6Jn2vD4x8,Carne de avestruz,1
+X8Nc2bH3m5,Hamburguesa Extraterrestre,H2Qc6mP9v7,Gelatina de colores,1
+X8Nc2bH3m5,Hamburguesa Extraterrestre,Z1Nv5bT7d2,Wasabi,1
+R5Tn2mB6k9,Hamburguesa Oceánica Profunda,F8Yk2zH4x7,Pan de tinta de calamar,1
+R5Tn2mB6k9,Hamburguesa Oceánica Profunda,E7Xf6dA4q9,Medusa en escabeche,1
+R5Tn2mB6k9,Hamburguesa Oceánica Profunda,K5Vj3tF2c7,Algas,1
+R5Tn2mB6k9,Hamburguesa Oceánica Profunda,W9Ls1bV4j8,Perlas comestibles,1
+P4Qv9jK7d2,Hamburguesa Dulce Picante,I3Am8fU7x2,Pan de churro,1
+P4Qv9jK7d2,Hamburguesa Dulce Picante,G6Hx9nR2y4,Jalapeños,1
+P4Qv9jK7d2,Hamburguesa Dulce Picante,D7Bv4mC8k5,Chocolate,1
+P4Qv9jK7d2,Hamburguesa Dulce Picante,8fcd9e64a5,Carne de ternera,1
+P4Qv9jK7d2,Hamburguesa Dulce Picante,018aa592b1,Queso de cabra,1
+M6Fz3vR8c7,Hamburguesa Selva Amazónica,R6Qd2mB5c8,Pan de plátano,1
+M6Fz3vR8c7,Hamburguesa Selva Amazónica,W2Vr7mH4z5,Carne de capibara,1
+M6Fz3vR8c7,Hamburguesa Selva Amazónica,S1Lj3xK7b9,Palmito,1
+M6Fz3vR8c7,Hamburguesa Selva Amazónica,T9Qv2rH5x7,Salsa de maracuyá,1
+M6Fz3vR8c7,Hamburguesa Selva Amazónica,E5Zu2pW8y1,Hormigas,1
+H9Xc4nB7z1,Hamburguesa Glacial Polar,F8Rd3kC6b2,Pan de nieve,1
+H9Xc4nB7z1,Hamburguesa Glacial Polar,V2Qf5bE7d6,Carne de reno,1
+H9Xc4nB7z1,Hamburguesa Glacial Polar,I4Lm7sF2n9,Hielo picado,1
+H9Xc4nB7z1,Hamburguesa Glacial Polar,G9Xw4kT3j2,Frutos rojos,1
+H9Xc4nB7z1,Hamburguesa Glacial Polar,B5Vd8mF2z7,Menta,1
+C3Nv7bH9m6,Hamburguesa Galáctica,P6Mn9vK8x1,Pan de polvo de estrella,1
+C3Nv7bH9m6,Hamburguesa Galáctica,J2Gh7eB4f9,Carne de gurgnak,1
+C3Nv7bH9m6,Hamburguesa Galáctica,Y3Pc6bT8n2,Queso de luna,1
+C3Nv7bH9m6,Hamburguesa Galáctica,Z4Lr9vF7g3,Salsa de meteorito,1
+C3Nv7bH9m6,Hamburguesa Galáctica,R5Tm8bC1x6,Lechuga de Marte,1
+D2Xc5nB8v7,Hamburguesa Neptuniana,E3Jk5rV7u1,Pan de gas de neptunio,1
+D2Xc5nB8v7,Hamburguesa Neptuniana,F7Bh4dV6z1,Carne de glaciar extraterrestre,1
+D2Xc5nB8v7,Hamburguesa Neptuniana,G4Rn1dJ3c7,Hielo de plutón,1
+D2Xc5nB8v7,Hamburguesa Neptuniana,Y5Bv2nM4x1,Anillos de Saturno,1
+D2Xc5nB8v7,Hamburguesa Neptuniana,T3Wf9vS2z1,Mayonesa de Júpiter,1
+T9Km2bV7n3,Hamburguesa Supernova,H7Qw3sK1m9,Pan de agujero negro,1
+T9Km2bV7n3,Hamburguesa Supernova,U8Nf4bV2k5,Carne de quark,1
+T9Km2bV7n3,Hamburguesa Supernova,I2Gk5dE3h6,Polvo cósmico,1
+T9Km2bV7n3,Hamburguesa Supernova,T7Xc9mQ5p4,Salsa de rayos gamma,1
+T9Km2bV7n3,Hamburguesa Supernova,R3Bv7nM6j5,Chispas de neutrinos,1
+H4Rn9vG2c5,Hamburguesa Radioactiva,Q5Gn2fR7z1,Pan de uranio enriquecido,1
+H4Rn9vG2c5,Hamburguesa Radioactiva,H9Jv6nD4k2,Carne de cerdo irradiada,1
+H4Rn9vG2c5,Hamburguesa Radioactiva,W3Kc8mV2b5,Queso radiactivo,1
+H4Rn9vG2c5,Hamburguesa Radioactiva,Y6Xz9pQ3r8,Relish de plutonio,1
+H4Rn9vG2c5,Hamburguesa Radioactiva,T4Lc7nB2m9,Cebolla mutante,1
+M7Fb4nT5k2,Hamburguesa de Materia Oscura,F8Vz3nK7c2,Pan de materia oscura,1
+M7Fb4nT5k2,Hamburguesa de Materia Oscura,R2Mf5dN8v3,Carne de partículas fantasma,1
+M7Fb4nT5k2,Hamburguesa de Materia Oscura,P7Rk4sT3m8,Lechuga de antigravedad,1
+M7Fb4nT5k2,Hamburguesa de Materia Oscura,C6Vj9nH2b5,Salsa de energía oscura,1
+M7Fb4nT5k2,Hamburguesa de Materia Oscura,D5Xf9vC2b6,Tomate de anti-materia,1
