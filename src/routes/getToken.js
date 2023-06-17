@@ -3,7 +3,7 @@ const axios = require("axios");
 
 let token = null;
 
-async function fetchToken() {
+async function getToken() {
 	try {
 		const headers = {
 			"Content-Type": "application/json",
@@ -14,18 +14,12 @@ async function fetchToken() {
 			{ group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
 			{ headers }
 		);
-		token = response.data.token;
+		return response.data.token;
 	} catch (error) {
 		console.error(error);
 	}
 }
 
-async function getToken() {
-	if (!token) {
-		// Obtener y almacenar el token si aún no está disponible
-		await fetchToken();
-	}
-	return token;
-}
+
 
 module.exports = getToken;

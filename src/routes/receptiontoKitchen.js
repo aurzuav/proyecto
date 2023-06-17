@@ -1,13 +1,13 @@
 const moveProduct = require("./moveProduct")
 
-async function ReceptionToKitchen(datosOrden, Formuladictionary) {
+async function ReceptionToKitchen(datosOrden, formula) {
 	try {
-		console.log("estoy en reception to kitchen")
-		sku = datosOrden.sku;
-		const formula = Formuladictionary[sku].ingredientes
+		console.log("ReceptionToKitchen")
+		console.log(formula)
 		// CAMBIAR DE BODEGA DE RECEPCION A COCINA EL INGREDIENTE QUE NECESITAMOS PARA LA HAMBURGUESA
 		for (let sku in formula) {
-			moveProduct(sku);
+			console.log(`quiero mover ${datosOrden.cantidad} del sku: ${sku}`)
+			await moveProduct(sku, datosOrden.cantidad);
 		}
 	} catch (error) {
 		console.log(error);

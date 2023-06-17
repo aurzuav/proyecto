@@ -27,6 +27,9 @@ const checkIngredients = require("./checkIngredients");
 const produceBurgers = require("./produceBurgers.js");
 const { read } = require("fs");
 const { Console } = require("console");
+const checkKitchen = require("./checkKitchen.js");
+const KitchentoCheckOut = require("./KitchentoCheckOut.js");
+const wait = require("./wait.js");
 
 //app.use(router.routes());
 
@@ -37,29 +40,49 @@ async function manejarOrden(OrderId, canal) {
 	try {
 		datos = await obtenerOrden(OrderId)
 		try {
-			if (canal === "grupo"){
+			if (canal === "grupo") {
 				const stock = await getStockRecepcion(datos.sku, 5)
-				if (stock >= datos.cantidad){
+				if (stock >= datos.cantidad) {
 					checkIngredients();
 					//console.log("lo tengo")
-					requestBody = {"estado":"aceptada"}
+					requestBody = { "estado": "aceptada" }
 					await actualizarOrden(requestBody, OrderId, canal);
 					await ReceptionToDispatch(OrderId, canal, datos.cantidad)
-				}else{
+				} else {
 					//producir
 					//console.log("no lo tengo")
-					requestBody = {"estado":"rechazada"}
-					await producir_orden(datos);
+					requestBody = { "estado": "rechazada" }
+					//await producir_orden(datos);
 					await actualizarOrden(requestBody, OrderId, canal);
-					
+
 				}
-			}else if (canal === "SFTP"){
+			} else if (canal === "SFTP") {
 				BurgersinProdution.push(datos.sku); //entender
 				await actualizarOrden(requestBody = {"estado":"aceptada"}, OrderId, canal);
 				await producir_orden(datos);
-				// const formula = Formuladictionary[datos.sku].ingredientes;
-				// console.log("receptiontokitchen")
-				// await ReceptionToKitchen(datos, Formuladictionary);
+				const formula = Formuladictionary[datos.sku].ingredientes
+				let bool = false
+				while(!bool){
+					await ReceptionToKitchen(datos, formula);
+					bool = await checkKitchen(formula, datos.cantidad)
+					if (bool === true){
+						break
+					}
+					console.log("va a esperar que esten los ingredientes en la cocina")
+					await wait(3 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)
+				}
+				if (bool) {
+					await producirSku(datos.sku, datos.cantidad)
+					let result = false;
+					while (!result) {
+						result = await KitchentoCheckOut(datos.sku, datos.cantidad, OrderId); // Llama a tu función checkKitchen aquí
+						if (!result) {
+							console.log("va a esperar")
+							await wait(3 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)
+						}
+					}
+
+				}
 				// setTimeout(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
 				// console.log("ready_for_production")
 				// console.log(ready_for_production);
@@ -78,7 +101,7 @@ async function manejarOrden(OrderId, canal) {
 				// console.log("reasy")
 				// console.log(ready_for_production)
 			}
-			
+
 		} catch (error) {
 			console.log(error);
 		}
@@ -92,7 +115,7 @@ async function manejarOrden(OrderId, canal) {
 // 	  setTimeout(resolve, timeout);
 // 	});
 //   }
-  
+
 //   // Call the function and wait for the specified timeout
 //   wait(10 * 60 * 1000).then(() => {
 // 	const result = checkIngredients(BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
@@ -122,23 +145,25 @@ async function producir_orden(datos) {
 				const ingredient = Productdictionary[ingrediente];
 				console.log(`Ingrediente completo: ${JSON.stringify(ingredient)}`)
 				const array_groups = JSON.parse(ingredient.gruposProductores)
+				const qty = Math.ceil(cantidadHamburguesas / parseInt(ingredient.loteProduccion)) * parseInt(ingredient.loteProduccion);
 				console.log(array_groups)
 				if (array_groups.includes(5)) {
 					console.log("Nosotros producimos el ingrediente")
-					//como sabemos lo q tenemos que pedir? no debería ser lote de la hamb * lote del producto?
-					const qty = parseInt(ingredient.loteProduccion) * cantidadHamburguesas;
-					console.log(cantidadHamburguesas)
-					console.log(qty)
+					console.log(`Cantidad de hamburgesas ${cantidadHamburguesas}`)
+					console.log(`cantidad del ingrediente a producir: ${qty}`)
 					await producirSku(ingrediente, qty)
 				}
 				else { // ask ingredient to another group
+					//falta hacer algo que me diga si lo pedí o no
 					for (indice in array_groups) {
 						const grupoProductor = array_groups[indice].toString()
 						console.log("Vamos a pedir el ingrediente");
+						console.log(`Cantidad de hamburgesas ${cantidadHamburguesas}`)
+						console.log(`cantidad del ingrediente a pedir: ${qty}`)
 						const stock = await getStock(ingrediente, grupoProductor);
 						console.log(`el stock es:${stock}`)
-						if (stock === 1) {
-							console.log("entro al if de stock");
+						if (stock === 1) { //esto no se ha probado
+							console.log("Si hay stock, se va a pedir");
 							console.log(grupoProductor);
 							const fechaActualUtc = moment.utc();
 							const fechaHoraUtc4 = fechaActualUtc.add(4, "hours").format("YYYY-MM-DD HH:mm:ss");
@@ -147,7 +172,7 @@ async function producir_orden(datos) {
 								"cliente": "5",
 								"proveedor": grupoProductor,
 								"sku": ingrediente,
-								"cantidad": parseInt(ingredient.loteProduccion),
+								"cantidad": qty,
 								"vencimiento": fechaHoraUtc4
 							};
 							//console.log(requestBody)
@@ -159,9 +184,10 @@ async function producir_orden(datos) {
 								console.log(error);
 							}
 						}
+					}
 				}
 			}
-		}}
+		}
 	} catch (error) {
 		console.log(error.message);
 	}
