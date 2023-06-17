@@ -59,7 +59,10 @@ async function moveProduct(sku, cantidad) {
       } 
     }
   } catch (error) {
-    console.log(error);
+    if (error.isAxiosError) {
+      const errorArray = error.response.data; // Accede al array de errores
+      console.log(errorArray); // Imprime el array de errores
+    }
   }
 }
 

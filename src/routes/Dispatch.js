@@ -16,8 +16,12 @@ async function Dispatch(idOrden, productId) {
             {headers}
         );
         console.log(dispatchResponse.data)
+        return true
 	} catch (error) {
-		console.error(error);
+        if (error.isAxiosError) {
+            const errorArray = error.response.data; // Accede al array de errores
+            console.log(errorArray); // Imprime el array de errores
+        }
 	}
 }
 

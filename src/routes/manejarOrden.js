@@ -57,31 +57,44 @@ async function manejarOrden(OrderId, canal) {
 
 				}
 			} else if (canal === "SFTP") {
-				BurgersinProdution.push(datos.sku); //entender
-				await actualizarOrden(requestBody = {"estado":"aceptada"}, OrderId, canal);
-				await producir_orden(datos);
-				const formula = Formuladictionary[datos.sku].ingredientes
-				let bool = false
-				while(!bool){
-					await ReceptionToKitchen(datos, formula);
-					bool = await checkKitchen(formula, datos.cantidad)
-					if (bool === true){
-						break
-					}
-					console.log("va a esperar que esten los ingredientes en la cocina")
-					await wait(3 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)
+				var cantidadHamburguesas = datos.cantidad
+				const sku = datos.sku
+				const producto = Productdictionary[sku]
+				const divisionEntera = Math.floor(cantidadHamburguesas / producto.loteProduccion);
+				console.log(datos)
+				console.log(producto)
+				if (divisionEntera * producto.loteProduccion === cantidadHamburguesas) {
+					// La cantidad es divisible exactamente por el lote
+				} else {
+					// La cantidad no es divisible exactamente por el lote
+					const siguienteNumero = (divisionEntera + 1) * producto.loteProduccion;
+					cantidadHamburguesas = siguienteNumero;
 				}
-				if (bool) {
-					await producirSku(datos.sku, datos.cantidad)
-					let result = false;
-					while (!result) {
-						result = await KitchentoCheckOut(datos.sku, datos.cantidad, OrderId); // Llama a tu función checkKitchen aquí
-						if (!result) {
+				await actualizarOrden(requestBody = { "estado": "aceptada" }, OrderId, canal);
+				await producir_orden(datos, cantidadHamburguesas);
+				const formula = Formuladictionary[datos.sku].ingredientes
+				let continuarProceso = false
+				while (!continuarProceso) {
+					await ReceptionToKitchen(formula, cantidadHamburguesas);
+					const kitchenResult = await checkKitchen(formula, cantidadHamburguesas);
+					continuarProceso = kitchenResult.todosDisponibles;
+					console.log(kitchenResult)
+					if (continuarProceso === true) {
+						break;
+					}
+					console.log("Esperando que los ingredientes estén disponibles en recepción y luego en la cocina");
+					await wait(1 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)	
+				}
+				if (continuarProceso) {
+					await producirSku(datos.sku, cantidadHamburguesas)
+					let despachar = false;
+					while (!despachar) {
+						despachar = await KitchentoCheckOut(datos.sku, cantidadHamburguesas, OrderId); // Llama a tu función checkKitchen aquí
+						if (!despachar) {
 							console.log("va a esperar")
 							await wait(3 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)
 						}
 					}
-
 				}
 				// setTimeout(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);
 				// console.log("ready_for_production")
@@ -122,20 +135,9 @@ async function manejarOrden(OrderId, canal) {
 // 	console.log(result); // Output the returned value
 //   });
 
-async function producir_orden(datos) {
-	var cantidadHamburguesas = datos.cantidad
+async function producir_orden(datos,cantidadHamburguesas) {	
 	const sku = datos.sku
 	const producto = Productdictionary[sku]
-	const divisionEntera = Math.floor(cantidadHamburguesas / producto.loteProduccion);
-	console.log(datos)
-	console.log(producto)
-	if (divisionEntera * producto.loteProduccion === cantidadHamburguesas) {
-		// La cantidad es divisible exactamente por el lote
-	} else {
-		// La cantidad no es divisible exactamente por el lote
-		const siguienteNumero = (divisionEntera + 1) * producto.loteProduccion;
-		cantidadHamburguesas = siguienteNumero;
-	}
 	try {
 		// si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
 		if (producto.produccion === "cocina") { // si es una hamburguesa
@@ -155,6 +157,7 @@ async function producir_orden(datos) {
 				}
 				else { // ask ingredient to another group
 					//falta hacer algo que me diga si lo pedí o no
+					outerLoop:
 					for (indice in array_groups) {
 						const grupoProductor = array_groups[indice].toString()
 						console.log("Vamos a pedir el ingrediente");
@@ -179,7 +182,11 @@ async function producir_orden(datos) {
 							try {
 								const order = await newOrder(requestBody);
 								//console.log(order)
-								await notifyCreateOrder(order)
+								let sePidio = false
+								sePidio = await notifyCreateOrder(order)
+								if (sePidio){
+									break outerLoop
+								}
 							} catch (error) {
 								console.log(error);
 							}

@@ -20,8 +20,10 @@ async function producirSku(sku, quantity){
               ); // Replace with the API endpoint URL
               console.log(response.data);
         } catch (error) {
-          console.log("ERROR en producir")
-          console.log(error)
+          if (error.isAxiosError) {
+            const errorArray = error.response.data; // Accede al array de errores
+            console.log(errorArray); // Imprime el array de errores
+          }
         }
 }
 

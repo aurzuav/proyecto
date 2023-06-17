@@ -3,6 +3,7 @@ const axios = require("axios");
 const IdAlmacenes = require("./IdAlmacenes");
 const Dispatch = require("./Dispatch");
 const getToken = require("./getTokenW");
+const wait = require("./wait");
 
 async function KitchentoCheckOut(sku, cantidad, idOrden) {
     try {
@@ -59,9 +60,13 @@ async function KitchentoCheckOut(sku, cantidad, idOrden) {
                     requestBody,
                     { headers }
                 )
-                console.log("lo movi al checkout")
                 console.log(moveResponse.data)
-                await Dispatch(idOrden, id)
+                console.log("lo movi al checkout")
+                despachado = false
+                while(!despachado){
+                    despachado = await Dispatch(idOrden, id)
+                    await wait(1 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)
+                }
                 contador += 1
             }
             return true

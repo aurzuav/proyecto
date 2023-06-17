@@ -25,6 +25,7 @@ async function notifyCreateOrder(data) {
 		);
 		console.log(response.data);
 		console.log(`notificamos pedir ${data.sku} a ${data.proveedor}`);
+		return true
 	} catch (error) {
 		console.log(`error al notificar ${data.sku} a ${data.proveedor}`);
 	}
