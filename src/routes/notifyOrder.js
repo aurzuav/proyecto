@@ -17,7 +17,7 @@ async function notifyOrder(estado, group, orderId) {
 		console.log( response.data);
 	} catch (error) {
 		console.log(`No se pudo notificar al grupo que la orden está ${estado}`)
-		console.log(error);
+		//console.log(error);
 	}
 };
 

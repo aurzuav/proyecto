@@ -5,9 +5,9 @@ async function ReceptionToKitchen(formula, cantidad) {
 		console.log("ReceptionToKitchen")
 		console.log(formula)
 		// CAMBIAR DE BODEGA DE RECEPCION A COCINA EL INGREDIENTE QUE NECESITAMOS PARA LA HAMBURGUESA
-		for (let sku in formula) {
-			console.log(`quiero mover ${cantidad} del sku: ${sku}`)
-			await moveProduct(sku, cantidad);
+		for (let indiceSku in formula) {
+			console.log(`quiero mover ${cantidad} del sku: ${formula[indiceSku]}`)
+			await moveProduct(formula[indiceSku], cantidad);
 		}
 	} catch (error) {
 		console.log(error);

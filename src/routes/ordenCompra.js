@@ -46,8 +46,8 @@ function procesarPedidos() {
 			// 	console.log(pedidos[pedido])
 			// 	manejarOrden(pedidos[0].id, "SFTP")
 			// }
-			console.log(pedidos[0])
-			manejarOrden(pedidos[0].id, "SFTP")
+			console.log(pedidos[pedidos.length -1])
+			//manejarOrden(pedidos[pedidos.length -1].id, "SFTP")
 		})
 		.catch((error) => {
 			console.error("Error:", error.message);

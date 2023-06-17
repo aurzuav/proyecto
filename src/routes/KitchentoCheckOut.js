@@ -1,11 +1,9 @@
 
 const axios = require("axios");
 const IdAlmacenes = require("./IdAlmacenes");
-const Dispatch = require("./Dispatch");
 const getToken = require("./getTokenW");
-const wait = require("./wait");
 
-async function KitchentoCheckOut(sku, cantidad, idOrden) {
+async function KitchentoCheckOut(sku, cantidad) {
     try {
         const almacenes = await IdAlmacenes()
         let keyKitchen;
@@ -28,7 +26,7 @@ async function KitchentoCheckOut(sku, cantidad, idOrden) {
                 return; // Terminar el bucle si se encuentra la clave "kitchen"
             }
         });
-        console.log(keyKitchen, keyCheckOut)
+        //console.log(keyKitchen, keyCheckOut)
         const token = await getToken();
         const headers = {
             "Content-Type": "application/json",
@@ -42,13 +40,13 @@ async function KitchentoCheckOut(sku, cantidad, idOrden) {
         );
         console.log(stockKitchen.data)
         if (stockKitchen.data.length >= cantidad) {
-            console.log("va a mover, la hamburguesa esta ready")
+            console.log("va a mover, la cantidad de hamburguesas necesarias esta en la cocina")
             const listaIds = stockKitchen.data.map(objeto => objeto._id);
             let contador = 0
             requestBody = { store: `${keyCheckOut}` }
             while (contador < cantidad) {
                 id = listaIds[contador]
-                console.log(listaIds)
+                //console.log(listaIds)
                 const token = await getToken();
                 const headers = {
                     "Content-Type": "application/json",
@@ -62,15 +60,13 @@ async function KitchentoCheckOut(sku, cantidad, idOrden) {
                 )
                 console.log(moveResponse.data)
                 console.log("lo movi al checkout")
-                despachado = false
-                while(!despachado){
-                    despachado = await Dispatch(idOrden, id)
-                    await wait(1 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)
-                }
                 contador += 1
             }
-            return true
+            if (contador >= cantidad){
+                return {productIds: listaIds, listoParaDespacho:true}
+            }
         }
+        return {productIds: [], listoParaDespacho:false}
     } catch (error) {
         console.log(error)
     }
