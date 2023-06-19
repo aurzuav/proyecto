@@ -31,6 +31,7 @@ const checkKitchen = require("./checkKitchen.js");
 const KitchentoCheckOut = require("./KitchentoCheckOut.js");
 const wait = require("./wait.js");
 const Dispatch = require("./Dispatch.js");
+const getStatement = require("./getStatement.js");
 
 //app.use(router.routes());
 
@@ -39,6 +40,7 @@ getCSVDictionaryProducts(Productdictionary, "./products_E3.csv");
 
 async function manejarOrden(OrderId, canal) {
 	try {
+		const bank = await getStatement();
 		datos = await obtenerOrden(OrderId)
 		try {
 			if (canal === "grupo") {

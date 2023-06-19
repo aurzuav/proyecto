@@ -1,6 +1,7 @@
 
 const axios = require("axios");
 const getToken = require("./getTokenW");
+const getData = require("./getData.js");
 
 async function Dispatch(idOrden, productsId) {
 	try {
@@ -20,6 +21,7 @@ async function Dispatch(idOrden, productsId) {
             console.log(dispatchResponse.data)
             return true
         }
+        getData(0, { order_id: `${idOrden}` })
 	} catch (error) {
         if (error.isAxiosError) {
             const errorArray = error.response.data; // Accede al array de errores

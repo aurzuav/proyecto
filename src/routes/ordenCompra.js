@@ -15,6 +15,8 @@ const ReceptionToKitchen = require("./receptiontoKitchen.js");
 const getToken = require("./getToken.js");
 const poblar_or = require("../ordenes_recibidas.js")
 const manejarOrden = require("./manejarOrden.js")
+const getInvoices = require("./getStatement.js");
+const getData = require("./getData.js");
 
 const {
 	getCSVDictionaryProducts,
@@ -56,7 +58,9 @@ function procesarPedidos() {
 
 
 // Llamar a la función inicialmente
-procesarPedidos();
+console.log("pidiendo datos banco")
+getData();
+//procesarPedidos();
 
 // Ejecutar la función cada 15 minutos
 //setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos
