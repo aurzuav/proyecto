@@ -33,6 +33,7 @@ const wait = require("./wait.js");
 const Dispatch = require("./Dispatch.js");
 const getStatement = require("./getStatement.js");
 const getBalance = require("./getBalance.js");
+const getData = require("./getData.js");
 
 //app.use(router.routes());
 
@@ -41,7 +42,7 @@ getCSVDictionaryProducts(Productdictionary, "./products_E3.csv");
 
 async function manejarOrden(OrderId, canal) {
 	try {
-		const bank = await getStatement();
+		//const bank = await getStatement();
 		datos = await obtenerOrden(OrderId)
 		try {
 			if (canal === "grupo") {
@@ -52,6 +53,7 @@ async function manejarOrden(OrderId, canal) {
 					requestBody = { "estado": "aceptada" }
 					await actualizarOrden(requestBody, OrderId, canal);
 					await ReceptionToDispatch(OrderId, datos.cantidad, datos.sku)
+					await getData(OrderId, { order_id: `${OrderId}` })
 				} else {
 					//producir
 					//console.log("no lo tengo")
@@ -170,7 +172,7 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 									"cantidad": qty,
 									"vencimiento": fechaHoraUtc4
 								};
-								const balance = getBalance();
+								const balance = await getBalance();
 								try {
 									const costoOrden = (ingredient.costoProduccion/ingredient.loteProduccion)*qty
 									if (balance >= costoOrden){

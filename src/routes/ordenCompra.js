@@ -43,13 +43,13 @@ const { response } = require("express");
 
 function procesarPedidos() {
 	leerArchivosXML()
-		.then((pedidos) => {
-			// for (let pedido in pedidos){
-			// 	console.log(pedidos[pedido])
-			// 	manejarOrden(pedidos[0].id, "SFTP")
-			// }
-			console.log(pedidos[pedidos.length -1])
-			manejarOrden(pedidos[pedidos.length -1].id, "SFTP")
+		.then(async (pedidos) => {
+			for (let pedido in pedidos){
+				console.log(pedidos[pedido])
+				await manejarOrden(pedidos[pedido].id, "SFTP")
+			}
+			// console.log(pedidos[pedidos.length -1])
+			// manejarOrden(pedidos[pedidos.length -1].id, "SFTP")
 		})
 		.catch((error) => {
 			console.error("Error:", error.message);
