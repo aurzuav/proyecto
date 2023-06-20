@@ -81,7 +81,7 @@ async function manejarOrden(OrderId, canal) {
 					kitchenResult = await checkKitchen(formula, cantidadHamburguesas); //veo si estan en la cocina
 				}
 				if (kitchenResult.faltantes.length > 0){
-					//await producir_orden(datos, cantidadHamburguesas, kitchenResult.faltantes); //produzco lo que falta
+					await producir_orden(datos, cantidadHamburguesas, kitchenResult.faltantes); //produzco lo que falta
 					//await wait(3 * 60 * 1000); //Deberia esperar para se produzcan
 				}
 				let continuarProceso = kitchenResult.todosDisponibles //bool

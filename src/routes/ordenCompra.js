@@ -49,7 +49,7 @@ function procesarPedidos() {
 			// 	manejarOrden(pedidos[0].id, "SFTP")
 			// }
 			console.log(pedidos[pedidos.length -1])
-			//manejarOrden(pedidos[pedidos.length -1].id, "SFTP")
+			manejarOrden(pedidos[pedidos.length -1].id, "SFTP")
 		})
 		.catch((error) => {
 			console.error("Error:", error.message);
@@ -59,7 +59,7 @@ function procesarPedidos() {
 
 // Llamar a la función inicialmente
 console.log("pidiendo datos banco")
-getData();
+//getData();
 //procesarPedidos();
 
 // Ejecutar la función cada 15 minutos

@@ -4,6 +4,7 @@ const getTokenW = require("./getTokenW.js")
 const axios = require("axios");
 const notifyOrder = require("./notifyOrder.js");
 const IdAlmacenes = require("./IdAlmacenes.js");
+const getData = require("./getData.js");
 
 
 async function ReceptionToDispatch(idOrden, qty, sku) {
@@ -59,6 +60,7 @@ async function ReceptionToDispatch(idOrden, qty, sku) {
       }
     }
     console.log(`Orden: ${idOrden} Despachada`);
+    getData({ order_id: `${idOrden}` })
   } catch (error) {
     if (error.isAxiosError) {
       const errorArray = error.response.data; // Accede al array de errores

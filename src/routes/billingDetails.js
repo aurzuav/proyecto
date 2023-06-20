@@ -13,24 +13,25 @@ const pool = new Pool({
 });
 
 // Definir una función para poblar la tabla "ordenes" a partir de diccionarios
-async function billingDetails(id, client, supplier, channel, status, price, interest, totalprice, created, updated) {
-  let client; // Variable para almacenar el cliente de conexión
+async function billingDetails(id, id_orden, client, supplier, channel, status, price, interest, totalprice, created, updated) {
+    console.log("entro a billingDetails");
+    let client1; // Variable para almacenar el client1e de conexión
 
   try {
-    client = await pool.connect(); // Obtener una instancia de cliente de conexión
+    client1 = await pool.connect(); // Obtener una instancia de client1e de conexión
 
-    await client.query(
-      `INSERT INTO billingdetails (id, client, supplier, channel, status, price, interest, totalprice, created, updated)
-       VALUES ($1, $2, $3, $4, $5)`,
-      [id, client, supplier, channel, status, price, interest, totalprice, created, updated]
+    await client1.query(
+      `INSERT INTO BillingDetails (invoice_id, order_id, client, supplier, channel, status, price, interest, totalprice, created, updated)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      [id, id_orden, client, supplier, channel, status, price, interest, totalprice, created, updated]
     );
 
     console.log('Invoice insertado exitosamente');
   } catch (error) {
     console.error('Error al poblar la tabla "billingDetails":', error);
   } finally {
-    if (client) {
-      client.release(); // Liberar el cliente de conexión
+    if (client1) {
+      client1.release(); // Liberar el client1e de conexión
     }
   }
 }
@@ -38,8 +39,8 @@ async function billingDetails(id, client, supplier, channel, status, price, inte
 // Definir la ruta para obtener los datos de la tabla "ordenes_creadas"
 app.get('/details', async function(req, res) {
   try {
-    const client = await pool.connect();
-    const result = await client.query('SELECT * FROM billingDetails');
+    const client1 = await pool.connect();
+    const result = await client1.query('SELECT * FROM billingDetails');
     const rows = result.rows;
     res.send(rows);
   } catch (error) {
@@ -49,7 +50,7 @@ app.get('/details', async function(req, res) {
 });
 
 // Ejecutar la función para poblar la tabla al iniciar el servidor
-billingDetails(); // Puedes pasar los valores deseados para poblar la tabla aquí
+//billingDetails(); // Puedes pasar los valores deseados para poblar la tabla aquí
 
 
 module.exports = billingDetails;

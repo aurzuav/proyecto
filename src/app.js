@@ -124,6 +124,7 @@ async function getToken() {
 module.exports = getToken;
 
 const ordenCompra = require('./routes/ordenCompra');
+const payInvoice = require("./routes/payInvoice.js");
 app.use(ordenCompra.routes())
 
 // dispatches products - ver input productid y orderid
@@ -428,6 +429,7 @@ app.use(async (ctx, next) => {
       );
     }else{
       orden.estado = ctx.request.body.estado;
+      payInvoice(id_orden);
 
       ctx.status = 204;
       //ctx.body = orden;

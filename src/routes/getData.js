@@ -9,7 +9,8 @@ var emitInvoiceArgs = { order_id: '648f2341fd1aaae5de314e09' };
 var emit_try = { status: 'aceptada', side: 'B2B' };
 
 // va a tener type y info_dict
-async function getData(info_dict) {
+async function getData(orden_id, info_dict) {
+    console.log("entro a getData")
     try {
         // we create client
         soap.createClient(url, {}, function (err, client) {
@@ -19,14 +20,20 @@ async function getData(info_dict) {
 
             // emit statement B2B
         client.emitInvoice(info_dict, function (err, result) {
-            console.log("entro a B2B")
-            console.log(`emit: ${JSON.stringify(result)}`)
-            console.log(`emitInvoice Error:
-            ${JSON.stringify(err.root.Envelope.Body)}`)
-            //billingDetails(todos los inputs);
+            console.log("entro a B2B");
+            //console.log(JSON.stringify(result));
+            console.log(result);
+            const data = result.BillingDetails;
+            console.log(data);
+            console.log(data.id)
+            console.log(result);
+            // console.log(`emitInvoice Error:
+            // ${JSON.stringify(err.root.Envelope.Body)}`)
+            billingDetails(data.id, orden_id, data.client, data.supplier, data.channel, data.status, data.price, 
+                data.interest, data.totalprice, data.createdAt, data.updtedAt);
         })
         });
-        payInvoice();
+        //payInvoice();
     }
     catch (error) {
         console.log(error.message);
