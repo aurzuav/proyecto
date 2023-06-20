@@ -427,6 +427,7 @@ app.use(async (ctx, next) => {
         "Output_S3.txt",
         JSON.stringify(ordenesRecibidas2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
       );
+      payInvoice(id_orden);
     }else{
       orden.estado = ctx.request.body.estado;
       payInvoice(id_orden);

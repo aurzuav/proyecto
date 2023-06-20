@@ -60,7 +60,7 @@ async function ReceptionToDispatch(idOrden, qty, sku) {
       }
     }
     console.log(`Orden: ${idOrden} Despachada`);
-    getData({ order_id: `${idOrden}` })
+    getData(idOrden, { order_id: `${idOrden}` })
   } catch (error) {
     if (error.isAxiosError) {
       const errorArray = error.response.data; // Accede al array de errores

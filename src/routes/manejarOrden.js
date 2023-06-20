@@ -32,6 +32,7 @@ const KitchentoCheckOut = require("./KitchentoCheckOut.js");
 const wait = require("./wait.js");
 const Dispatch = require("./Dispatch.js");
 const getStatement = require("./getStatement.js");
+const getBalance = require("./getBalance.js");
 
 //app.use(router.routes());
 
@@ -169,23 +170,28 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 									"cantidad": qty,
 									"vencimiento": fechaHoraUtc4
 								};
-								//console.log(requestBody)
+								const balance = getBalance();
 								try {
-									const order = await newOrder(requestBody);
-									//console.log(order)
-									let sePidio = false
-									sePidio = await notifyCreateOrder(order)
+									const costoOrden = (ingredient.costoProduccion/ingredient.loteProduccion)*qty
+									if (balance >= costoOrden){
+										const order = await newOrder(requestBody);
+										//console.log(order)
+										let sePidio = false
+										sePidio = await notifyCreateOrder(order)
+									}else{
+										console.log(`balance insuficiente, balance: ${balance}, costo: ${costoOrden}`);
+									}
 									if (sePidio) {
 										break outerLoop
 									}
 								} catch (error) {
 									console.log(error);
 								}
+								//console.log(requestBody)
 							}
 						}
 					}
 				}
-
 			}
 		}
 	} catch (error) {

@@ -24,13 +24,10 @@ async function getData(orden_id, info_dict) {
             //console.log(JSON.stringify(result));
             console.log(result);
             const data = result.BillingDetails;
-            console.log(data);
-            console.log(data.id)
-            console.log(result);
             // console.log(`emitInvoice Error:
             // ${JSON.stringify(err.root.Envelope.Body)}`)
             billingDetails(data.id, orden_id, data.client, data.supplier, data.channel, data.status, data.price, 
-                data.interest, data.totalprice, data.createdAt, data.updtedAt);
+                data.interest, data.totalPrice, data.createdAt, data.updtedAt);
         })
         });
         //payInvoice();

@@ -1,11 +1,6 @@
 [
   {
-    "id": "649109c47323cfeaa0ef8cae",
-    "cliente": "7",
-    "sku": "",
-    "fechaEntrega": "",
-    "cantidad": 5,
-    "urlNotificacion": "http://example.com/oc/4af9f23d8ead0e1d320000a1",
+    "id": "649110437323cfeaa0ef9c17",
     "estado": "recibida"
   }
 ]
