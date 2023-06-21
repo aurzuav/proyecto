@@ -127,6 +127,7 @@ const ordenCompra = require('./routes/ordenCompra');
 const payInvoice = require("./routes/payInvoice.js");
 const obtenerOrden = require("./routes/obtenerOrden.js");
 const wait = require("./routes/wait.js");
+const alterarEstado = require("./cambiar_estado.js");
 app.use(ordenCompra.routes())
 
 // dispatches products - ver input productid y orderid
@@ -453,18 +454,19 @@ app.use(async (ctx, next) => {
         JSON.stringify(listInstructions2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
       );
     }
-    // if (orden.estado == "aceptada"){
-    //   let datosOrden = await obtenerOrden(id_orden)
-    //   let cumplida = false
-    //   while(!cumplida){
-    //     datosOrden = await obtenerOrden(id_orden)
-    //     if (datosOrden.estado == "cumplida"){
-    //       cumplida = true
-    //       break
-    //     }
-    //     wait(10*60*1000)
-    //   }
-    // }
+    if (orden.estado == "aceptada"){
+      await alterarEstado(id_orden, orden.estado)
+      // let datosOrden = await obtenerOrden(id_orden)
+      // let cumplida = false
+      // while(!cumplida){
+      //   datosOrden = await obtenerOrden(id_orden)
+      //   if (datosOrden.estado == "cumplida"){
+      //     cumplida = true
+      //     break
+      //   }
+      //   wait(10*60*1000)
+      // }
+    }
     
     await next();
   }

@@ -13,12 +13,13 @@ var url =
 async function getBalance() {
     try {
         soap.createClient(url, {}, function (err, client) {
-            console.log(`.describe():`, client.describe());
+            //console.log(`.describe():`, client.describe());
             var wsSecurity = new soap.WSSecurity('5', 'p=HjsR<8qUDZ9kSEdv', {});
             client.setSecurity(wsSecurity);
         
             client.getBankStatement({}, function (err, result) {
             const balance = result.BankStatement.balance;
+            //console.log(balance)
             return balance;
             });
 
@@ -31,4 +32,8 @@ async function getBalance() {
 
 
 module.exports = getBalance;
+
+
+getBalance()
+
 

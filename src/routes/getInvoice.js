@@ -18,7 +18,7 @@ async function getInvoice() {
             var wsSecurity = new soap.WSSecurity('5', 'p=HjsR<8qUDZ9kSEdv', {});
             //console.log(wsSecurity)
             client.setSecurity(wsSecurity);
-            const requestBody = { status: "aceptada", side: "supplier"}
+            const requestBody = { status: "creada", side: "supplier"}
             client.getInvoices(requestBody, function (err, result) {
                 console.log(result)
             });
