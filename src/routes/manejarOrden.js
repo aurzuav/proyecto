@@ -171,17 +171,12 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 									"cantidad": qty,
 									"vencimiento": fechaHoraUtc4
 								};
-								const balance = await getBalance();
+								//const balance = await getBalance();
 								try {
 									const costoOrden = (ingredient.costoProduccion/ingredient.loteProduccion)*qty
 									let sePidio = false
-									if (balance >= costoOrden){
-										const order = await newOrder(requestBody);
-										sePidio = await notifyCreateOrder(order)
-										//falta manejar si rechazan
-									}else{
-										console.log(`balance insuficiente, balance: ${balance}, costo: ${costoOrden}`);
-									}
+									const order = await newOrder(requestBody);
+									sePidio = await notifyCreateOrder(order)
 									if (sePidio) {
 										break outerLoop
 									}
