@@ -31,7 +31,7 @@ const checkKitchen = require("./checkKitchen.js");
 const KitchentoCheckOut = require("./KitchentoCheckOut.js");
 const wait = require("./wait.js");
 const Dispatch = require("./Dispatch.js");
-const getStatement = require("./getStatement.js");
+//const getStatement = require("./getStatement.js");
 const getBalance = require("./getBalance.js");
 const getData = require("./getData.js");
 
@@ -53,10 +53,10 @@ async function manejarOrden(OrderId, canal) {
 					requestBody = { "estado": "aceptada" }
 					await actualizarOrden(requestBody, OrderId, canal);
 					await ReceptionToDispatch(OrderId, datos.cantidad, datos.sku)
-					await getData(OrderId, { order_id: `${OrderId}` })
+					//await getData(OrderId, { order_id: `${OrderId}` })
 				} else {
 					//producir
-					//console.log("no lo tengo")
+					console.log("no lo tengo, voy a rechazar")
 					requestBody = { "estado": "rechazada" }
 					//await producir_orden(datos);
 					await actualizarOrden(requestBody, OrderId, canal);
@@ -85,7 +85,7 @@ async function manejarOrden(OrderId, canal) {
 				}
 				if (kitchenResult.faltantes.length > 0){
 					await producir_orden(datos, cantidadHamburguesas, kitchenResult.faltantes); //produzco lo que falta
-					//await wait(3 * 60 * 1000); //Deberia esperar para se produzcan
+					await wait(3 * 60 * 1000); //Deberia esperar para se produzcan
 				}
 				let continuarProceso = kitchenResult.todosDisponibles //bool
 				while (!continuarProceso) {
@@ -133,9 +133,8 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 	try {
 		// si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
 		if (producto.produccion === "cocina") { // si es una hamburguesa
-			console.log("es una hamburguesa")
 			const formula = Formuladictionary[sku].ingredientes;
-			console.log("faltantes:")
+			console.log("ingredientes faltantes:")
 			console.log(faltantes)
 			for (let ingrediente in formula) {
 				if (faltantes.includes(ingrediente)) {
@@ -175,11 +174,11 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 								const balance = await getBalance();
 								try {
 									const costoOrden = (ingredient.costoProduccion/ingredient.loteProduccion)*qty
+									let sePidio = false
 									if (balance >= costoOrden){
 										const order = await newOrder(requestBody);
-										//console.log(order)
-										let sePidio = false
 										sePidio = await notifyCreateOrder(order)
+										//falta manejar si rechazan
 									}else{
 										console.log(`balance insuficiente, balance: ${balance}, costo: ${costoOrden}`);
 									}
@@ -189,7 +188,6 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 								} catch (error) {
 									console.log(error);
 								}
-								//console.log(requestBody)
 							}
 						}
 					}
