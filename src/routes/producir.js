@@ -5,7 +5,7 @@ const axios = require("axios");
 
 async function producirSku(sku, quantity){
         try {
-          console.log("INGREDIENTE")
+          console.log(`voy a producir ${sku} con cantidad: ${quantity}`)
             const token = await getToken();
             const headers = {
                 "Content-Type": "application/json", // Adjust the content type if necessary

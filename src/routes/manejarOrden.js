@@ -33,7 +33,7 @@ const wait = require("./wait.js");
 const Dispatch = require("./Dispatch.js");
 //const getStatement = require("./getStatement.js");
 const getBalance = require("./getBalance.js");
-const getData = require("./getData.js");
+const createInvoice = require("./createInvoice.js");
 
 //app.use(router.routes());
 
@@ -43,23 +43,23 @@ getCSVDictionaryProducts(Productdictionary, "./products_E3.csv");
 async function manejarOrden(OrderId, canal) {
 	try {
 		//const bank = await getStatement();
-		datos = await obtenerOrden(OrderId)
+		const datos = await obtenerOrden(OrderId)
 		try {
 			if (canal === "grupo") {
 				const stock = await getStockRecepcion(datos.sku)
 				console.log(stock)
 				if (stock >= datos.cantidad) {
 					console.log("tengo stock, voy a aceptar el pedido de grupo")
-					requestBody = { "estado": "aceptada" }
-					await actualizarOrden(requestBody, OrderId, canal);
+					const requestBody1 = { "estado": "aceptada" }
+					await actualizarOrden(requestBody1, OrderId, canal);
 					await ReceptionToDispatch(OrderId, datos.cantidad, datos.sku)
-					//await getData(OrderId, { order_id: `${OrderId}` })
+					await createInvoice(OrderId, { order_id: `${OrderId}` })
 				} else {
 					//producir
 					console.log("no lo tengo, voy a rechazar")
-					requestBody = { "estado": "rechazada" }
+					const requestBody2 = { "estado": "rechazada" }
 					//await producir_orden(datos);
-					await actualizarOrden(requestBody, OrderId, canal);
+					await actualizarOrden(requestBody2, OrderId, canal);
 
 				}
 			} else if (canal === "SFTP") {
@@ -100,8 +100,10 @@ async function manejarOrden(OrderId, canal) {
 					await wait(1 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)	
 				}
 				if (continuarProceso) {
-					await producirSku(datos.sku, cantidadHamburguesas)
+					console.log(kitchenResult)
+					await producirSku(sku, cantidadHamburguesas)
 					let despachar = false;
+					let checkOutResult = ""; 
 					while (!despachar) {
 						checkOutResult = await KitchentoCheckOut(datos.sku, cantidadHamburguesas); 
 						console.log(JSON.stringify(checkOutResult))
@@ -114,6 +116,7 @@ async function manejarOrden(OrderId, canal) {
 						if (despachar){
 							console.log("voy a despachar")
 							await Dispatch(OrderId, productIds)
+							await createInvoice(OrderId, { order_id: `${OrderId}` })
 						}
 					} 
 				}

@@ -49,7 +49,7 @@ app.get('/ordenes', async function(req, res) {
 });
 
 // Ejecutar la función para poblar la tabla al iniciar el servidor
-poblarTabla(); // Puedes pasar los valores deseados para poblar la tabla aquí
+//poblarTabla(); // Puedes pasar los valores deseados para poblar la tabla aquí
 
 
 

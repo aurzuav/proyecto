@@ -19,7 +19,7 @@ async function actualizarOrden(requestBody, idOrden, canal){
 		const datos = await obtenerOrden(idOrden)
 
 		if (requestBody.estado === "aceptada"){
-			await poblar_or(datos.id, "creada", datos.sku, datos.cantidad,canal)
+			await poblar_or(datos.id, "aceptada", datos.sku, datos.cantidad,canal)
 		}
 		if (datos.cliente !== "999"){
 			await notifyOrder(requestBody.estado, datos.cliente, idOrden);

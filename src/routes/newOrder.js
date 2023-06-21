@@ -22,7 +22,7 @@ async function newOrder(requestBody) {
         if (response.status === 201) {
             console.log("ORDEN CREADA");
             console.log(requestBody);
-            poblar_oc(response.data.id, "creada", requestBody.sku, requestBody.cantidad, requestBody.proveedor)
+            //poblar_oc(response.data.id, "creada", requestBody.sku, requestBody.cantidad, requestBody.proveedor)
             return response.data;
         }
     } catch (error) {
