@@ -6,6 +6,7 @@ const notifyOrder = require("./notifyOrder.js");
 const IdAlmacenes = require("./IdAlmacenes.js");
 
 
+
 async function ReceptionToDispatch(idOrden, qty, sku) {
   try {
     console.log(`voy a despachar la orden ${idOrden}`)
@@ -59,6 +60,7 @@ async function ReceptionToDispatch(idOrden, qty, sku) {
       }
     }
     console.log(`Orden: ${idOrden} Despachada`);
+    
   } catch (error) {
     if (error.isAxiosError) {
       const errorArray = error.response.data; // Accede al array de errores

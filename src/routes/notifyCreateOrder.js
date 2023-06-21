@@ -15,7 +15,7 @@ async function notifyCreateOrder(data) {
 			"sku": data.sku,
 			"fechaEntrega": data.vencimiento,
 			"cantidad": data.cantidad,
-			"urlNotificacion": `http://lagarto${data.proveedor}.ing.puc.cl/ordenes-compra/${data.id}`,
+			"urlNotificacion": `http://lagarto${data.cliente}.ing.puc.cl/ordenes-compra/${data.id}`,
 		};
 		//console.log(requestBody)
 		const response = await axios.post(

@@ -15,6 +15,8 @@ const ReceptionToKitchen = require("./receptiontoKitchen.js");
 const getToken = require("./getToken.js");
 const poblar_or = require("../ordenes_recibidas.js")
 const manejarOrden = require("./manejarOrden.js")
+//const getInvoices = require("./getStatement.js");
+const getData = require("./getData.js");
 
 const {
 	getCSVDictionaryProducts,
@@ -35,19 +37,21 @@ getCSVDictionaryFormula(Formuladictionary, "./formulas_E3.csv");
 module.exports =  router;
 
 
-const leerArchivosXML = require("../SFTP2.js");
+const leerArchivosXML = require("../SFTP3.js");
 const { response } = require("express");
+const wait = require("./wait.js");
 
 
 function procesarPedidos() {
 	leerArchivosXML()
-		.then((pedidos) => {
-			// for (let pedido in pedidos){
-			// 	console.log(pedidos[pedido])
-			// 	manejarOrden(pedidos[0].id, "SFTP")
-			// }
-			console.log(pedidos[pedidos.length -1])
-			//manejarOrden(pedidos[pedidos.length -1].id, "SFTP")
+		.then(async (pedidos) => {
+			for (let pedido in pedidos){
+				console.log(pedidos[pedido])
+				manejarOrden(pedidos[pedido].id, "SFTP")
+				await wait(3*60*1000)
+			}
+			// console.log(pedidos[pedidos.length -1])
+			// manejarOrden(pedidos[pedidos.length -1].id, "SFTP")
 		})
 		.catch((error) => {
 			console.error("Error:", error.message);
@@ -56,10 +60,12 @@ function procesarPedidos() {
 
 
 // Llamar a la función inicialmente
+//console.log("pidiendo datos banco")
+//getData();
 procesarPedidos();
 
 // Ejecutar la función cada 15 minutos
-//setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos
+setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos
 
 
 // setInterval(checkIngredients, 10 * 60 * 1000, BurgersinProdution, Productdictionary, Formuladictionary, ready_for_production);

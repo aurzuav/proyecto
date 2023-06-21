@@ -31,6 +31,9 @@ const checkKitchen = require("./checkKitchen.js");
 const KitchentoCheckOut = require("./KitchentoCheckOut.js");
 const wait = require("./wait.js");
 const Dispatch = require("./Dispatch.js");
+//const getStatement = require("./getStatement.js");
+const getBalance = require("./getBalance.js");
+const getData = require("./getData.js");
 
 //app.use(router.routes());
 
@@ -39,6 +42,7 @@ getCSVDictionaryProducts(Productdictionary, "./products_E3.csv");
 
 async function manejarOrden(OrderId, canal) {
 	try {
+		//const bank = await getStatement();
 		datos = await obtenerOrden(OrderId)
 		try {
 			if (canal === "grupo") {
@@ -49,9 +53,10 @@ async function manejarOrden(OrderId, canal) {
 					requestBody = { "estado": "aceptada" }
 					await actualizarOrden(requestBody, OrderId, canal);
 					await ReceptionToDispatch(OrderId, datos.cantidad, datos.sku)
+					//await getData(OrderId, { order_id: `${OrderId}` })
 				} else {
 					//producir
-					//console.log("no lo tengo")
+					console.log("no lo tengo, voy a rechazar")
 					requestBody = { "estado": "rechazada" }
 					//await producir_orden(datos);
 					await actualizarOrden(requestBody, OrderId, canal);
@@ -79,8 +84,8 @@ async function manejarOrden(OrderId, canal) {
 					kitchenResult = await checkKitchen(formula, cantidadHamburguesas); //veo si estan en la cocina
 				}
 				if (kitchenResult.faltantes.length > 0){
-					//await producir_orden(datos, cantidadHamburguesas, kitchenResult.faltantes); //produzco lo que falta
-					//await wait(3 * 60 * 1000); //Deberia esperar para se produzcan
+					await producir_orden(datos, cantidadHamburguesas, kitchenResult.faltantes); //produzco lo que falta
+					await wait(3 * 60 * 1000); //Deberia esperar para se produzcan
 				}
 				let continuarProceso = kitchenResult.todosDisponibles //bool
 				while (!continuarProceso) {
@@ -128,9 +133,8 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 	try {
 		// si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
 		if (producto.produccion === "cocina") { // si es una hamburguesa
-			console.log("es una hamburguesa")
 			const formula = Formuladictionary[sku].ingredientes;
-			console.log("faltantes:")
+			console.log("ingredientes faltantes:")
 			console.log(faltantes)
 			for (let ingrediente in formula) {
 				if (faltantes.includes(ingrediente)) {
@@ -167,11 +171,11 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 									"cantidad": qty,
 									"vencimiento": fechaHoraUtc4
 								};
-								//console.log(requestBody)
+								//const balance = await getBalance();
 								try {
-									const order = await newOrder(requestBody);
-									//console.log(order)
+									const costoOrden = (ingredient.costoProduccion/ingredient.loteProduccion)*qty
 									let sePidio = false
+									const order = await newOrder(requestBody);
 									sePidio = await notifyCreateOrder(order)
 									if (sePidio) {
 										break outerLoop
@@ -183,7 +187,6 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 						}
 					}
 				}
-
 			}
 		}
 	} catch (error) {
