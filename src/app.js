@@ -416,16 +416,16 @@ app.use(async (ctx, next) => {
   if (ctx.method === "PATCH" && ctx.url.startsWith("/ordenes-compra/")) {
     const id_orden = ctx.url.replace("/ordenes-compra/", "");
     //console.log(id_orden)
-    const orden = ordenesRecibidas2.find((orden) => orden.id == id_orden);
+    let orden = ordenesRecibidas2.find((orden) => orden.id == id_orden);
 
     if (orden == undefined) {
       // creamos la orden con su id y el estado recibido
       ctx.status = 204;
-      const nuevaOrden = {
+      orden = {
         id: id_orden,
         estado: ctx.request.body.estado,
       };  
-      ordenesRecibidas2.push(nuevaOrden);
+      ordenesRecibidas2.push(orden);
       writeFile(
         "Output_S3.txt",
         JSON.stringify(ordenesRecibidas2, null, 2).replace(/\n/g, "\r\n") + "\r\n"
