@@ -26,7 +26,7 @@ async function createInvoice(orden_id, info_dict) {
             const data = result.BillingDetails;
             // console.log(`emitInvoice Error:
             // ${JSON.stringify(err.root.Envelope.Body)}`)
-            billingDetails(data.invoice_id, orden_id, data.client, data.supplier, data.channel, data.status, data.price, 
+            billingDetails(data.id, orden_id, data.client, data.supplier, data.channel, data.status, data.price, 
                 data.interest, data.totalPrice, data.createdAt, data.updtedAt);
         })
         });

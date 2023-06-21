@@ -17,6 +17,8 @@ const pool = new Pool({
 // Definir una función para poblar la tabla "ordenes" a partir de diccionarios
 
 async function getInfoDDBB(order_id) {
+
+    console.log("entro a getInfoDDBB");
     let client; // Variable para almacenar el cliente de conexión
 
     try {
@@ -25,7 +27,9 @@ async function getInfoDDBB(order_id) {
         const query = 'SELECT invoice_id FROM billingdetails WHERE order_id = $1';
         const values = [order_id];
         const data = await client.query(query, values);
-        return data.rows;
+        console.log("data");
+        console.log(data);
+        return data.rows[0].invoice_id;
     } catch (error) {
         console.error('Error al obtener los datos de la tabla "billingDetails":', error);
         throw error; // Agregamos "throw error" para propagar el error

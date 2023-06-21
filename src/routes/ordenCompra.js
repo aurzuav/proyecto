@@ -61,7 +61,7 @@ function procesarPedidos() {
 // Llamar a la función inicialmente
 //console.log("pidiendo datos banco")
 
-procesarPedidos();
+//procesarPedidos();
 
 // Ejecutar la función cada 15 minutos
 setInterval(procesarPedidos, 15 * 60 * 1000); // 15 minutos en milisegundos
