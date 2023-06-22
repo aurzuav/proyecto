@@ -9,6 +9,7 @@ const fs = require("fs");
 const csv = require("csv-parser");
 const bodyParser = require("koa-bodyparser");
 const manejarOrden = require("./routes/manejarOrden.js");
+const getInvoice = require("./routes/getInvoice.js");
 
 const { Pool } = require('pg');
 
@@ -401,7 +402,7 @@ app.use(async (ctx, next) => {
     ctx.status = 201;
     ctx.body = nuevaOrden;
 
-    console.log("Orden creada exitosamente");
+    console.log("Orden grupo recibida exitosamente");
     console.log(nuevaOrden);
     // manejar la orden
     manejarOrden(nuevaOrden.id, "grupo");
@@ -415,11 +416,11 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   if (ctx.method === "PATCH" && ctx.url.startsWith("/ordenes-compra/")) {
     const id_orden = ctx.url.replace("/ordenes-compra/", "");
-    //console.log(id_orden)
-    let orden = ordenesRecibidas2.find((orden) => orden.id == id_orden);
+    var orden = ordenesRecibidas2.find((orden) => orden.id == id_orden);
 
     if (orden == undefined) {
       // creamos la orden con su id y el estado recibido
+      console.log("Orden no existe");
       ctx.status = 204;
       orden = {
         id: id_orden,
@@ -455,17 +456,19 @@ app.use(async (ctx, next) => {
       );
     }
     if (orden.estado == "aceptada"){
-      await alterarEstado(id_orden, orden.estado)
-      // let datosOrden = await obtenerOrden(id_orden)
-      // let cumplida = false
-      // while(!cumplida){
-      //   datosOrden = await obtenerOrden(id_orden)
-      //   if (datosOrden.estado == "cumplida"){
-      //     cumplida = true
-      //     break
-      //   }
-      //   wait(10*60*1000)
-      // }
+      await alterarEstado(id_orden, orden.estado);
+      await payInvoice(id_orden);
+      let datosOrden = "";
+      let cumplida = false;
+      while(!cumplida){
+        datosOrden = await obtenerOrden(id_orden)
+        if (datosOrden.estado == "cumplida"){
+          payInvoice(id_orden);
+          cumplida = true
+          break
+        }
+        wait(10*60*1000)
+      }
     }
     
     await next();

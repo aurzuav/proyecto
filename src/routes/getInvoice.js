@@ -10,7 +10,7 @@ var url =
 
 
 // Definir una función para poblar la tabla "ordenes" a partir de diccionarios
-async function getInvoice() {
+async function getInvoice(order_id) {
     try {
         soap.createClient(url, {}, function (err, client) {
             //console.log(`.describe():`, client.describe());
@@ -18,9 +18,14 @@ async function getInvoice() {
             var wsSecurity = new soap.WSSecurity('5', 'p=HjsR<8qUDZ9kSEdv', {});
             //console.log(wsSecurity)
             client.setSecurity(wsSecurity);
-            const requestBody = { status: "creada", side: "supplier"}
+            const requestBody = { status: 'pending', side: 'client'}
             client.getInvoices(requestBody, function (err, result) {
-                console.log(result)
+                const invoices = result.BillingDetails;
+                for (let invoice of invoices) {
+                    console.log("entro for");
+                    console.log(invoice.id);
+                    return invoice.id;
+                }
             });
 
             });
@@ -30,4 +35,6 @@ async function getInvoice() {
         }
 }
 
-getInvoice()
+module.exports = getInvoice;
+
+//getInvoice()
