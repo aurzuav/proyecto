@@ -13,8 +13,8 @@ async function notifyOrder(estado, group, orderId) {
 			{ "estado": estado},
 			{ headers }
 		);
+		//console.log(response.data);
 		console.log(`Se notificó al grupo que la orden está ${estado}`)
-		console.log( response.data);
 	} catch (error) {
 		console.log(`No se pudo notificar al grupo que la orden está ${estado}`)
 		//console.log(error);

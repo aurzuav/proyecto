@@ -402,7 +402,7 @@ app.use(async (ctx, next) => {
     ctx.status = 201;
     ctx.body = nuevaOrden;
 
-    console.log("Orden creada exitosamente");
+    console.log("Orden grupo recibida exitosamente");
     console.log(nuevaOrden);
     // manejar la orden
     manejarOrden(nuevaOrden.id, "grupo");
