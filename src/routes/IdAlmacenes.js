@@ -1,9 +1,14 @@
 const getToken = require("./getTokenW");
 const axios = require("axios");
 
+let almacenes = null;
+
 async function IdAlmacenes() {
+    if (almacenes !== null) {
+        return almacenes;
+    }
+
     try {
-        //TOKEN
         const token = await getToken();
         const headers = {
             "Content-Type": "application/json",
@@ -15,21 +20,18 @@ async function IdAlmacenes() {
                 headers,
             }
         );
-        //OBTENER ID DE almacenes
 
-        const almacenes = [];
-
-        storesResponse.data.forEach(store => {
+        almacenes = storesResponse.data.map(store => {
             const almacen = {};
 
             if (store.checkIn) {
                 almacen[store._id] = "almacenCheckIn";
             }
-            if (store.checkOut) {
-                almacen[store._id] = "almacenCheckOut";
-            }
             if (store.buffer) {
                 almacen[store._id] = "buffer";
+            }
+            if (store.checkOut) {
+                almacen[store._id] = "almacenCheckOut";
             }
             if (store.kitchen) {
                 almacen[store._id] = "kitchen";
@@ -37,11 +39,14 @@ async function IdAlmacenes() {
             if (!store.checkIn && !store.checkOut && !store.buffer && !store.kitchen) {
                 almacen[store._id] = "principal";
             }
-            almacenes.push(almacen);
-        });
-        return almacenes
-    } catch (error) {
 
+            return almacen;
+        });
+
+        return almacenes;
+    } catch (error) {
+        console.log("error en IdAlmadenes.js")
     }
 }
-module.exports = IdAlmacenes
+
+module.exports = IdAlmacenes;

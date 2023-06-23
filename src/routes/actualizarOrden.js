@@ -4,7 +4,7 @@ const poblar_or = require("../ordenes_recibidas.js")
 const obtenerOrden = require("./obtenerOrden")
 const notifyOrder = require("./notifyOrder.js");
 
-async function actualizarOrden(requestBody, idOrden, canal){
+async function actualizarOrden(requestBody, datosOrden, canal){
 	try {
 		const token = await getToken();
 		const headers = {
@@ -12,17 +12,16 @@ async function actualizarOrden(requestBody, idOrden, canal){
 			Authorization: "Bearer " + token,
 		};
 		const response = await axios.post(
-			`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${idOrden}/estado`,
+			`https://dev.api-proyecto.2023-1.tallerdeintegracion.cl/ordenes-compra/ordenes/${datosOrden.id}/estado`,
 			requestBody,
 			{ headers }
 		);
-		const datos = await obtenerOrden(idOrden)
 
 		if (requestBody.estado === "aceptada"){
-			await poblar_or(datos.id, "aceptada", datos.sku, datos.cantidad,canal)
+			await poblar_or(datosOrden.id, "aceptada", datosOrden.sku, datosOrden.cantidad,canal)
 		}
-		if (datos.cliente !== "999"){
-			await notifyOrder(requestBody.estado, datos.cliente, idOrden);
+		if (datosOrden.cliente !== "999"){
+			await notifyOrder(requestBody.estado, datosOrden.cliente, datosOrden.id);
 		}
 		console.log(`Orden actualizada con estado: ${requestBody.estado} correctamente`)
 		return response.data;

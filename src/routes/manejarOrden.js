@@ -43,31 +43,31 @@ getCSVDictionaryProducts(Productdictionary, "./products_E3.csv");
 async function manejarOrden(OrderId, canal) {
 	try {
 		//const bank = await getStatement();
-		const datos = await obtenerOrden(OrderId)
+		const datosOrden = await obtenerOrden(OrderId)
 		try {
 			if (canal === "grupo") {
-				const stock = await getStockRecepcion(datos.sku)
+				const stock = await getStockRecepcion(datosOrden.sku)
 				console.log(stock)
-				if (stock >= datos.cantidad) {
+				if (stock >= datosOrden.cantidad) {
 					console.log("tengo stock, voy a aceptar el pedido de grupo")
 					const requestBody1 = { "estado": "aceptada" }
-					await actualizarOrden(requestBody1, OrderId, canal);
-					await ReceptionToDispatch(OrderId, datos.cantidad, datos.sku)
+					await actualizarOrden(requestBody1, datosOrden, canal);
+					await ReceptionToDispatch(OrderId, datosOrden.cantidad, datosOrden.sku)
 					await createInvoice(OrderId, { order_id: `${OrderId}` })
 				} else {
 					//producir
 					console.log("no lo tengo, voy a rechazar")
 					const requestBody2 = { "estado": "rechazada" }
-					//await producir_orden(datos);
-					await actualizarOrden(requestBody2, OrderId, canal);
+					//await producir_orden(datosOrden);
+					await actualizarOrden(requestBody2, datosOrden, canal);
 
 				}
 			} else if (canal === "SFTP") {
-				var cantidadHamburguesas = datos.cantidad
-				const sku = datos.sku
+				var cantidadHamburguesas = datosOrden.cantidad
+				const sku = datosOrden.sku
 				const producto = Productdictionary[sku]
 				const divisionEntera = Math.floor(cantidadHamburguesas / producto.loteProduccion);
-				console.log(datos)
+				console.log(datosOrden)
 				console.log(producto)
 				if (divisionEntera * producto.loteProduccion === cantidadHamburguesas) {
 					// La cantidad es divisible exactamente por el lote
@@ -76,16 +76,17 @@ async function manejarOrden(OrderId, canal) {
 					const siguienteNumero = (divisionEntera + 1) * producto.loteProduccion;
 					cantidadHamburguesas = siguienteNumero;
 				}
-				const formula = Formuladictionary[datos.sku].ingredientes
-				await actualizarOrden(requestBody = { "estado": "aceptada" }, OrderId, canal);
+				const formula = Formuladictionary[datosOrden.sku].ingredientes
+				await actualizarOrden(requestBody = { "estado": "aceptada" }, datosOrden, canal);
 				let kitchenResult = await checkKitchen(formula, cantidadHamburguesas); //veo si estan en la cocina
 				if (kitchenResult.faltantes.length > 0){
+					//receptiontokitchen podria mandar menos requests
 					await ReceptionToKitchen(kitchenResult.faltantes, cantidadHamburguesas); //trato de mover los que no estan en la cocina a la cocina
 					kitchenResult = await checkKitchen(formula, cantidadHamburguesas); //veo si estan en la cocina
 				}
 				if (kitchenResult.faltantes.length > 0){
-					await producir_orden(datos, cantidadHamburguesas, kitchenResult.faltantes); //produzco lo que falta
-					await wait(3 * 60 * 1000); //Deberia esperar para se produzcan
+					await producir_orden(datosOrden, cantidadHamburguesas, kitchenResult.faltantes); //produzco lo que falta
+					await wait(15 * 60 * 1000); // esperar para se produzcan (cambiar valor)
 				}
 				let continuarProceso = kitchenResult.todosDisponibles //bool
 				while (!continuarProceso) {
@@ -97,21 +98,22 @@ async function manejarOrden(OrderId, canal) {
 						break;
 					}
 					console.log("Esperando que los ingredientes estén disponibles en alguna bodega y luego en la cocina");
-					await wait(1 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)	
+					await wait(1 * 60 * 1000); // Espera 1 minutos (3 * 60 segundos * 1000 milisegundos)	
 				}
 				if (continuarProceso) {
 					console.log(kitchenResult)
 					await producirSku(sku, cantidadHamburguesas)
+					await wait(30 * 60 * 1000); //esperar lo que se demora la hamburguesa (cambiar)
 					let despachar = false;
 					let checkOutResult = ""; 
 					while (!despachar) {
-						checkOutResult = await KitchentoCheckOut(datos.sku, cantidadHamburguesas); 
+						checkOutResult = await KitchentoCheckOut(datosOrden.sku, cantidadHamburguesas); 
 						console.log(JSON.stringify(checkOutResult))
 						despachar = checkOutResult.listoParaDespacho
 						const productIds = checkOutResult.productIds
 						if (!despachar) {
 							console.log("No esta lista la hamburguesa, va a esperar")
-							await wait(3 * 60 * 1000); // Espera 3 minutos (3 * 60 segundos * 1000 milisegundos)
+							await wait(1 * 60 * 1000); // Espera 1 minutos (3 * 60 segundos * 1000 milisegundos)
 						}
 						if (despachar){
 							console.log("voy a despachar")
@@ -130,8 +132,8 @@ async function manejarOrden(OrderId, canal) {
 	}
 }
 
-async function producir_orden(datos, cantidadHamburguesas, faltantes) {
-	const sku = datos.sku
+async function producir_orden(datosOrden, cantidadHamburguesas, faltantes) {
+	const sku = datosOrden.sku
 	const producto = Productdictionary[sku]
 	try {
 		// si es una hamburguesa debiera tener una formula que esta en Formulasdictionary
@@ -176,7 +178,7 @@ async function producir_orden(datos, cantidadHamburguesas, faltantes) {
 								};
 								//const balance = await getBalance();
 								try {
-									const costoOrden = (ingredient.costoProduccion/ingredient.loteProduccion)*qty
+									//const costoOrden = (ingredient.costoProduccion/ingredient.loteProduccion)*qty
 									let sePidio = false
 									const order = await newOrder(requestBody);
 									sePidio = await notifyCreateOrder(order)

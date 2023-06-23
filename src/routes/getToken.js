@@ -12,6 +12,11 @@ async function fetchToken() {
 			{ group: 5, secret: "p=HjsR<8qUDZ9kSEdv" },
 			{ headers }
 		);
+			// Programar actualización del token cada 25 minutos
+		setInterval(async () => {
+			console.log("actualizando token")
+			token = await fetchToken();
+			}, 25 * 60 * 1000);
 		return response.data.token;
 	} catch (error) {
 		console.error(error);
@@ -21,14 +26,9 @@ async function fetchToken() {
 async function getToken() {
 	// Si el token no está definido o ha expirado, obtén uno nuevo
 	if (!token) {
+		console.log("token no estaba")
 		token = await fetchToken();
 	}
-
-	// Programar actualización del token cada 25 minutos
-	setInterval(async () => {
-		token = await fetchToken();
-	}, 25 * 60 * 1000);
-
 	return token;
 }
 

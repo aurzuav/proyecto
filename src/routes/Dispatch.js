@@ -11,6 +11,7 @@ async function Dispatch(idOrden, productsId) {
             "Content-Type": "application/json",
             Authorization: "Bearer " + `${token}`,
         };
+        let productId = ""
         for (let indice in productsId){
             productId = productsId[indice]
             const dispatchResponse = await axios.post(

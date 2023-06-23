@@ -19,7 +19,8 @@ async function moveProduct(sku, cantidad) {
     outerLoop: // Etiqueta para el bucle externo
     for (const almacen of almacenes) {
       const idStore = Object.keys(almacen)[0];
-      console.log(`consulta a almacen ${JSON.stringify(idStore)} por el sku ${sku}`)
+      if ((almacen[idStore] == "almacenCheckIn") || (almacen[idStore] == "buffer")){
+      console.log(`consulta a almacen ${almacen[idStore]} con id: ${idStore} por el sku ${sku}`)
       const token = await getToken();
       const headers = {
         "Content-Type": "application/json",
@@ -58,7 +59,7 @@ async function moveProduct(sku, cantidad) {
         break outerLoop; // Salir del bucle externo
       } 
     }
-  } catch (error) {
+  } }catch (error) {
     if (error.isAxiosError) {
       const errorArray = error.response.data; // Accede al array de errores
       console.log(errorArray); // Imprime el array de errores

@@ -10,7 +10,7 @@ const IdAlmacenes = require("./IdAlmacenes.js");
 async function ReceptionToDispatch(idOrden, qty, sku) {
   try {
     console.log(`voy a despachar la orden ${idOrden}`)
-    const almacenes = await IdAlmacenes()
+    const almacenes = await IdAlmacenes() //podria borrarse
     let keyCheckIn;
     almacenes.forEach(almacen => {
         const key = Object.keys(almacen)[0];
